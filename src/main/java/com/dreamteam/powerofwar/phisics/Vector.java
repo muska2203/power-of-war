@@ -1,4 +1,4 @@
-package com.dreamteam.powerofwar;
+package com.dreamteam.powerofwar.phisics;
 
 public class Vector {
 
@@ -42,10 +42,13 @@ public class Vector {
     }
 
     public static Vector byDirection(double length, double direction) {
-        double alpha = Math.toRadians(direction);
+        return byRadians(length, Math.toRadians(direction));
+    }
+
+    public static Vector byRadians(double length, double radians) {
         Vector vector = new Vector();
-        vector.x = Math.cos(alpha) * length;
-        vector.y = Math.sin(alpha) * length;
+        vector.x = Math.cos(radians) * length;
+        vector.y = Math.sin(radians) * length;
         return vector;
     }
 
@@ -75,7 +78,7 @@ public class Vector {
         return new Vector(v1.getX() + v2.getX(), v1.getY() + v2.getY());
     }
 
-    public double getAlpha() {
+    public double getRadians() {
         if (this.x == 0 && this.y == 0) {
             return 0;
         }

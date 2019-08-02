@@ -1,11 +1,18 @@
-package com.dreamteam.powerofwar;
+package com.dreamteam.powerofwar.renderer;
 
+import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.event.AddObjectEvent;
+import com.dreamteam.powerofwar.game.event.EventListener;
+import com.dreamteam.powerofwar.game.event.StopGameEvent;
+import com.dreamteam.powerofwar.game.object.GameObject;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -16,13 +23,17 @@ import static org.lwjgl.opengl.GL13.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class GameRender implements Runnable {
+public class GameRenderer implements Runnable {
 
     private Board board;
+    private EventListener eventListener;
     private long window;
+    private long fps;
 
-    public GameRender(Board board) {
+    public GameRenderer(Board board, EventListener eventListener) {
         this.board = board;
+        this.eventListener = eventListener;
+        fps = 60;
     }
 
     @Override
@@ -39,6 +50,7 @@ public class GameRender implements Runnable {
         // Terminate GLFW and free the error callback
         glfwTerminate();
         glfwSetErrorCallback(null).free();
+        eventListener.registerEvent(new StopGameEvent());
     }
 
     private void init() {
@@ -47,7 +59,7 @@ public class GameRender implements Runnable {
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if ( !glfwInit() )
+        if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
         // Configure GLFW
@@ -57,17 +69,29 @@ public class GameRender implements Runnable {
 
         // Create the window
         window = glfwCreateWindow((int) board.getWidth(), (int) board.getHeight(), "Hello World!", NULL, NULL);
-        if ( window == NULL )
+        if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+                glfwSetWindowShouldClose(window, true);
+            }
+        });
+        glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
+            if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE) {
+                DoubleBuffer xPosition = BufferUtils.createDoubleBuffer(1);
+                DoubleBuffer yPosition = BufferUtils.createDoubleBuffer(1);
+                glfwGetCursorPos(window, xPosition, yPosition);
+                IntBuffer width = BufferUtils.createIntBuffer(1);
+                IntBuffer height = BufferUtils.createIntBuffer(1);
+                glfwGetWindowSize(window, width, height);
+                eventListener.registerEvent(new AddObjectEvent(xPosition.get(0), height.get(0) - yPosition.get(0)));
+            }
         });
 
         // Get the thread stack and push a new frame
-        try ( MemoryStack stack = stackPush() ) {
+        try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
             IntBuffer pHeight = stack.mallocInt(1); // int*
 
@@ -88,7 +112,7 @@ public class GameRender implements Runnable {
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
         // Enable v-sync
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
 
         // Make the window visible
         glfwShowWindow(window);
@@ -101,27 +125,58 @@ public class GameRender implements Runnable {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+        long lastUpdate = System.nanoTime();
 
 
+        IntBuffer w = BufferUtils.createIntBuffer(1);
+        IntBuffer h = BufferUtils.createIntBuffer(1);
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while ( !glfwWindowShouldClose(window) ) {
-            // Set the clear color
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-            glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        while (!glfwWindowShouldClose(window)) {
+            if (System.nanoTime() - lastUpdate > 1000000 / fps) {
+                // Set the clear color
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+                glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
+                glfwGetWindowSize(window, w, h);
+                int windowWidth = w.get(0);
+                int windowHeight = h.get(0);
+                double boardScale = Math.max(windowWidth / board.getWidth(), windowHeight / board.getHeight());
+                windowWidth *= boardScale;
+                windowHeight *= boardScale;
 
-            glColor4f(0.0f, 1.0f, 0.0f, 0.0f);
-            glMatrixMode(GL_PROJECTION);
-            double size = 0.05;
-            for (GameObject gameObject : board.getGameObjects()) {
-                glRectd(gameObject.getX() - size, gameObject.getY() - size, gameObject.getX() + size, gameObject.getY() + size);
+                glColor4f(0.0f, 1.0f, 0.0f, 0.0f);
+                glMatrixMode(GL_MODELVIEW);
+                for (GameObject gameObject : board.getGameObjects()) {
+                    double size = gameObject.getSize() * 2;
+                    double objectHeight = convertWidth(size, windowHeight, boardScale);
+                    double objectWidth = convertWidth(size, windowWidth, boardScale);
+                    double xPosition = convertWidth(gameObject.getX(), windowWidth, boardScale) * 2 - 1;
+                    double yPosition = convertWidth(gameObject.getY(), windowHeight, boardScale) * 2 - 1;
+                    drawQuad(xPosition, yPosition, objectWidth, objectHeight);
+                }
+                lastUpdate = System.nanoTime();
             }
             // draw quad
             // Poll for window events. The key callback above will only be
             // invoked during this call.
-            glfwSwapBuffers(window); // swap the color buffers
+            glfwSwapBuffers(window);
             glfwPollEvents();
         }
+    }
+
+    private void drawQuad(double x, double y, double width, double height) {
+        glBegin(GL_QUADS);
+
+        glVertex2d(x - width, y - height);
+        glVertex2d(x + width, y - height);
+        glVertex2d(x + width, y + height);
+        glVertex2d(x - width, y + height);
+
+        glEnd();
+    }
+
+    private double convertWidth(double size, double windowSize, double boardScale) {
+        return (size * boardScale) / windowSize;
     }
 }

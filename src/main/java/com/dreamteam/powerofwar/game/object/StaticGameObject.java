@@ -1,4 +1,6 @@
-package com.dreamteam.powerofwar;
+package com.dreamteam.powerofwar.game.object;
+
+import com.dreamteam.powerofwar.phisics.Vector;
 
 public class StaticGameObject extends BaseGameObject {
     public StaticGameObject(double x, double y) {
