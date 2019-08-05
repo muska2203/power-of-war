@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
 public enum GameObjectType {
+
     /**
      * Любой статический объект. Дерево, рудник, база, казарма, хижины и тд...
      */

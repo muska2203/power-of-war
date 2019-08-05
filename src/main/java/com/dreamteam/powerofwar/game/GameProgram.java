@@ -14,19 +14,19 @@ public class GameProgram implements EventListener, Runnable {
     private Thread gameThread = new Thread(this);
     private Long lastUpdate = null;
     private Queue<Event> events = new ConcurrentLinkedDeque<>();
+    private boolean running;
 
     public GameProgram(Board board) {
         this.board = board;
     }
 
-    public void startGame() {
+    public synchronized void startGame() {
+        running = true;
         gameThread.start();
     }
 
-    public void stopGame() {
-        if (gameThread.isAlive()) {
-            gameThread.interrupt();
-        }
+    public synchronized void stopGame() {
+        running = false;
     }
 
     public void addGameObject(GameObject gameObject) {
@@ -46,7 +46,7 @@ public class GameProgram implements EventListener, Runnable {
 
     @Override
     public void run() {
-        while (!Thread.interrupted()) {
+        while (running) {
             doEvents();
             Long now = System.nanoTime();
             if (lastUpdate == null) {
@@ -58,9 +58,8 @@ public class GameProgram implements EventListener, Runnable {
             board.cleanOverboardObjects();
             board.checkCollisions();
             lastUpdate = now;
-            System.out.println(board.getGameObjects().size());
             try {
-                Thread.sleep(100);
+                Thread.sleep(15);
             } catch (InterruptedException e) {
                 this.stopGame();
             }

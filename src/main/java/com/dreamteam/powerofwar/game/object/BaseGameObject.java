@@ -33,14 +33,8 @@ public class BaseGameObject implements GameObject {
      */
     private double actionRadius;
 
-    public BaseGameObject(double x,
-                          double y,
-                          double size,
-                          double visibilityRadius,
-                          double actionRadius,
-                          double speed,
-                          Vector speedVector,
-                          GameObjectType gameObjectType
+    public BaseGameObject(double x, double y, double size, double visibilityRadius, double actionRadius, double speed,
+                          Vector speedVector, GameObjectType gameObjectType
     ) {
         this.id = ++objectsCount;
         this.x = x;

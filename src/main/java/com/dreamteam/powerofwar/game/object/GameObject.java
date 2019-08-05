@@ -5,7 +5,9 @@ import com.dreamteam.powerofwar.game.Board;
 public interface GameObject {
 
     double getX();
+
     double getY();
+
     double getSize();
 
     /**
@@ -13,9 +15,13 @@ public interface GameObject {
      * @return радиус области видимости
      */
     double getVisibilityRadius();
+
     double getActionRadius();
+
     GameObjectType getType();
+
     double getSpeedX();
+
     double getSpeedY();
 
     /**
@@ -24,6 +30,7 @@ public interface GameObject {
      * @param time текущее время
      */
     void doAction(Board board, long time);
+
     void stop();
 
     /**
@@ -37,4 +44,6 @@ public interface GameObject {
     void setRadians(double radians);
 
     boolean isInCollisionWith(GameObject gameObject);
+
+    
 }
