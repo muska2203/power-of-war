@@ -4,23 +4,53 @@ import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
 
+/**
+ * Основной класс-сущность, использующийся в игре.
+ * При создании новых классов-сущностей необходимо наследоваться от этого класса либо от его наслединков.
+ */
 public class BaseGameObject implements GameObject {
 
+    /**
+     * Используется как счетчик объектов для задания идентификатора новым объектам.
+     */
+    private static int objectsCount = 0;
+
+    private int id;
     private double x;
     private double y;
     private double size;
+    private double visibilityRadius;
     private Vector speedVector;
+    private GameObjectType gameObjectType;
     /**
      * Относительная скорость объекта. значение не должно быть отрицательным.
      */
     private double speed;
+    /**
+     * Радиус области действий.
+     * Например, для войнов эта характеристика показывает дальность атаки.
+     * А для Базы определяет область возможной постройки других строений {@link Building}.
+     */
+    private double actionRadius;
 
-    public BaseGameObject(double x, double y, Vector speedVector, double speed) {
+    public BaseGameObject(double x,
+                          double y,
+                          double size,
+                          double visibilityRadius,
+                          double actionRadius,
+                          double speed,
+                          Vector speedVector,
+                          GameObjectType gameObjectType
+    ) {
+        this.id = ++objectsCount;
         this.x = x;
         this.y = y;
+        this.size = size;
+        this.visibilityRadius = visibilityRadius;
+        this.speedVector = speedVector;
+        this.gameObjectType = gameObjectType;
         this.speed = speed;
-        this.speedVector = Vector.byRadians(speed, speedVector.getRadians());
-        this.size = 5;
+        this.actionRadius = actionRadius;
     }
 
     @Override
@@ -39,6 +69,11 @@ public class BaseGameObject implements GameObject {
     }
 
     @Override
+    public GameObjectType getType() {
+        return this.gameObjectType;
+    }
+
+    @Override
     public double getSpeedX() {
         return speedVector.getX();
     }
@@ -49,7 +84,7 @@ public class BaseGameObject implements GameObject {
     }
 
     @Override
-    public void move(Board board, long time) {
+    public void doAction(Board board, long time) {
         x += getSpeedX() * Units.SPEED * time;
         y += getSpeedY() * Units.SPEED * time;
     }
@@ -71,11 +106,21 @@ public class BaseGameObject implements GameObject {
 
     @Override
     public boolean isInCollisionWith(GameObject gameObject) {
-        boolean byX = Math.abs(gameObject.getX() - this.getX()) < (this.getSize() + gameObject.getSize());
-        boolean byY = Math.abs(gameObject.getY() - this.getY()) < (this.getSize() + gameObject.getSize());
-
-        return byX && byY;
+        double criticalDist2 = this.size + gameObject.getSize();
+        criticalDist2 *= criticalDist2;
+        double distByX = this.x - gameObject.getX();
+        double distByY = this.y - gameObject.getY();
+        double actualDist2 = distByX * distByX + distByY * distByY;
+        return actualDist2 <= criticalDist2;
     }
 
+    @Override
+    public double getActionRadius() {
+        return this.actionRadius;
+    }
 
+    @Override
+    public double getVisibilityRadius() {
+        return visibilityRadius;
+    }
 }

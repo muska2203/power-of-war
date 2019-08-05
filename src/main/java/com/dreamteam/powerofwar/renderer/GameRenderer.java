@@ -14,6 +14,7 @@ import org.lwjgl.system.MemoryStack;
 
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -25,6 +26,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class GameRenderer implements Runnable {
 
+    private static final double DEG2RAD = Math.PI / 180;
     private Board board;
     private EventListener eventListener;
     private long window;
@@ -148,12 +150,10 @@ public class GameRenderer implements Runnable {
                 glColor4f(0.0f, 1.0f, 0.0f, 0.0f);
                 glMatrixMode(GL_MODELVIEW);
                 for (GameObject gameObject : board.getGameObjects()) {
-                    double size = gameObject.getSize() * 2;
-                    double objectHeight = convertWidth(size, windowHeight, boardScale);
-                    double objectWidth = convertWidth(size, windowWidth, boardScale);
+                    double size = convertWidth(gameObject.getSize(), windowWidth, boardScale) * 5;
                     double xPosition = convertWidth(gameObject.getX(), windowWidth, boardScale) * 2 - 1;
                     double yPosition = convertWidth(gameObject.getY(), windowHeight, boardScale) * 2 - 1;
-                    drawQuad(xPosition, yPosition, objectWidth, objectHeight);
+                    drawCircle(xPosition, yPosition, size);
                 }
                 lastUpdate = System.nanoTime();
             }
@@ -163,6 +163,17 @@ public class GameRenderer implements Runnable {
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
+    }
+
+    private void drawCircle(double x, double y, double radius) {
+        glBegin(GL_POLYGON);
+
+        for (int i = 0; i < 360; i++) {
+            double degInRad = i * DEG2RAD;
+            glVertex2d(Math.sin(degInRad) * radius + x, Math.cos(degInRad) * radius + y);
+        }
+
+        glEnd();
     }
 
     private void drawQuad(double x, double y, double width, double height) {

@@ -54,7 +54,7 @@ public class GameProgram implements EventListener, Runnable {
             }
             long loopTime = now - lastUpdate;
 
-            board.getGameObjects().forEach((gameObject -> gameObject.move(board, loopTime)));
+            board.getGameObjects().forEach((gameObject -> gameObject.doAction(board, loopTime)));
             board.cleanOverboardObjects();
             board.checkCollisions();
             lastUpdate = now;
