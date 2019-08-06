@@ -36,13 +36,11 @@ public class Board {
         return height;
     }
 
-    public void cleanOverboardObjects() {
-        gameObjects.removeIf(object -> object.getX() < 0 || object.getX() > width || object.getY() < 0 || object.getY() > height);
+    public void cleanDeadObjects() {
+        gameObjects.removeIf(GameObject::isDead);
     }
 
-    public void checkCollisions() {
-        for (GameObject gameObject : gameObjects) {
-            gameObjects.removeIf(object -> object != gameObject && object.isInCollisionWith(gameObject));
-        }
+    public void cleanOverboardObjects() {
+        gameObjects.removeIf(object -> object.getX() < 0 || object.getX() > width || object.getY() < 0 || object.getY() > height);
     }
 }

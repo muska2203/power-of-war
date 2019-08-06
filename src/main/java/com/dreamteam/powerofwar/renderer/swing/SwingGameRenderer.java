@@ -15,14 +15,12 @@ public class SwingGameRenderer extends JFrame {
 
     private Board board;
     private EventListener eventListener;
-    private long fps;
     private Thread gameThread = new Thread(this::gameLoop);
     private boolean running;
 
     public SwingGameRenderer(Board board, EventListener eventListener) {
         this.board = board;
         this.eventListener = eventListener;
-        fps = 60;
         setTitle("Power of War");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add(new GameComponent());

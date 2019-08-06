@@ -22,6 +22,7 @@ public class BaseGameObject implements GameObject {
     private double visibilityRadius;
     private Vector speedVector;
     private GameObjectType gameObjectType;
+    private int health = 1;
     /**
      * Относительная скорость объекта. значение не должно быть отрицательным.
      */
@@ -41,7 +42,7 @@ public class BaseGameObject implements GameObject {
         this.y = y;
         this.size = size;
         this.visibilityRadius = visibilityRadius;
-        this.speedVector = speedVector;
+        this.speedVector = Vector.byRadians(speed, speedVector.getRadians());
         this.gameObjectType = gameObjectType;
         this.speed = speed;
         this.actionRadius = actionRadius;
@@ -63,50 +64,36 @@ public class BaseGameObject implements GameObject {
     }
 
     @Override
+    public int getHealth() {
+        return 1;
+    }
+
+    @Override
     public GameObjectType getType() {
         return this.gameObjectType;
     }
 
     @Override
-    public double getSpeedX() {
-        return speedVector.getX();
+    public void update(Board board, long time) {
+        x += speedVector.getX() * Units.SPEED * time;
+        y += speedVector.getY() * Units.SPEED * time;
+        for (GameObject gameObject : board.getGameObjects()) {
+            if (gameObject != this && GameObjectUtils.checkCollision(this, gameObject)) {
+                gameObject.doDamage(1000);
+            }
+        }
     }
 
     @Override
-    public double getSpeedY() {
-        return speedVector.getY();
+    public void doDamage(int damage) {
+        health -= damage;
     }
 
     @Override
-    public void doAction(Board board, long time) {
-        x += getSpeedX() * Units.SPEED * time;
-        y += getSpeedY() * Units.SPEED * time;
+    public boolean isDead() {
+        return health <= 0;
     }
 
-    @Override
-    public void stop() {
-        speedVector = new Vector();
-    }
-
-    @Override
-    public void setDirection(double direction) {
-        speedVector = Vector.byDirection(speed, direction);
-    }
-
-    @Override
-    public void setRadians(double radians) {
-        speedVector = Vector.byRadians(speed, radians);
-    }
-
-    @Override
-    public boolean isInCollisionWith(GameObject gameObject) {
-        double criticalDist2 = this.size + gameObject.getSize();
-        criticalDist2 *= criticalDist2;
-        double distByX = this.x - gameObject.getX();
-        double distByY = this.y - gameObject.getY();
-        double actualDist2 = distByX * distByX + distByY * distByY;
-        return actualDist2 <= criticalDist2;
-    }
 
     @Override
     public double getActionRadius() {
