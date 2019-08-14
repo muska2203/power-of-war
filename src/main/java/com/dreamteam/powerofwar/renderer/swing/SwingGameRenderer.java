@@ -3,6 +3,7 @@ package com.dreamteam.powerofwar.renderer.swing;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.event.AddObjectEvent;
 import com.dreamteam.powerofwar.game.event.EventListener;
+import com.dreamteam.powerofwar.game.object.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,13 +64,17 @@ public class SwingGameRenderer extends JFrame {
 
     private class GameComponent extends JComponent {
 
+        private double scale = 1;
+        private int xBoardStart = 0;
+        private int yBoardStart = 0;
+
         GameComponent() {
             super();
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     if (e.getButton() == 1) {
-                        eventListener.registerEvent(new AddObjectEvent(e.getX(), e.getY()));
+                        eventListener.registerEvent(new AddObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY())));
                     }
                 }
             });
@@ -89,15 +94,55 @@ public class SwingGameRenderer extends JFrame {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             Dimension dim = getSize();
-            g.setColor(Color.red);
-            g.fillRect(0, 0, dim.width, dim.height);
+            fillScaleData(dim);
             g.setColor(Color.black);
-            board.getGameObjects().forEach(gameObject -> {
-                int size = (int) (gameObject.getSize() * 2);
-                int xPosition = (int) (gameObject.getX() - gameObject.getSize());
-                int yPosition = (int) (gameObject.getY() - gameObject.getSize());
+            g.fillRect(0, 0, dim.width, dim.height);
+            g.setColor(Color.white);
+            g.drawRect(toUICoordinateX(0), toUICoordinateY(0), toUICoordinate(board.getWidth()), toUICoordinate(board.getHeight()));
+            for (GameObject gameObject : board.getGameObjects()) {
+                int size = toUICoordinate(gameObject.getSize() * 2);
+                int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getSize());
+                int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getSize());
                 g.fillOval(xPosition, yPosition, size, size);
-            });
+            }
+        }
+
+        private int toUICoordinateX(double coordinate) {
+            return toUICoordinate(coordinate) + xBoardStart;
+        }
+
+        private int toUICoordinateY(double coordinate) {
+            return toUICoordinate(coordinate) + yBoardStart;
+        }
+
+        private int toUICoordinate(double coordinate) {
+            return (int) (coordinate * scale);
+        }
+
+        private int fromUICoordinateX(double coordinate) {
+            return fromUICoordinate(coordinate - xBoardStart);
+        }
+
+        private int fromUICoordinateY(double coordinate) {
+            return fromUICoordinate(coordinate - yBoardStart);
+        }
+
+        private int fromUICoordinate(double coordinate) {
+            return (int) (coordinate / scale);
+        }
+
+        private void fillScaleData(Dimension dim) {
+            double widthScale = dim.width / board.getWidth();
+            double heightScale = dim.height / board.getHeight();
+            if (widthScale > heightScale) {
+                scale = heightScale;
+                xBoardStart = (int) ((dim.width - board.getWidth() * scale) / 2);
+                yBoardStart = 0;
+            } else {
+                scale = widthScale;
+                xBoardStart = 0;
+                yBoardStart = (int) ((dim.height - board.getHeight() * scale) / 2);
+            }
         }
     }
 }
