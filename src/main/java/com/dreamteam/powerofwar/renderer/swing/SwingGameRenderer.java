@@ -105,6 +105,13 @@ public class SwingGameRenderer extends JFrame {
                 int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getSize());
                 g.fillOval(xPosition, yPosition, size, size);
             }
+            g.setColor(Color.red);
+            for (GameObject gameObject : board.getGameObjects()) {
+                int size = toUICoordinate(gameObject.getVisibilityRadius() * 2);
+                int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getVisibilityRadius());
+                int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getVisibilityRadius());
+                g.drawOval(xPosition, yPosition, size, size);
+            }
         }
 
         private int toUICoordinateX(double coordinate) {

@@ -19,4 +19,12 @@ public class GameObjectUtils {
         double actualDist2 = distByX * distByX + distByY * distByY;
         return actualDist2 <= criticalDist2;
     }
+
+    public static boolean checkVisibility(GameObject currentObject, GameObject checkedObject) {
+        double criticalDist2 = Math.pow(currentObject.getVisibilityRadius() + checkedObject.getSize(), 2);
+        double distByX = checkedObject.getX() - currentObject.getX();
+        double distByY = checkedObject.getY() - currentObject.getY();
+        double actualDist2 = distByX * distByX + distByY * distByY;
+        return actualDist2 <= criticalDist2;
+    }
 }

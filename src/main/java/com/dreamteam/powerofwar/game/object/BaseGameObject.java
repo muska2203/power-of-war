@@ -21,13 +21,13 @@ public class BaseGameObject implements GameObject {
     private double y;
     private double size;
     private double visibilityRadius;
-    private Vector speedVector;
+    Vector speedVector;
     private GameObjectType gameObjectType;
     private int health = 1;
     /**
      * Относительная скорость объекта. значение не должно быть отрицательным.
      */
-    private double speed;
+    double speed;
     /**
      * Радиус области действий.
      * Например, для войнов эта характеристика показывает дальность атаки.

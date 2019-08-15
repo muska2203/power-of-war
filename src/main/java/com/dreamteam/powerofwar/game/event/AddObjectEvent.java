@@ -1,7 +1,7 @@
 package com.dreamteam.powerofwar.game.event;
 
 import com.dreamteam.powerofwar.game.GameProgram;
-import com.dreamteam.powerofwar.game.object.RandomObject;
+import com.dreamteam.powerofwar.game.object.SuicideObject;
 
 public class AddObjectEvent extends BaseEvent {
 
@@ -11,6 +11,6 @@ public class AddObjectEvent extends BaseEvent {
 
     @Override
     public void execute(GameProgram gameProgram) {
-        gameProgram.addGameObject(new RandomObject(x, y));
+        gameProgram.addGameObject(new SuicideObject(x, y));
     }
 }
