@@ -1,8 +1,8 @@
 package com.dreamteam.powerofwar.game;
 
+import com.dreamteam.powerofwar.game.action.Action;
 import com.dreamteam.powerofwar.game.object.GameObject;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -14,6 +14,7 @@ public class Board {
     private double width;
     private double height;
     private List<GameObject> gameObjects = new CopyOnWriteArrayList<>();
+    private List<Action> actions = new CopyOnWriteArrayList<>();
 
     public Board(double width, double height) {
         this.width = width;
@@ -21,7 +22,7 @@ public class Board {
     }
 
     public List<GameObject> getGameObjects() {
-        return Collections.unmodifiableList(gameObjects);
+        return gameObjects;
     }
 
     public void addGameObject(GameObject gameObject) {
@@ -42,5 +43,18 @@ public class Board {
 
     public void cleanOverboardObjects() {
         gameObjects.removeIf(object -> object.getX() < 0 || object.getX() > width || object.getY() < 0 || object.getY() > height);
+    }
+
+    public void doActions(long loopTime) {
+        for (Action action : actions) {
+            if (action.isReady(loopTime)) {
+                action.execute();
+            }
+        }
+        actions.removeIf(Action::isCompleted);
+    }
+
+    public void addAction(Action action) {
+        this.actions.add(action);
     }
 }

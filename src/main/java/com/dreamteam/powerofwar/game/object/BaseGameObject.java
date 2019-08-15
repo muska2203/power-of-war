@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.action.DamageAction;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
 
@@ -74,14 +75,18 @@ public class BaseGameObject implements GameObject {
     }
 
     @Override
-    public void update(Board board, long time) {
-        x += speedVector.getX() * Units.SPEED * time;
-        y += speedVector.getY() * Units.SPEED * time;
+    public void update(Board board) {
         for (GameObject gameObject : board.getGameObjects()) {
             if (gameObject != this && GameObjectUtils.checkCollision(this, gameObject)) {
-                gameObject.doDamage(1000);
+                board.addAction(new DamageAction(100, gameObject, 0));
             }
         }
+    }
+
+    @Override
+    public void move(long loopTime) {
+        x += speedVector.getX() * Units.SPEED * loopTime;
+        y += speedVector.getY() * Units.SPEED * loopTime;
     }
 
     @Override

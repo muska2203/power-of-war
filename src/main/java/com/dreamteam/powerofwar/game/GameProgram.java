@@ -1,6 +1,5 @@
 package com.dreamteam.powerofwar.game;
 
-
 import com.dreamteam.powerofwar.game.event.Event;
 import com.dreamteam.powerofwar.game.event.EventListener;
 import com.dreamteam.powerofwar.game.object.GameObject;
@@ -33,11 +32,6 @@ public class GameProgram implements EventListener, Runnable {
         board.addGameObject(gameObject);
     }
 
-    private void doEvents() {
-        while (!events.isEmpty()) {
-            events.poll().execute(this);
-        }
-    }
 
     @Override
     public void registerEvent(Event event) {
@@ -48,21 +42,35 @@ public class GameProgram implements EventListener, Runnable {
     public void run() {
         while (running) {
             doEvents();
-            Long now = System.nanoTime();
-            if (lastUpdate == null) {
-                lastUpdate = now;
-            }
-            long loopTime = now - lastUpdate;
+            long loopTime = calculateLoopTime();
+            board.doActions(loopTime);
 
-            board.getGameObjects().forEach((gameObject -> gameObject.update(board, loopTime)));
+            board.getGameObjects().forEach((gameObject -> gameObject.update(board)));
+            board.getGameObjects().forEach((gameObject -> gameObject.move(loopTime)));
             board.cleanOverboardObjects();
             board.cleanDeadObjects();
-            lastUpdate = now;
             try {
                 Thread.sleep(15);
             } catch (InterruptedException e) {
                 this.stopGame();
             }
         }
+    }
+
+    private void doEvents() {
+        while (!events.isEmpty()) {
+            events.poll().execute(this);
+        }
+    }
+
+
+    private long calculateLoopTime() {
+        Long now = System.nanoTime();
+        if (lastUpdate == null) {
+            lastUpdate = now;
+        }
+        long result = now - lastUpdate;
+        lastUpdate = now;
+        return result;
     }
 }
