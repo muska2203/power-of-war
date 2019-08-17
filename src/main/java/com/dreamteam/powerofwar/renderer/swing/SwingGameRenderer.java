@@ -1,10 +1,10 @@
 package com.dreamteam.powerofwar.renderer.swing;
 
 import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.event.AddCowardMinionEvent;
-import com.dreamteam.powerofwar.game.event.AddSuicideMinionEvent;
+import com.dreamteam.powerofwar.game.event.AddGameObjectEvent;
 import com.dreamteam.powerofwar.game.event.EventListener;
 import com.dreamteam.powerofwar.game.object.GameObject;
+import com.dreamteam.powerofwar.game.object.GameObjectType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,10 +75,10 @@ public class SwingGameRenderer extends JFrame {
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     if (e.getButton() == 1) {
-                        eventListener.registerEvent(new AddSuicideMinionEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY())));
+                        eventListener.registerEvent(new AddGameObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY()), GameObjectType.SUICIDE));
                     }
                     if (e.getButton() == 3) {
-                        eventListener.registerEvent(new AddCowardMinionEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY())));
+                        eventListener.registerEvent(new AddGameObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY()), GameObjectType.COWARD));
                     }
                 }
             });

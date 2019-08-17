@@ -1,20 +1,25 @@
 package com.dreamteam.powerofwar.game.object;
 
-public enum GameObjectType {
+public enum GameObjectType implements GameObjectCreator {
 
     /**
-     * Любой статический объект. Дерево, рудник, база, казарма, хижины и тд...
+     * Любитель обнимашек.
      */
-    STATIC,
+    SUICIDE(SuicideObject::new),
 
     /**
-     * Любой юнит, который может реагировать с внешним миром.
-     * Например, войны, рабочие, нейтральные персонажи
+     * Бегун.
      */
-    MINION,
+    COWARD(CowardMinion::new);
 
-    /**
-     * Ресурсы. Нужны для постройки юнитов
-     */
-    RESOURCE
+    private GameObjectCreator objectCreator;
+
+    GameObjectType(GameObjectCreator gameObjectCreator) {
+        this.objectCreator = gameObjectCreator;
+    }
+
+    @Override
+    public GameObject create(double x, double y) {
+        return objectCreator.create(x, y);
+    }
 }

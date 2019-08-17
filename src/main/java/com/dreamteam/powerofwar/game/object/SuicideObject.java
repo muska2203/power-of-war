@@ -17,7 +17,7 @@ public class SuicideObject extends BaseGameObject {
                 Units.MINION_DEFAULT_ACTION_RADIUS,
                 new Random().nextDouble() * 4 + 1,
                 Vector.byDirection(1, new Random().nextDouble() * 360),
-                GameObjectType.MINION);
+                GameObjectType.SUICIDE);
     }
 
     @Override

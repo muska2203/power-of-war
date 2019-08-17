@@ -9,14 +9,15 @@ import java.util.Random;
 /**
  * Трусливый миньон. От всех убегает. Старается даже ни с кем не видится. Атаки не наносит
  */
-public class CowardMinion extends Minion {
+public class CowardMinion extends BaseGameObject {
 
     public CowardMinion(double x, double y) {
-        super(x, y, Vector.byDirection(1, new Random().nextDouble() * 360),
+        super(x, y, Units.MINION_SIZE,
+                Units.MINION_DEFAULT_VISIBILITY_RADIUS,
+                Units.MINION_DEFAULT_ACTION_RADIUS,
                 new Random().nextDouble() * 4 + 1,
-                MinionType.WARRIOR,
-                3,
-                Units.MINION_DEFAULT_ACTION_RADIUS);
+                Vector.byDirection(1, new Random().nextDouble() * 360),
+                GameObjectType.COWARD);
     }
 
     @Override
