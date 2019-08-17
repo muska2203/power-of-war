@@ -50,6 +50,11 @@ public class BaseGameObject implements GameObject {
     }
 
     @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
     public double getX() {
         return x;
     }

@@ -12,6 +12,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SwingGameRenderer extends JFrame {
 
@@ -103,18 +108,53 @@ public class SwingGameRenderer extends JFrame {
             g.fillRect(0, 0, dim.width, dim.height);
             g.setColor(Color.white);
             g.drawRect(toUICoordinateX(0), toUICoordinateY(0), toUICoordinate(board.getWidth()), toUICoordinate(board.getHeight()));
-            for (GameObject gameObject : board.getGameObjects()) {
-                int size = toUICoordinate(gameObject.getSize() * 2);
-                int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getSize());
-                int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getSize());
-                g.fillOval(xPosition, yPosition, size, size);
+
+            Map<GameObjectType, List<GameObject>> gameObjectTypeListMap = board.getGameObjects()
+                    .stream()
+                    .collect(Collectors.groupingBy(GameObject::getType));
+
+            List<GameObject> gameObjectsSuicide =
+                    Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.SUICIDE)).orElse(Collections.emptyList());
+            List<GameObject> gameObjectsCoward =
+                    Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.COWARD)).orElse(Collections.emptyList());
+
+            g.drawString("Suicide: " + gameObjectsSuicide.size(), 50, 10);
+            g.drawString("Coward : " + gameObjectsCoward.size(), 50, 30);
+            drawObjects(g, Color.red, Color.red, null, gameObjectsSuicide);
+            drawObjects(g, Color.GREEN, Color.GREEN, Color.GREEN, gameObjectsCoward);
+        }
+
+        private void drawObjects(Graphics g, Color bodyColor, Color visionColor, Color actionColor, List<GameObject> gameObjects) {
+            if (gameObjects == null || gameObjects.size() == 0) {
+                return;
             }
-            g.setColor(Color.red);
-            for (GameObject gameObject : board.getGameObjects()) {
-                int size = toUICoordinate(gameObject.getVisibilityRadius() * 2);
-                int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getVisibilityRadius());
-                int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getVisibilityRadius());
-                g.drawOval(xPosition, yPosition, size, size);
+            if (bodyColor != null) {
+                g.setColor(bodyColor);
+                for (GameObject gameObject : gameObjects) {
+                    int size = toUICoordinate(gameObject.getSize() * 2);
+                    int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getSize());
+                    int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getSize());
+                    g.drawString("" + gameObject.getId(), xPosition - 2, yPosition - 2);
+                    g.fillOval(xPosition, yPosition, size, size);
+                }
+            }
+            if (visionColor != null) {
+                g.setColor(visionColor);
+                for (GameObject gameObject : gameObjects) {
+                    int size = toUICoordinate(gameObject.getVisibilityRadius() * 2);
+                    int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getVisibilityRadius());
+                    int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getVisibilityRadius());
+                    g.drawOval(xPosition, yPosition, size, size);
+                }
+            }
+            if (actionColor != null) {
+                g.setColor(actionColor);
+                for (GameObject gameObject : gameObjects) {
+                    int size = toUICoordinate(gameObject.getActionRadius() * 2);
+                    int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getActionRadius());
+                    int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getActionRadius());
+                    g.drawOval(xPosition, yPosition, size, size);
+                }
             }
         }
 

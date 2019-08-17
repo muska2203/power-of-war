@@ -5,6 +5,12 @@ import com.dreamteam.powerofwar.game.Board;
 public interface GameObject {
 
     /**
+     * Возвращает уникальный идентификатор объекта
+     * @return
+     */
+    int getId();
+
+    /**
      * Возвращает позицию объекта по оси "OX" относительно игровой доски.
      */
     double getX();
