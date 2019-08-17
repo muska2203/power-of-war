@@ -52,6 +52,10 @@ public class Vector {
         return vector;
     }
 
+    public Vector negate() {
+        return byRadians(this.getLength(), this.getRadians() + Math.PI);
+    }
+
     public double getLength() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
