@@ -3,9 +3,9 @@ package com.dreamteam.powerofwar.game.event;
 import com.dreamteam.powerofwar.game.GameProgram;
 import com.dreamteam.powerofwar.game.object.CowardMinion;
 
-public class AddObjectEvent extends BaseEvent {
+public class AddCowardMinionEvent extends BaseEvent {
 
-    public AddObjectEvent(double x, double y) {
+    public AddCowardMinionEvent(double x, double y) {
         super(x, y);
     }
 
