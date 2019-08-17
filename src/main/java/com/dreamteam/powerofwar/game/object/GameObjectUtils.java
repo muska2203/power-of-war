@@ -3,7 +3,7 @@ package com.dreamteam.powerofwar.game.object;
 /**
  * Утилитарный класс, который предоставляет часто используемые расчеты, связанные с игровыми объектами.
  */
-public class GameObjectUtils {
+class GameObjectUtils {
 
     /**
      * Проверяет 2 объекта на столкновение.

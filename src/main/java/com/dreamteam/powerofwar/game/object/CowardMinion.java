@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public class CowardMinion extends BaseGameObject {
 
-    public CowardMinion(double x, double y) {
+    CowardMinion(double x, double y) {
         super(x, y, Units.MINION_SIZE,
                 Units.MINION_DEFAULT_VISIBILITY_RADIUS,
                 Units.MINION_DEFAULT_ACTION_RADIUS,

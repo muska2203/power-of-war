@@ -79,11 +79,10 @@ public class SwingGameRenderer extends JFrame {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    if (e.getButton() == 1) {
-                        eventListener.registerEvent(new AddGameObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY()), GameObjectType.SUICIDE));
-                    }
-                    if (e.getButton() == 3) {
-                        eventListener.registerEvent(new AddGameObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY()), GameObjectType.COWARD));
+                    switch (e.getButton()) {
+                        case 1: eventListener.registerEvent(new AddGameObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY()), GameObjectType.SUICIDE)); break;
+                        case 2: eventListener.registerEvent(new AddGameObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY()), GameObjectType.SUICIDE_FACTORY)); break;
+                        case 3: eventListener.registerEvent(new AddGameObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY()), GameObjectType.COWARD)); break;
                     }
                 }
             });
@@ -117,10 +116,13 @@ public class SwingGameRenderer extends JFrame {
                     Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.SUICIDE)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsCoward =
                     Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.COWARD)).orElse(Collections.emptyList());
+            List<GameObject> gameObjectsSuicideFactories =
+                    Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.SUICIDE_FACTORY)).orElse(Collections.emptyList());
 
             g.drawString("Suicide: " + gameObjectsSuicide.size(), 50, 10);
             g.drawString("Coward : " + gameObjectsCoward.size(), 50, 30);
             drawObjects(g, Color.red, Color.red, null, gameObjectsSuicide);
+            drawObjects(g, Color.red, null, null, gameObjectsSuicideFactories);
             drawObjects(g, Color.GREEN, Color.GREEN, Color.GREEN, gameObjectsCoward);
         }
 

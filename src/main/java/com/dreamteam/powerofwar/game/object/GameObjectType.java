@@ -10,7 +10,12 @@ public enum GameObjectType implements GameObjectCreator {
     /**
      * Бегун.
      */
-    COWARD(CowardMinion::new);
+    COWARD(CowardMinion::new),
+
+    /**
+     * Фабрика любителей обнимашек.
+     */
+    SUICIDE_FACTORY(SuicideFactory::new);
 
     private GameObjectCreator objectCreator;
 

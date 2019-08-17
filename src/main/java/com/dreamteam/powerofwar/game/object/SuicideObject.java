@@ -11,7 +11,7 @@ public class SuicideObject extends BaseGameObject {
 
     private GameObject target;
 
-    public SuicideObject(double x, double y) {
+    SuicideObject(double x, double y) {
         super(x, y, Units.MINION_SIZE,
                 Units.MINION_DEFAULT_VISIBILITY_RADIUS,
                 Units.MINION_DEFAULT_ACTION_RADIUS,
@@ -23,7 +23,7 @@ public class SuicideObject extends BaseGameObject {
     @Override
     public void update(Board board) {
         for (GameObject gameObject : board.getGameObjects()) {
-            if (gameObject != this) {
+            if (gameObject != this && gameObject.getType().equals(GameObjectType.COWARD)) {
                 if (target != null && target.isDead()) {
                     target = null;
                 }
@@ -37,6 +37,7 @@ public class SuicideObject extends BaseGameObject {
 
                 if (GameObjectUtils.checkCollision(this, gameObject)) {
                     board.addAction(new DamageAction(100, gameObject, 0));
+                    board.addAction(new DamageAction(100, this, 0));
                 }
             }
         }

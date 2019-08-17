@@ -9,7 +9,7 @@ import com.dreamteam.powerofwar.phisics.Vector;
  * Основной класс-сущность, использующийся в игре.
  * При создании новых классов-сущностей необходимо наследоваться от этого класса либо от его наслединков.
  */
-public class BaseGameObject implements GameObject {
+public abstract class BaseGameObject implements GameObject {
 
     /**
      * Используется как счетчик объектов для задания идентификатора новым объектам.
@@ -35,7 +35,7 @@ public class BaseGameObject implements GameObject {
      */
     private double actionRadius;
 
-    public BaseGameObject(double x, double y, double size, double visibilityRadius, double actionRadius, double speed,
+    BaseGameObject(double x, double y, double size, double visibilityRadius, double actionRadius, double speed,
                           Vector speedVector, GameObjectType gameObjectType
     ) {
         this.id = ++objectsCount;
@@ -46,6 +46,16 @@ public class BaseGameObject implements GameObject {
         this.speedVector = Vector.byRadians(speed, speedVector.getRadians());
         this.gameObjectType = gameObjectType;
         this.speed = speed;
+        this.actionRadius = actionRadius;
+    }
+
+    BaseGameObject(double x, double y, double size, double visibilityRadius, double actionRadius, GameObjectType gameObjectType) {
+        this.id = ++objectsCount;
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.visibilityRadius = visibilityRadius;
+        this.gameObjectType = gameObjectType;
         this.actionRadius = actionRadius;
     }
 
