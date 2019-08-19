@@ -2,6 +2,7 @@ package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.action.DamageAction;
+import com.dreamteam.powerofwar.game.user.User;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
 
@@ -24,6 +25,7 @@ public abstract class BaseGameObject implements GameObject {
     Vector speedVector;
     private GameObjectType gameObjectType;
     private int health = 1;
+    private User user;
     /**
      * Относительная скорость объекта. значение не должно быть отрицательным.
      */
@@ -36,7 +38,7 @@ public abstract class BaseGameObject implements GameObject {
     private double actionRadius;
 
     BaseGameObject(double x, double y, double size, double visibilityRadius, double actionRadius, double speed,
-                          Vector speedVector, GameObjectType gameObjectType
+                          Vector speedVector, GameObjectType gameObjectType, User user
     ) {
         this.id = ++objectsCount;
         this.x = x;
@@ -47,9 +49,11 @@ public abstract class BaseGameObject implements GameObject {
         this.gameObjectType = gameObjectType;
         this.speed = speed;
         this.actionRadius = actionRadius;
+        this.user = user;
     }
 
-    BaseGameObject(double x, double y, double size, double visibilityRadius, double actionRadius, GameObjectType gameObjectType) {
+    BaseGameObject(double x, double y, double size, double visibilityRadius, double actionRadius,
+                   GameObjectType gameObjectType, User user) {
         this.id = ++objectsCount;
         this.x = x;
         this.y = y;
@@ -57,6 +61,7 @@ public abstract class BaseGameObject implements GameObject {
         this.visibilityRadius = visibilityRadius;
         this.gameObjectType = gameObjectType;
         this.actionRadius = actionRadius;
+        this.user = user;
     }
 
     @Override
@@ -123,5 +128,10 @@ public abstract class BaseGameObject implements GameObject {
     @Override
     public double getVisibilityRadius() {
         return visibilityRadius;
+    }
+
+    @Override
+    public User getOwner() {
+        return user;
     }
 }

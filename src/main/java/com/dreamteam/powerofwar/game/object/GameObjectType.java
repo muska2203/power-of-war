@@ -1,5 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
+import com.dreamteam.powerofwar.game.user.User;
+
 public enum GameObjectType implements GameObjectCreator {
 
     /**
@@ -24,7 +26,7 @@ public enum GameObjectType implements GameObjectCreator {
     }
 
     @Override
-    public GameObject create(double x, double y) {
-        return objectCreator.create(x, y);
+    public GameObject create(double x, double y, User user) {
+        return objectCreator.create(x, y, user);
     }
 }

@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.user.User;
 
 public interface GameObject {
 
@@ -70,4 +71,11 @@ public interface GameObject {
      * <p>Используется в основном для сборщика мертвых объектов и их удаления с игровой доски.
      */
     boolean isDead();
+
+    /**
+     * Возвращает владельца текущего объекта.
+     *
+     * @return пользователь-владелец объекта.
+     */
+    User getOwner();
 }

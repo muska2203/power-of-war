@@ -5,6 +5,7 @@ import com.dreamteam.powerofwar.game.event.AddGameObjectEvent;
 import com.dreamteam.powerofwar.game.event.EventListener;
 import com.dreamteam.powerofwar.game.object.GameObject;
 import com.dreamteam.powerofwar.game.object.GameObjectType;
+import com.dreamteam.powerofwar.game.user.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +27,8 @@ public class SwingGameRenderer extends JFrame {
     private Thread gameThread = new Thread(this::gameLoop);
     private boolean running;
     private GameObjectType selectedGameObjectType = null;
+    User firstUser = new User();
+    User secondUser = new User();
 
     public SwingGameRenderer(Board board, EventListener eventListener) {
         this.board = board;
@@ -118,13 +121,11 @@ public class SwingGameRenderer extends JFrame {
                     if (selectedGameObjectType == null) {
                         return;
                     }
-                    if (e.getButton() == 1) {
-                        eventListener.registerEvent(
-                                new AddGameObjectEvent(
-                                        fromUICoordinateX(e.getX()),
-                                        fromUICoordinateY(e.getY()),
-                                        selectedGameObjectType)
-                        );
+                    int x = fromUICoordinateX(e.getX());
+                    int y = fromUICoordinateY(e.getY());
+
+                    switch (e.getButton()) {
+                        case 1: eventListener.registerEvent(new AddGameObjectEvent(x, y, selectedGameObjectType, firstUser)); break;
                     }
                 }
             });
