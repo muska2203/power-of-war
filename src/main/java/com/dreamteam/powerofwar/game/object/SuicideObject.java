@@ -6,6 +6,7 @@ import com.dreamteam.powerofwar.game.user.User;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
 
+import java.util.Optional;
 import java.util.Random;
 
 public class SuicideObject extends BaseGameObject {
@@ -26,21 +27,26 @@ public class SuicideObject extends BaseGameObject {
         if (target != null && (target.isDead() || !GameObjectUtils.checkVisibility(this, target))) {
             target = null;
         }
+        GameObject nearest = null;
         for (GameObject gameObject : board.getGameObjects()) {
             if (gameObject != this && (gameObject.getType().equals(GameObjectType.COWARD) || gameObject.getOwner() != this.getOwner())) {
-                if (GameObjectUtils.checkVisibility(this, gameObject) && target == null) {
-                    target = gameObject;
+                if (GameObjectUtils.checkVisibility(this, gameObject)) {
+                    if (nearest == null) {
+                        nearest = gameObject;
+                    } else if (GameObjectUtils.getDistance(nearest, this) > GameObjectUtils.getDistance(gameObject, this)) {
+                        nearest = gameObject;
+                    }
                 }
-                if (target != null) {
-                    Vector vector = new Vector(target.getX() - this.getX(), target.getY() - this.getY());
-                    this.speedVector = Vector.byRadians(this.speed, vector.getRadians());
-                }
-
                 if (GameObjectUtils.checkCollision(this, gameObject)) {
                     board.addAction(new DamageAction(100, gameObject, 0));
                     board.addAction(new DamageAction(100, this, 0));
                 }
             }
+        }
+        this.target = nearest;
+        if (target != null) {
+            Vector vector = new Vector(target.getX() - this.getX(), target.getY() - this.getY());
+            this.speedVector = Vector.byRadians(this.speed, vector.getRadians());
         }
     }
 }

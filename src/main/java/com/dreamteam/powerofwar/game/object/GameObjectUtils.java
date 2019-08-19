@@ -13,11 +13,7 @@ class GameObjectUtils {
      * @return true - если объекты пересекаются, false - в противном случае.
      */
     public static boolean checkCollision(GameObject firstObject, GameObject secondObject) {
-        double criticalDist2 = Math.pow(secondObject.getSize() + firstObject.getSize(), 2);
-        double distByX = secondObject.getX() - firstObject.getX();
-        double distByY = secondObject.getY() - firstObject.getY();
-        double actualDist2 = distByX * distByX + distByY * distByY;
-        return actualDist2 <= criticalDist2;
+        return getDistance(firstObject, secondObject) <= secondObject.getSize() + firstObject.getSize();
     }
 
     public static boolean checkVisibility(GameObject currentObject, GameObject checkedObject) {
@@ -26,5 +22,12 @@ class GameObjectUtils {
         double distByY = checkedObject.getY() - currentObject.getY();
         double actualDist2 = distByX * distByX + distByY * distByY;
         return actualDist2 <= criticalDist2;
+    }
+
+    public static double getDistance(GameObject firstObject, GameObject secondObject) {
+        double distByX = secondObject.getX() - firstObject.getX();
+        double distByY = secondObject.getY() - firstObject.getY();
+        double actualDist2 = distByX * distByX + distByY * distByY;
+        return Math.sqrt(actualDist2);
     }
 }

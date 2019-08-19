@@ -10,7 +10,7 @@ public class Units {
      */
     public static final double SPEED = 0.00000001;
     public static final double MINION_SIZE = 5;
-    public static final double MINION_DEFAULT_VISIBILITY_RADIUS = 50;
+    public static final double MINION_DEFAULT_VISIBILITY_RADIUS = 300;
     public static final double MINION_DEFAULT_ACTION_RADIUS = 30;
     public static final double BUILDING_SIZE = 10;
     public static final double BUILDING_DEFAULT_VISIBILITY_RADIUS = 70;
