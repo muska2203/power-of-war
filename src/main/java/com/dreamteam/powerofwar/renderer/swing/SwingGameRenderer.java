@@ -27,8 +27,9 @@ public class SwingGameRenderer extends JFrame {
     private Thread gameThread = new Thread(this::gameLoop);
     private boolean running;
     private GameObjectType selectedGameObjectType = null;
-    User firstUser = new User();
-    User secondUser = new User();
+    private User selectedUser = null;
+    User firstUser = new User("First User");
+    User secondUser = new User("Second User");
 
     public SwingGameRenderer(Board board, EventListener eventListener) {
         this.board = board;
@@ -59,13 +60,21 @@ public class SwingGameRenderer extends JFrame {
         Button cowardMinion = new Button("Coward Minion");
         Button resetChoice = new Button("Reset choice");
         Button cleanField = new Button("Clean field");
+        Button firstUser = new Button("First User");
+        Button secondUser = new Button("Second User");
         suicideFactory.addActionListener(e -> this.selectedGameObjectType = GameObjectType.SUICIDE_FACTORY);
         suicideObject.addActionListener(e -> this.selectedGameObjectType = GameObjectType.SUICIDE);
         cowardMinion.addActionListener(e -> this.selectedGameObjectType = GameObjectType.COWARD);
-        resetChoice.addActionListener(e -> this.selectedGameObjectType = null);
+        resetChoice.addActionListener(e -> {
+            this.selectedGameObjectType = null;
+            this.selectedUser = null;
+        });
         cleanField.addActionListener(e -> this.killAllObject());
-        Dimension dimension = new Dimension(100, 70);
-        for (Button button : Arrays.asList(suicideFactory, suicideObject, cowardMinion, resetChoice, cleanField)) {
+        firstUser.addActionListener(e -> this.selectedUser = this.firstUser);
+        secondUser.addActionListener(e -> this.selectedUser = this.secondUser);
+        Dimension dimension = new Dimension(70, 70);
+        for (Button button : Arrays.asList(suicideFactory, suicideObject, cowardMinion,
+                resetChoice, cleanField, firstUser, secondUser)) {
             button.setSize(dimension);
         }
         box.add(suicideFactory);
@@ -73,7 +82,9 @@ public class SwingGameRenderer extends JFrame {
         box.add(cowardMinion);
         box.add(resetChoice);
         box.add(cleanField);
-        box.setSize(350, 100);
+        box.add(firstUser);
+        box.add(secondUser);
+        box.setSize(500, 80);
         return box;
     }
 
@@ -118,14 +129,14 @@ public class SwingGameRenderer extends JFrame {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    if (selectedGameObjectType == null) {
+                    if (selectedGameObjectType == null || selectedUser == null) {
                         return;
                     }
                     int x = fromUICoordinateX(e.getX());
                     int y = fromUICoordinateY(e.getY());
 
                     switch (e.getButton()) {
-                        case 1: eventListener.registerEvent(new AddGameObjectEvent(x, y, selectedGameObjectType, firstUser)); break;
+                        case 1: eventListener.registerEvent(new AddGameObjectEvent(x, y, selectedGameObjectType, selectedUser)); break;
                     }
                 }
             });
@@ -155,6 +166,14 @@ public class SwingGameRenderer extends JFrame {
                     .stream()
                     .collect(Collectors.groupingBy(GameObject::getType));
 
+            Map<User, List<GameObject>> gameObjectByUser = board.getGameObjects()
+                    .stream()
+                    .collect(Collectors.groupingBy(GameObject::getOwner));
+
+            List<GameObject> gameObjectsFirstUser =
+                    Optional.ofNullable(gameObjectByUser.get(firstUser)).orElse(Collections.emptyList());
+            List<GameObject> gameObjectsSecondUser =
+                    Optional.ofNullable(gameObjectByUser.get(secondUser)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsSuicide =
                     Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.SUICIDE)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsCoward =
@@ -165,10 +184,11 @@ public class SwingGameRenderer extends JFrame {
             g.drawString("Suicide         : " + gameObjectsSuicide.size(), 50, 10);
             g.drawString("Coward          : " + gameObjectsCoward.size(), 50, 30);
             g.drawString("Suicide factory : " + gameObjectsSuicideFactories.size(), 50, 50);
-            g.drawString("Selected object : " + selectedGameObjectType, 50, 70);
-            drawObjects(g, Color.red, Color.red, null, gameObjectsSuicide);
-            drawObjects(g, Color.red, null, null, gameObjectsSuicideFactories);
-            drawObjects(g, Color.GREEN, Color.GREEN, Color.GREEN, gameObjectsCoward);
+            g.drawString("Selected object : " + selectedGameObjectType, 250, 10);
+            g.drawString("Selected User   : " + selectedUser, 250, 30);
+            drawObjects(g, Color.GREEN, Color.GREEN, null, gameObjectsFirstUser);
+            drawObjects(g, Color.red, Color.red, null, gameObjectsSecondUser);
+            drawObjects(g, null, null, Color.WHITE, gameObjectsCoward);
         }
 
         private void drawObjects(Graphics g, Color bodyColor, Color visionColor, Color actionColor, List<GameObject> gameObjects) {

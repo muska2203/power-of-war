@@ -27,7 +27,7 @@ public class SuicideObject extends BaseGameObject {
             target = null;
         }
         for (GameObject gameObject : board.getGameObjects()) {
-            if (gameObject != this && gameObject.getType().equals(GameObjectType.COWARD)) {
+            if (gameObject != this && (gameObject.getType().equals(GameObjectType.COWARD) || gameObject.getOwner() != this.getOwner())) {
                 if (GameObjectUtils.checkVisibility(this, gameObject) && target == null) {
                     target = gameObject;
                 }
