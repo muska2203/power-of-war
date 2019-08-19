@@ -29,7 +29,7 @@ public class SuicideObject extends BaseGameObject {
         }
         GameObject nearest = null;
         for (GameObject gameObject : board.getGameObjects()) {
-            if (gameObject != this && (gameObject.getType().equals(GameObjectType.COWARD) || gameObject.getOwner() != this.getOwner())) {
+            if (gameObject != this && gameObject.getOwner() != this.getOwner()) {
                 if (GameObjectUtils.checkVisibility(this, gameObject)) {
                     if (nearest == null) {
                         nearest = gameObject;

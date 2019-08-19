@@ -205,15 +205,17 @@ public class SwingGameRenderer extends JFrame {
                     g.fillOval(xPosition, yPosition, size, size);
                 }
             }
-//            if (visionColor != null) {
-//                g.setColor(visionColor);
-//                for (GameObject gameObject : gameObjects) {
-//                    int size = toUICoordinate(gameObject.getVisibilityRadius() * 2);
-//                    int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getVisibilityRadius());
-//                    int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getVisibilityRadius());
-//                    g.drawOval(xPosition, yPosition, size, size);
-//                }
-//            }
+            if (visionColor != null) {
+                g.setColor(visionColor);
+                for (GameObject gameObject : gameObjects) {
+                    if (gameObject.getType().equals(GameObjectType.COWARD)) {
+                        int size = toUICoordinate(gameObject.getVisibilityRadius() * 2);
+                        int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getVisibilityRadius());
+                        int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getVisibilityRadius());
+                        g.drawOval(xPosition, yPosition, size, size);
+                    }
+                }
+            }
             if (actionColor != null) {
                 g.setColor(actionColor);
                 for (GameObject gameObject : gameObjects) {

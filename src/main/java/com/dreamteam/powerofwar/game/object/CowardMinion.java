@@ -14,7 +14,7 @@ public class CowardMinion extends BaseGameObject {
 
     CowardMinion(double x, double y, User user) {
         super(x, y, Units.MINION_SIZE,
-                Units.MINION_DEFAULT_VISIBILITY_RADIUS,
+                30,
                 Units.MINION_DEFAULT_ACTION_RADIUS,
                 10,
                 Vector.byDirection(1, new Random().nextDouble() * 360),
@@ -25,10 +25,10 @@ public class CowardMinion extends BaseGameObject {
     public void update(Board board) {
         Vector resultVector = new Vector();
         for (GameObject gameObject : board.getGameObjects()) {
-            if (gameObject != this
-                    && !gameObject.getType().equals(GameObjectType.COWARD)
-                    && GameObjectUtils.checkVisibility(this, gameObject)
-                    && !gameObject.isDead()) {
+            if (gameObject != this && !gameObject.getType().equals(GameObjectType.COWARD)
+                    && GameObjectUtils.checkVisibility(this, gameObject) && !gameObject.isDead()
+                    && gameObject.getOwner() != this.getOwner()
+            ) {
                 Vector vector = new Vector(gameObject.getX() - this.getX(), gameObject.getY() - this.getY());
                 resultVector.addVector(vector);
             }
