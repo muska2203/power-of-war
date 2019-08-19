@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,16 +25,21 @@ public class SwingGameRenderer extends JFrame {
     private EventListener eventListener;
     private Thread gameThread = new Thread(this::gameLoop);
     private boolean running;
+    private GameObjectType selectedGameObjectType = null;
 
     public SwingGameRenderer(Board board, EventListener eventListener) {
         this.board = board;
         this.eventListener = eventListener;
         setTitle("Power of War");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        add(new GameComponent());
-        pack();
+        Box contentBox = Box.createVerticalBox();
+        setSize(new Dimension(700, 700));
+        GameComponent gameComponent = new GameComponent();
+        contentBox.add(gameComponent);
+        contentBox.add(createControlPanel());
         setMinimumSize(getSize());// enforces the minimum size of both frame and component
         setVisible(true);
+        this.setContentPane(contentBox);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -41,6 +47,36 @@ public class SwingGameRenderer extends JFrame {
                 stopGame();
             }
         });
+    }
+
+    private Component createControlPanel() {
+        Box box = Box.createHorizontalBox();
+        Button suicideFactory = new Button("Suicide Factory");
+        Button suicideObject = new Button("Suicide Object");
+        Button cowardMinion = new Button("Coward Minion");
+        Button resetChoice = new Button("Reset choice");
+        Button cleanField = new Button("Clean field");
+        suicideFactory.addActionListener(e -> this.selectedGameObjectType = GameObjectType.SUICIDE_FACTORY);
+        suicideObject.addActionListener(e -> this.selectedGameObjectType = GameObjectType.SUICIDE);
+        cowardMinion.addActionListener(e -> this.selectedGameObjectType = GameObjectType.COWARD);
+        resetChoice.addActionListener(e -> this.selectedGameObjectType = null);
+        cleanField.addActionListener(e -> this.killAllObject());
+        Dimension dimension = new Dimension(100, 70);
+        for (Button button : Arrays.asList(suicideFactory, suicideObject, cowardMinion, resetChoice, cleanField)) {
+            button.setSize(dimension);
+        }
+        box.add(suicideFactory);
+        box.add(suicideObject);
+        box.add(cowardMinion);
+        box.add(resetChoice);
+        box.add(cleanField);
+        box.setSize(350, 100);
+        return box;
+    }
+
+    private void killAllObject() {
+        List<GameObject> objects = this.board.getGameObjects();
+        objects.forEach(object -> object.doDamage(100500));
     }
 
     public synchronized void start() {
@@ -79,10 +115,16 @@ public class SwingGameRenderer extends JFrame {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    switch (e.getButton()) {
-                        case 1: eventListener.registerEvent(new AddGameObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY()), GameObjectType.SUICIDE)); break;
-                        case 2: eventListener.registerEvent(new AddGameObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY()), GameObjectType.SUICIDE_FACTORY)); break;
-                        case 3: eventListener.registerEvent(new AddGameObjectEvent(fromUICoordinateX(e.getX()), fromUICoordinateY(e.getY()), GameObjectType.COWARD)); break;
+                    if (selectedGameObjectType == null) {
+                        return;
+                    }
+                    if (e.getButton() == 1) {
+                        eventListener.registerEvent(
+                                new AddGameObjectEvent(
+                                        fromUICoordinateX(e.getX()),
+                                        fromUICoordinateY(e.getY()),
+                                        selectedGameObjectType)
+                        );
                     }
                 }
             });
@@ -119,8 +161,10 @@ public class SwingGameRenderer extends JFrame {
             List<GameObject> gameObjectsSuicideFactories =
                     Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.SUICIDE_FACTORY)).orElse(Collections.emptyList());
 
-            g.drawString("Suicide: " + gameObjectsSuicide.size(), 50, 10);
-            g.drawString("Coward : " + gameObjectsCoward.size(), 50, 30);
+            g.drawString("Suicide         : " + gameObjectsSuicide.size(), 50, 10);
+            g.drawString("Coward          : " + gameObjectsCoward.size(), 50, 30);
+            g.drawString("Suicide factory : " + gameObjectsSuicideFactories.size(), 50, 50);
+            g.drawString("Selected object : " + selectedGameObjectType, 50, 70);
             drawObjects(g, Color.red, Color.red, null, gameObjectsSuicide);
             drawObjects(g, Color.red, null, null, gameObjectsSuicideFactories);
             drawObjects(g, Color.GREEN, Color.GREEN, Color.GREEN, gameObjectsCoward);
