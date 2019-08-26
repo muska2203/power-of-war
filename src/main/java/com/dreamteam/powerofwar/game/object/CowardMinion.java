@@ -13,12 +13,32 @@ import java.util.Random;
 public class CowardMinion extends BaseGameObject {
 
     CowardMinion(double x, double y, User user) {
-        super(x, y, Units.MINION_SIZE,
-                30,
-                Units.MINION_DEFAULT_ACTION_RADIUS,
-                10,
-                Vector.byDirection(1, new Random().nextDouble() * 360),
-                GameObjectType.COWARD, user);
+        super(x, y, Vector.byDirection(1, new Random().nextDouble() * 360), user);
+    }
+
+    @Override
+    protected double getSpeed() {
+        return 10;
+    }
+
+    @Override
+    public double getSize() {
+        return Units.MINION_SIZE;
+    }
+
+    @Override
+    public double getVisibilityRadius() {
+        return 30;
+    }
+
+    @Override
+    public double getActionRadius() {
+        return Units.MINION_DEFAULT_ACTION_RADIUS;
+    }
+
+    @Override
+    public GameObjectType getType() {
+        return GameObjectType.COWARD;
     }
 
     @Override
@@ -34,7 +54,7 @@ public class CowardMinion extends BaseGameObject {
             }
         }
         if (resultVector.getX() != 0 || resultVector.getY() != 0) {
-            this.speedVector = Vector.byRadians(this.speed, resultVector.getRadians()).negate();
+            this.setSpeedVector(resultVector.negate());
         }
     }
 }

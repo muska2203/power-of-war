@@ -1,7 +1,5 @@
 package com.dreamteam.powerofwar.game.object;
 
-import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.action.DamageAction;
 import com.dreamteam.powerofwar.game.user.User;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
@@ -20,47 +18,19 @@ public abstract class BaseGameObject implements GameObject {
     private int id;
     private double x;
     private double y;
-    private double size;
-    private double visibilityRadius;
-    Vector speedVector;
-    private GameObjectType gameObjectType;
+    private Vector speedVector;
     private int health = 1;
     private User user;
-    /**
-     * Относительная скорость объекта. значение не должно быть отрицательным.
-     */
-    double speed;
-    /**
-     * Радиус области действий.
-     * Например, для войнов эта характеристика показывает дальность атаки.
-     * А для Базы определяет область возможной постройки других строений {@link Building}.
-     */
-    private double actionRadius;
 
-    BaseGameObject(double x, double y, double size, double visibilityRadius, double actionRadius, double speed,
-                          Vector speedVector, GameObjectType gameObjectType, User user
-    ) {
-        this.id = ++objectsCount;
-        this.x = x;
-        this.y = y;
-        this.size = size;
-        this.visibilityRadius = visibilityRadius;
-        this.speedVector = Vector.byRadians(speed, speedVector.getRadians());
-        this.gameObjectType = gameObjectType;
-        this.speed = speed;
-        this.actionRadius = actionRadius;
-        this.user = user;
+    BaseGameObject(double x, double y, Vector speedVector, User user) {
+        this(x, y, user);
+        this.speedVector = Vector.byRadians(getSpeed(), speedVector.getRadians());
     }
 
-    BaseGameObject(double x, double y, double size, double visibilityRadius, double actionRadius,
-                   GameObjectType gameObjectType, User user) {
+    BaseGameObject(double x, double y, User user) {
         this.id = ++objectsCount;
         this.x = x;
         this.y = y;
-        this.size = size;
-        this.visibilityRadius = visibilityRadius;
-        this.gameObjectType = gameObjectType;
-        this.actionRadius = actionRadius;
         this.user = user;
     }
 
@@ -80,27 +50,8 @@ public abstract class BaseGameObject implements GameObject {
     }
 
     @Override
-    public double getSize() {
-        return size;
-    }
-
-    @Override
     public int getHealth() {
-        return 1;
-    }
-
-    @Override
-    public GameObjectType getType() {
-        return this.gameObjectType;
-    }
-
-    @Override
-    public void update(Board board) {
-        for (GameObject gameObject : board.getGameObjects()) {
-            if (gameObject != this && GameObjectUtils.checkCollision(this, gameObject)) {
-                board.addAction(new DamageAction(100, gameObject, 0));
-            }
-        }
+        return health;
     }
 
     @Override
@@ -116,22 +67,27 @@ public abstract class BaseGameObject implements GameObject {
 
     @Override
     public boolean isDead() {
-        return health <= 0;
-    }
-
-
-    @Override
-    public double getActionRadius() {
-        return this.actionRadius;
-    }
-
-    @Override
-    public double getVisibilityRadius() {
-        return visibilityRadius;
+        return getHealth() <= 0;
     }
 
     @Override
     public User getOwner() {
         return user;
     }
+
+    /**
+     * Изменяет направление указанного игрового объекта.
+     *
+     * @param vector новое направление
+     */
+    protected void setSpeedVector(Vector vector) {
+        this.speedVector = Vector.byRadians(getSpeed(), vector.getRadians());
+    }
+
+    /**
+     * Возвращает относительную скорость объекта.
+     *
+     * @return скорость объекта.
+     */
+    protected abstract double getSpeed();
 }

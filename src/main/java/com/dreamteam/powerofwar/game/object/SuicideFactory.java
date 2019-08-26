@@ -3,8 +3,8 @@ package com.dreamteam.powerofwar.game.object;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.action.AddGameObjectAction;
 import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.phisics.Units;
 
-import static com.dreamteam.powerofwar.phisics.Units.*;
 
 public class SuicideFactory extends BaseGameObject {
 
@@ -12,7 +12,27 @@ public class SuicideFactory extends BaseGameObject {
     private double timeAfterLastAction = 0;
 
     SuicideFactory(double x, double y, User user) {
-        super(x, y, BUILDING_SIZE, BUILDING_DEFAULT_VISIBILITY_RADIUS, BUILDING_DEFAULT_ACTION_RADIUS, GameObjectType.SUICIDE_FACTORY, user);
+        super(x, y, user);
+    }
+
+    @Override
+    public double getSize() {
+        return Units.BUILDING_SIZE;
+    }
+
+    @Override
+    public double getVisibilityRadius() {
+        return Units.BUILDING_DEFAULT_VISIBILITY_RADIUS;
+    }
+
+    @Override
+    public double getActionRadius() {
+        return Units.MINION_DEFAULT_ACTION_RADIUS;
+    }
+
+    @Override
+    public GameObjectType getType() {
+        return GameObjectType.SUICIDE_FACTORY;
     }
 
     @Override
@@ -25,7 +45,12 @@ public class SuicideFactory extends BaseGameObject {
 
     @Override
     public void move(long loopTime) {
-        timeAfterLastAction += loopTime * SPEED;
+        timeAfterLastAction += loopTime * Units.SPEED;
         //do nothing
+    }
+
+    @Override
+    protected double getSpeed() {
+        return 0;
     }
 }
