@@ -17,7 +17,16 @@ public enum GameObjectType implements GameObjectCreator {
     /**
      * Фабрика любителей обнимашек.
      */
-    SUICIDE_FACTORY(SuicideFactory::new);
+    SUICIDE_FACTORY(SuicideFactory::new),
+
+    /**
+     * Золотодобытчик
+     */
+    GOLD_MINER(GoldMiner::new),
+
+    GOLD(GoldResource::new),
+
+    BASE(Base::new);
 
     private GameObjectCreator objectCreator;
 

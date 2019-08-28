@@ -1,5 +1,7 @@
 package com.dreamteam.powerofwar.phisics;
 
+import com.dreamteam.powerofwar.game.object.GameObject;
+
 public class Vector {
 
     private double x;
@@ -50,6 +52,10 @@ public class Vector {
         vector.x = Math.cos(radians) * length;
         vector.y = Math.sin(radians) * length;
         return vector;
+    }
+
+    public static Vector byTarget(GameObject current, GameObject target) {
+        return new Vector(target.getX() - current.getX(), target.getY() - current.getY());
     }
 
     public Vector negate() {

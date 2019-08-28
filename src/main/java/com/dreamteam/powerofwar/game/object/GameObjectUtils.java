@@ -1,5 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
+import java.util.Collection;
+
 /**
  * Утилитарный класс, который предоставляет часто используемые расчеты, связанные с игровыми объектами.
  */
@@ -29,5 +31,20 @@ class GameObjectUtils {
         double distByY = secondObject.getY() - firstObject.getY();
         double actualDist2 = distByX * distByX + distByY * distByY;
         return Math.sqrt(actualDist2);
+    }
+
+    public static GameObject getNearestObject(GameObject current, Collection<GameObject> objects) {
+        double minDistance = Double.MAX_VALUE;
+        GameObject nearest = null;
+
+        for (GameObject object : objects) {
+            double distance = getDistance(object, current);
+            if (distance <= minDistance) {
+                minDistance = distance;
+                nearest = object;
+            }
+        }
+
+        return nearest;
     }
 }

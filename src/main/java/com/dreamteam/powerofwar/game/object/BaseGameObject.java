@@ -81,7 +81,11 @@ public abstract class BaseGameObject implements GameObject {
      * @param vector новое направление
      */
     protected void setSpeedVector(Vector vector) {
-        this.speedVector = Vector.byRadians(getSpeed(), vector.getRadians());
+        if (vector.getLength() == 0) {
+            this.speedVector = vector;
+        } else {
+            this.speedVector = Vector.byRadians(getSpeed(), vector.getRadians());
+        }
     }
 
     /**

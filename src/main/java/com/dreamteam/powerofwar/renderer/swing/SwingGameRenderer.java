@@ -28,8 +28,8 @@ public class SwingGameRenderer extends JFrame {
     private boolean running;
     private GameObjectType selectedGameObjectType = null;
     private User selectedUser = null;
-    User firstUser = new User("First User");
-    User secondUser = new User("Second User");
+    private User firstUser = new User("First User");
+    private User secondUser = new User("Second User");
 
     public SwingGameRenderer(Board board, EventListener eventListener) {
         this.board = board;
@@ -62,6 +62,9 @@ public class SwingGameRenderer extends JFrame {
         Button cleanField = new Button("Clean field");
         Button firstUser = new Button("First User");
         Button secondUser = new Button("Second User");
+        Button goldMiner = new Button("Gold Miner");
+        Button gold = new Button("Gold");
+        Button base = new Button("Base");
         suicideFactory.addActionListener(e -> this.selectedGameObjectType = GameObjectType.SUICIDE_FACTORY);
         suicideObject.addActionListener(e -> this.selectedGameObjectType = GameObjectType.SUICIDE);
         cowardMinion.addActionListener(e -> this.selectedGameObjectType = GameObjectType.COWARD);
@@ -72,18 +75,24 @@ public class SwingGameRenderer extends JFrame {
         cleanField.addActionListener(e -> this.killAllObject());
         firstUser.addActionListener(e -> this.selectedUser = this.firstUser);
         secondUser.addActionListener(e -> this.selectedUser = this.secondUser);
+        goldMiner.addActionListener(e -> this.selectedGameObjectType = GameObjectType.GOLD_MINER);
+        gold.addActionListener(e -> this.selectedGameObjectType = GameObjectType.GOLD);
+        base.addActionListener(e -> this.selectedGameObjectType = GameObjectType.BASE);
         Dimension dimension = new Dimension(70, 70);
-        for (Button button : Arrays.asList(suicideFactory, suicideObject, cowardMinion,
-                resetChoice, cleanField, firstUser, secondUser)) {
+        for (Button button : Arrays.asList(
+//                suicideFactory,
+//                suicideObject,
+//                cowardMinion,
+                gold,
+                goldMiner,
+                base,
+                resetChoice,
+                cleanField,
+                firstUser,
+                secondUser)) {
             button.setSize(dimension);
+            box.add(button);
         }
-        box.add(suicideFactory);
-        box.add(suicideObject);
-        box.add(cowardMinion);
-        box.add(resetChoice);
-        box.add(cleanField);
-        box.add(firstUser);
-        box.add(secondUser);
         box.setSize(500, 80);
         return box;
     }
@@ -181,11 +190,16 @@ public class SwingGameRenderer extends JFrame {
             List<GameObject> gameObjectsSuicideFactories =
                     Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.SUICIDE_FACTORY)).orElse(Collections.emptyList());
 
+
+
             g.drawString("Suicide         : " + gameObjectsSuicide.size(), 50, 10);
             g.drawString("Coward          : " + gameObjectsCoward.size(), 50, 30);
             g.drawString("Suicide factory : " + gameObjectsSuicideFactories.size(), 50, 50);
-            g.drawString("Selected object : " + selectedGameObjectType, 250, 10);
-            g.drawString("Selected User   : " + selectedUser, 250, 30);
+            g.drawString("Selected object : " + selectedGameObjectType, 200, 10);
+            g.drawString("Selected User   : " + selectedUser, 200, 30);
+            g.drawString("Gold miner      : ", 200, 50);
+            g.drawString("Gold mine       : ", 350, 10);
+            g.drawString("Base            : ", 350, 30);
             drawObjects(g, Color.GREEN, Color.GREEN, null, gameObjectsFirstUser);
             drawObjects(g, Color.red, Color.red, null, gameObjectsSecondUser);
             drawObjects(g, null, null, Color.WHITE, gameObjectsCoward);
@@ -201,7 +215,7 @@ public class SwingGameRenderer extends JFrame {
                     int size = toUICoordinate(gameObject.getSize() * 2);
                     int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getSize());
                     int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getSize());
-                    g.drawString("" + gameObject.getId(), xPosition - 2, yPosition - 2);
+                    g.drawString(gameObject.toString(), xPosition - 2, yPosition - 2);
                     g.fillOval(xPosition, yPosition, size, size);
                 }
             }
