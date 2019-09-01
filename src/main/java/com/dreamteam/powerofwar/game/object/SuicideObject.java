@@ -46,26 +46,19 @@ public class SuicideObject extends BaseGameObject {
         if (target != null && (target.isDead() || !GameObjectUtils.checkVisibility(this, target))) {
             target = null;
         }
-        GameObject nearest = null;
-        for (GameObject gameObject : board.getGameObjects()) {
-            if (gameObject != this && gameObject.getOwner() != this.getOwner()) {
-                if (GameObjectUtils.checkVisibility(this, gameObject)) {
-                    if (nearest == null) {
-                        nearest = gameObject;
-                    } else if (GameObjectUtils.getDistance(nearest, this) > GameObjectUtils.getDistance(gameObject, this)) {
-                        nearest = gameObject;
-                    }
-                }
-                if (GameObjectUtils.checkCollision(this, gameObject)) {
-                    board.addAction(new DamageAction(100, gameObject, 0));
-                    board.addAction(new DamageAction(100, this, 0));
-                }
-            }
-        }
-        this.target = nearest;
+
+        this.target = GameObjectUtils.getNearestObject(this,
+                board.getGameObjects(),
+                gameObject -> gameObject != this && !gameObject.isDead() && gameObject.getOwner() != this.getOwner()
+                        && GameObjectUtils.checkVisibility(this, gameObject));
         if (target != null) {
             Vector vector = new Vector(target.getX() - this.getX(), target.getY() - this.getY());
             this.setSpeedVector(vector);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "SuicideObject{id: " + this.getId() + "}";
     }
 }

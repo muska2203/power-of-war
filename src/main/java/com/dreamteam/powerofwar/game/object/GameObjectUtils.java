@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 /**
  * Утилитарный класс, который предоставляет часто используемые расчеты, связанные с игровыми объектами.
@@ -33,15 +34,39 @@ class GameObjectUtils {
         return Math.sqrt(actualDist2);
     }
 
+    /**
+     * Возвращает ближайший объект к нужному.
+     * @param current объект, для которого необходимо выбрать ближайший объект
+     * @param objects набор объектов.
+     * @return найденный объект, или <code>null</code>, если такого объекта не существует.
+     */
     public static GameObject getNearestObject(GameObject current, Collection<GameObject> objects) {
+        return getNearestObject(current, objects, (obj) -> true);
+    }
+
+    /**
+     * Возвращает ближайший объект, удовлетворяющий условию предиката
+     * @param current объект, для которого находится ближайший объект
+     * @param objects набор объектов, из которого необходимо выбирать
+     * @param predicate условие для более точного выбора
+     * @return объект, подходящий условию, либо <code>null</code>, если такого не обнаружено.
+     */
+    public static GameObject getNearestObject(GameObject current,
+                                              Collection<GameObject> objects,
+                                              Predicate<GameObject> predicate) {
+        if (objects == null || objects.isEmpty()) {
+            return null;
+        }
         double minDistance = Double.MAX_VALUE;
         GameObject nearest = null;
 
         for (GameObject object : objects) {
-            double distance = getDistance(object, current);
-            if (distance <= minDistance) {
-                minDistance = distance;
-                nearest = object;
+            if (predicate.test(object) && !object.isDead()) {
+                double distance = getDistance(object, current);
+                if (distance <= minDistance) {
+                    minDistance = distance;
+                    nearest = object;
+                }
             }
         }
 

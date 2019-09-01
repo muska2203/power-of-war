@@ -1,6 +1,8 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.action.BringResourceAction;
+import com.dreamteam.powerofwar.game.action.MineResourceAction;
 import com.dreamteam.powerofwar.game.user.User;
 import com.dreamteam.powerofwar.phisics.Vector;
 

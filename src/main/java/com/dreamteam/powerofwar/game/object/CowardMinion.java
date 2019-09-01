@@ -57,4 +57,9 @@ public class CowardMinion extends BaseGameObject {
             this.setSpeedVector(resultVector.negate());
         }
     }
+
+    @Override
+    public String toString() {
+        return "CowardMinion{id: " + this.getId() + "}";
+    }
 }

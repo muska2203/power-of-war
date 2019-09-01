@@ -1,6 +1,7 @@
-package com.dreamteam.powerofwar.game.object;
+package com.dreamteam.powerofwar.game.action;
 
-import com.dreamteam.powerofwar.game.action.Action;
+import com.dreamteam.powerofwar.game.object.Miner;
+import com.dreamteam.powerofwar.game.object.Resource;
 
 public class MineResourceAction implements Action {
 

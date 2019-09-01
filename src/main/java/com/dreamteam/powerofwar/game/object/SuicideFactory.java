@@ -53,4 +53,9 @@ public class SuicideFactory extends BaseGameObject {
     protected double getSpeed() {
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return "SuicideFactory{id: " + this.getId() + "}";
+    }
 }
