@@ -1,6 +1,5 @@
 package com.dreamteam.powerofwar.game.object;
 
-import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.user.User;
 
 public class GoldResource extends Resource {
@@ -33,10 +32,5 @@ public class GoldResource extends Resource {
     @Override
     public GameObjectType getType() {
         return GameObjectType.GOLD;
-    }
-
-    @Override
-    public void update(Board board) {
-        // do nothing
     }
 }

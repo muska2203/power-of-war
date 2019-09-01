@@ -18,10 +18,6 @@ public abstract class Miner extends BaseGameObject {
         super(x, y, new Vector(), user);
     }
 
-    public abstract GameObjectType getResourceType();
-
-    public abstract int getCapacity();
-
     public int getValue() {
         return value;
     }
@@ -51,33 +47,38 @@ public abstract class Miner extends BaseGameObject {
                 }
                 this.target = null;
             }
-            return;
-        }
-
-        // ищем новую цели для рабочего
-        List<GameObject> mines = board.getGameObjects()
-                .stream()
-                .filter(gameObject -> getResourceType().equals(gameObject.getType()))
-                .collect(Collectors.toList());
-
-
-        List<GameObject> bases = board.getGameObjects()
-                .stream()
-                .filter(gameObject -> GameObjectType.BASE.equals(gameObject.getType()))
-                .collect(Collectors.toList());
-
-        if (this.value < this.getCapacity() && !mines.isEmpty()) {
-            this.target = GameObjectUtils.getNearestObject(this, mines);
-        } else if (this.value > 0 && mines.isEmpty() && !bases.isEmpty()) {
-            this.target = GameObjectUtils.getNearestObject(this, bases);
-        } else if (this.value == this.getCapacity() && !bases.isEmpty()) {
-            this.target = GameObjectUtils.getNearestObject(this, bases);
         } else {
-            target = null;
-            this.setSpeedVector(new Vector());
+            this.target = chooseTarget(board);
         }
+
         if (this.target != null) {
             this.setSpeedVector(Vector.byTarget(this, target));
+        } else {
+            this.setSpeedVector(new Vector());
         }
+    }
+
+    private GameObject chooseTarget(Board board) {
+        if (this.isFull()) {
+            List<GameObject> bases = board.getGameObjects()
+                    .stream()
+                    .filter(gameObject -> GameObjectType.BASE.equals(gameObject.getType()))
+                    .collect(Collectors.toList());
+            return GameObjectUtils.getNearestObject(this, bases);
+        } else {
+            List<GameObject> mines = board.getGameObjects()
+                    .stream()
+                    .filter(gameObject -> getResourceType().equals(gameObject.getType()))
+                    .collect(Collectors.toList());
+            return GameObjectUtils.getNearestObject(this, mines);
+        }
+    }
+
+    public abstract GameObjectType getResourceType();
+
+    public abstract int getCapacity();
+
+    public boolean isFull() {
+        return value >= getCapacity();
     }
 }
