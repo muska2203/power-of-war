@@ -1,7 +1,7 @@
 # power-of-war
 super game with super gameplay from super developers with super skills for super gamers
 
-##TODO List
+## TODO List
 - [x] Реализовать игровой цикл
 - [x] Добавить вывод игровых объектов на экран
 - [x] Реализовать обработку событий, которые инициируют игровые объекты
