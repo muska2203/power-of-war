@@ -1,12 +1,12 @@
 package com.dreamteam.powerofwar.game.object;
 
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 
 public class GoldMiner extends Miner {
 
-    GoldMiner(double x, double y, User user) {
-        super(x, y, user);
+    GoldMiner(double x, double y, Player player) {
+        super(x, y, player);
     }
 
     @Override

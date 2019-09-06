@@ -2,7 +2,7 @@ package com.dreamteam.powerofwar.game.action;
 
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.object.GameObjectCreator;
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.player.Player;
 
 public class AddGameObjectAction implements Action {
 
@@ -10,9 +10,9 @@ public class AddGameObjectAction implements Action {
     private GameObjectCreator creator;
     private double x;
     private double y;
-    private User owner;
+    private Player owner;
 
-    public AddGameObjectAction(Board board, double x, double y, GameObjectCreator creator, User owner) {
+    public AddGameObjectAction(Board board, double x, double y, GameObjectCreator creator, Player owner) {
         this.board = board;
         this.creator = creator;
         this.x = x;

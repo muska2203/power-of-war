@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
 
@@ -20,18 +21,18 @@ public abstract class BaseGameObject implements GameObject {
     private double y;
     private Vector speedVector;
     private int health = 1;
-    private User user;
+    private Player player;
 
-    BaseGameObject(double x, double y, Vector speedVector, User user) {
-        this(x, y, user);
+    BaseGameObject(double x, double y, Vector speedVector, Player player) {
+        this(x, y, player);
         this.speedVector = Vector.byRadians(getSpeed(), speedVector.getRadians());
     }
 
-    BaseGameObject(double x, double y, User user) {
+    BaseGameObject(double x, double y, Player player) {
         this.id = ++objectsCount;
         this.x = x;
         this.y = y;
-        this.user = user;
+        this.player = player;
     }
 
     @Override
@@ -61,6 +62,11 @@ public abstract class BaseGameObject implements GameObject {
     }
 
     @Override
+    public void update(Board board) {
+        // do nothing
+    }
+
+    @Override
     public void doDamage(int damage) {
         health -= damage;
     }
@@ -71,8 +77,8 @@ public abstract class BaseGameObject implements GameObject {
     }
 
     @Override
-    public User getOwner() {
-        return user;
+    public Player getOwner() {
+        return player;
     }
 
     /**

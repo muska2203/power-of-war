@@ -1,7 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
 
@@ -12,8 +12,8 @@ import java.util.Random;
  */
 public class CowardMinion extends BaseGameObject {
 
-    CowardMinion(double x, double y, User user) {
-        super(x, y, Vector.byDirection(1, new Random().nextDouble() * 360), user);
+    CowardMinion(double x, double y, Player player) {
+        super(x, y, Vector.byDirection(1, new Random().nextDouble() * 360), player);
     }
 
     @Override

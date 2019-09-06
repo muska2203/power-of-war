@@ -1,11 +1,11 @@
 package com.dreamteam.powerofwar.game.object;
 
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.player.Player;
 
 public class GoldResource extends Resource {
 
-    GoldResource(double x, double y, User user) {
-        super(x, y, user);
+    GoldResource(double x, double y, Player player) {
+        super(x, y, player);
         this.count = 50;
     }
 

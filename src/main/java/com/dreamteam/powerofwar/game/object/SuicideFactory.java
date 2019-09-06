@@ -2,7 +2,7 @@ package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.action.AddGameObjectAction;
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 
 
@@ -11,8 +11,8 @@ public class SuicideFactory extends BaseGameObject {
     private static final long reloadingTime = 4;
     private double timeAfterLastAction = 0;
 
-    SuicideFactory(double x, double y, User user) {
-        super(x, y, user);
+    SuicideFactory(double x, double y, Player player) {
+        super(x, y, player);
     }
 
     @Override

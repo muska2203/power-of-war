@@ -1,6 +1,6 @@
 package com.dreamteam.powerofwar.game.object;
 
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.player.Player;
 
 public enum GameObjectType implements GameObjectCreator {
 
@@ -26,7 +26,7 @@ public enum GameObjectType implements GameObjectCreator {
 
     GOLD(GoldResource::new),
 
-    BASE(Base::new);
+    BASE((x, y, player) -> player.getObjectFactory().createBase(x, y));
 
     private GameObjectCreator objectCreator;
 
@@ -35,7 +35,7 @@ public enum GameObjectType implements GameObjectCreator {
     }
 
     @Override
-    public GameObject create(double x, double y, User user) {
-        return objectCreator.create(x, y, user);
+    public GameObject create(double x, double y, Player player) {
+        return objectCreator.create(x, y, player);
     }
 }

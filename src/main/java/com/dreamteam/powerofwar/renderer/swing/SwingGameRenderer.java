@@ -5,7 +5,7 @@ import com.dreamteam.powerofwar.game.event.AddGameObjectEvent;
 import com.dreamteam.powerofwar.game.event.EventListener;
 import com.dreamteam.powerofwar.game.object.GameObject;
 import com.dreamteam.powerofwar.game.object.GameObjectType;
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.player.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,9 +27,9 @@ public class SwingGameRenderer extends JFrame {
     private Thread gameThread = new Thread(this::gameLoop);
     private boolean running;
     private GameObjectType selectedGameObjectType = null;
-    private User selectedUser = null;
-    private User firstUser = new User("First User");
-    private User secondUser = new User("Second User");
+    private Player selectedPlayer = null;
+    private Player firstPlayer = new Player("First Player");
+    private Player secondPlayer = new Player("Second Player");
 
     public SwingGameRenderer(Board board, EventListener eventListener) {
         this.board = board;
@@ -60,8 +60,8 @@ public class SwingGameRenderer extends JFrame {
         Button cowardMinion = new Button("Coward Minion");
         Button resetChoice = new Button("Reset choice");
         Button cleanField = new Button("Clean field");
-        Button firstUser = new Button("First User");
-        Button secondUser = new Button("Second User");
+        Button firstUser = new Button("First Player");
+        Button secondUser = new Button("Second Player");
         Button goldMiner = new Button("Gold Miner");
         Button gold = new Button("Gold");
         Button base = new Button("Base");
@@ -70,11 +70,11 @@ public class SwingGameRenderer extends JFrame {
         cowardMinion.addActionListener(e -> this.selectedGameObjectType = GameObjectType.COWARD);
         resetChoice.addActionListener(e -> {
             this.selectedGameObjectType = null;
-            this.selectedUser = null;
+            this.selectedPlayer = null;
         });
         cleanField.addActionListener(e -> this.killAllObject());
-        firstUser.addActionListener(e -> this.selectedUser = this.firstUser);
-        secondUser.addActionListener(e -> this.selectedUser = this.secondUser);
+        firstUser.addActionListener(e -> this.selectedPlayer = this.firstPlayer);
+        secondUser.addActionListener(e -> this.selectedPlayer = this.secondPlayer);
         goldMiner.addActionListener(e -> this.selectedGameObjectType = GameObjectType.GOLD_MINER);
         gold.addActionListener(e -> this.selectedGameObjectType = GameObjectType.GOLD);
         base.addActionListener(e -> this.selectedGameObjectType = GameObjectType.BASE);
@@ -138,14 +138,14 @@ public class SwingGameRenderer extends JFrame {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    if (selectedGameObjectType == null || selectedUser == null) {
+                    if (selectedGameObjectType == null || selectedPlayer == null) {
                         return;
                     }
                     int x = fromUICoordinateX(e.getX());
                     int y = fromUICoordinateY(e.getY());
 
                     switch (e.getButton()) {
-                        case 1: eventListener.registerEvent(new AddGameObjectEvent(x, y, selectedGameObjectType, selectedUser)); break;
+                        case 1: eventListener.registerEvent(new AddGameObjectEvent(x, y, selectedGameObjectType, selectedPlayer)); break;
                     }
                 }
             });
@@ -175,14 +175,14 @@ public class SwingGameRenderer extends JFrame {
                     .stream()
                     .collect(Collectors.groupingBy(GameObject::getType));
 
-            Map<User, List<GameObject>> gameObjectByUser = board.getGameObjects()
+            Map<Player, List<GameObject>> gameObjectByUser = board.getGameObjects()
                     .stream()
                     .collect(Collectors.groupingBy(GameObject::getOwner));
 
             List<GameObject> gameObjectsFirstUser =
-                    Optional.ofNullable(gameObjectByUser.get(firstUser)).orElse(Collections.emptyList());
+                    Optional.ofNullable(gameObjectByUser.get(firstPlayer)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsSecondUser =
-                    Optional.ofNullable(gameObjectByUser.get(secondUser)).orElse(Collections.emptyList());
+                    Optional.ofNullable(gameObjectByUser.get(secondPlayer)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsSuicide =
                     Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.SUICIDE)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsCoward =
@@ -196,7 +196,7 @@ public class SwingGameRenderer extends JFrame {
             g.drawString("Coward          : " + gameObjectsCoward.size(), 50, 30);
             g.drawString("Suicide factory : " + gameObjectsSuicideFactories.size(), 50, 50);
             g.drawString("Selected object : " + selectedGameObjectType, 200, 10);
-            g.drawString("Selected User   : " + selectedUser, 200, 30);
+            g.drawString("Selected Player   : " + selectedPlayer, 200, 30);
             g.drawString("Gold miner      : ", 200, 50);
             g.drawString("Gold mine       : ", 350, 10);
             g.drawString("Base            : ", 350, 30);

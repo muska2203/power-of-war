@@ -1,7 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.player.Player;
 
 public interface GameObject {
 
@@ -77,5 +77,5 @@ public interface GameObject {
      *
      * @return пользователь-владелец объекта.
      */
-    User getOwner();
+    Player getOwner();
 }

@@ -1,6 +1,6 @@
 package com.dreamteam.powerofwar.game.object;
 
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.player.Player;
 
 /**
  * Создатель игровых объектов.
@@ -12,8 +12,8 @@ public interface GameObjectCreator {
      *
      * @param x координата по оси OX.
      * @param y координата по оси OY.
-     * @param user пользователь, которые создает объект.
+     * @param player пользователь, которые создает объект.
      * @return игровой объект.
      */
-    GameObject create(double x, double y, User user);
+    GameObject create(double x, double y, Player player);
 }

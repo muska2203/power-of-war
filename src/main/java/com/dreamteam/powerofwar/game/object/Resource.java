@@ -1,14 +1,14 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.user.User;
+import com.dreamteam.powerofwar.game.player.Player;
 
 public abstract class Resource extends BaseGameObject {
 
     protected int count;
 
-    Resource(double x, double y, User user) {
-        super(x, y, user);
+    Resource(double x, double y, Player player) {
+        super(x, y, player);
     }
 
     public int getCount() {
