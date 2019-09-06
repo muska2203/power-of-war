@@ -3,8 +3,8 @@ package com.dreamteam.powerofwar.game;
 import com.dreamteam.powerofwar.game.action.Action;
 import com.dreamteam.powerofwar.game.object.GameObject;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Игровое поле.
@@ -13,8 +13,8 @@ public class Board {
 
     private double width;
     private double height;
-    private List<GameObject> gameObjects = new ArrayList<>();
-    private List<Action> actions = new ArrayList<>();
+    private List<GameObject> gameObjects = new CopyOnWriteArrayList<>();
+    private List<Action> actions = new CopyOnWriteArrayList<>();
 
     public Board(double width, double height) {
         this.width = width;
