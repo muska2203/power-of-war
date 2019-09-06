@@ -26,9 +26,7 @@ public class Board {
     }
 
     public void addGameObject(GameObject gameObject) {
-        if (gameObject != null) {
-            gameObjects.add(gameObject);
-        }
+        gameObjects.add(gameObject);
     }
 
     public double getWidth() {

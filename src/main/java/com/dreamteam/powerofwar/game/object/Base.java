@@ -5,7 +5,7 @@ import com.dreamteam.powerofwar.phisics.Units;
 
 public class Base extends BaseGameObject {
 
-    Base(double x, double y, Player player) {
+    public Base(double x, double y, Player player) {
         super(x, y, player);
     }
 

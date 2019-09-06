@@ -62,7 +62,7 @@ public abstract class Miner extends BaseGameObject {
         if (this.isFull()) {
             List<GameObject> bases = board.getGameObjects()
                     .stream()
-                    .filter(gameObject -> GameObjectType.BASE.equals(gameObject.getType()))
+                    .filter(gameObject -> GameObjectType.BASE.equals(gameObject.getType()) && !gameObject.getOwner().isEnemyFor(this.getOwner()))
                     .collect(Collectors.toList());
             return GameObjectUtils.getNearestObject(this, bases);
         } else {

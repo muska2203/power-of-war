@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.action;
 
 import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.exception.TooManyObjectsException;
 import com.dreamteam.powerofwar.game.object.GameObjectCreator;
 import com.dreamteam.powerofwar.game.player.Player;
 
@@ -22,8 +23,9 @@ public class AddGameObjectAction implements Action {
 
     @Override
     public void execute() {
-        board.addGameObject(creator.create(x, y, owner));
-
+        try {
+            board.addGameObject(creator.create(x, y, owner));
+        } catch (TooManyObjectsException ignore) {}
     }
 
     @Override

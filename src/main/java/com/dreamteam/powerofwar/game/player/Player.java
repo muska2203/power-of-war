@@ -1,7 +1,5 @@
 package com.dreamteam.powerofwar.game.player;
 
-import com.dreamteam.powerofwar.game.object.GameObjectFactory;
-
 public class Player {
 
     public static final Player NEUTRAL_PLAYER = new Player("Neutral Player");
@@ -22,7 +20,7 @@ public class Player {
         return this.name;
     }
 
-    public boolean isEnemy(Player player) {
+    public boolean isEnemyFor(Player player) {
         return player != this;
     }
 
