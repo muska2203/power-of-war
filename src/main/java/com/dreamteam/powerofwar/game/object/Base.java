@@ -3,6 +3,9 @@ package com.dreamteam.powerofwar.game.object;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 
+/**
+ * TODO: JavaDoc
+ */
 public class Base extends BaseGameObject {
 
     public Base(double x, double y, Player player) {

@@ -1,7 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.action.BringResourceAction;
+import com.dreamteam.powerofwar.game.action.StoreResourcesAction;
 import com.dreamteam.powerofwar.game.action.MineResourceAction;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Vector;
@@ -9,6 +9,9 @@ import com.dreamteam.powerofwar.phisics.Vector;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * TODO: JavaDoc
+ */
 public abstract class Miner extends BaseGameObject {
 
     protected int value = 0;
@@ -41,7 +44,7 @@ public abstract class Miner extends BaseGameObject {
             // если дошли до цели
             if (GameObjectUtils.checkCollision(this, target)) {
                 if (GameObjectType.BASE.equals(target.getType())) {
-                    board.addAction(new BringResourceAction(this));
+                    board.addAction(new StoreResourcesAction(this));
                 } else {
                     board.addAction(new MineResourceAction((Resource) target, this));
                 }

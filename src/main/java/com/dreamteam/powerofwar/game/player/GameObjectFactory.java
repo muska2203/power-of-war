@@ -15,6 +15,9 @@ public class GameObjectFactory {
         this.player = player;
     }
 
+    /**
+     * TODO: JavaDoc
+     */
     public Base createBase(double x, double y) throws TooManyObjectsException {
         if (player.getContext().getCount(GameObjectType.BASE) >= 1) {
             throw new TooManyObjectsException(GameObjectType.BASE, player);

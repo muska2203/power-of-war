@@ -1,5 +1,8 @@
 package com.dreamteam.powerofwar.game.player;
 
+/**
+ * TODO: JavaDoc
+ */
 public class Player {
 
     public static final Player NEUTRAL_PLAYER = new Player("Neutral Player");

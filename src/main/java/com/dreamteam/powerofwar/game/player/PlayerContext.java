@@ -5,8 +5,9 @@ import com.dreamteam.powerofwar.game.object.GameObjectType;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
- * Информация о игроке.
+ * TODO: JavaDoc
  */
 public class PlayerContext {
 

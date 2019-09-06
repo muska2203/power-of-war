@@ -2,6 +2,7 @@ package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.player.Player;
 
+
 public class GoldResource extends Resource {
 
     GoldResource(double x, double y, Player player) {

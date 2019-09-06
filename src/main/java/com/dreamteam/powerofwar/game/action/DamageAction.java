@@ -3,7 +3,7 @@ package com.dreamteam.powerofwar.game.action;
 import com.dreamteam.powerofwar.game.object.GameObject;
 
 /**
- * Представляет собой действие нанесения точечного урона по указанному объекту.
+ * Действие нанесения точечного урона по указанному объекту.
  */
 public class DamageAction implements Action {
 

@@ -5,6 +5,9 @@ import com.dreamteam.powerofwar.game.exception.TooManyObjectsException;
 import com.dreamteam.powerofwar.game.object.GameObjectCreator;
 import com.dreamteam.powerofwar.game.player.Player;
 
+/**
+ * Действие добавления игрового объекта в игру.
+ */
 public class AddGameObjectAction implements Action {
 
     private Board board;
@@ -13,6 +16,16 @@ public class AddGameObjectAction implements Action {
     private double y;
     private Player owner;
 
+    /**
+     * Запоминает контекст, в который требуется добавить игровой объект.
+     * Само добавленгие производится после вызова основного метода {@link Action#execute()}.
+     *
+     * @param board игровое поле, на которое требуется добавить игровой объект.
+     * @param x позиция по оси OX.
+     * @param y позиция по оси OX.
+     * @param creator производитель игрового объекта.
+     * @param owner игрок, для которого требуется создать игровой объект.
+     */
     public AddGameObjectAction(Board board, double x, double y, GameObjectCreator creator, Player owner) {
         this.board = board;
         this.creator = creator;
