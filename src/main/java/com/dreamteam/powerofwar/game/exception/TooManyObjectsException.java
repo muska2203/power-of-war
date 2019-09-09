@@ -1,6 +1,6 @@
 package com.dreamteam.powerofwar.game.exception;
 
-import com.dreamteam.powerofwar.game.object.GameObjectType;
+import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.player.Player;
 
 /**

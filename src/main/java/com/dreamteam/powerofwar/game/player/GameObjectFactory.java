@@ -1,8 +1,8 @@
 package com.dreamteam.powerofwar.game.player;
 
 import com.dreamteam.powerofwar.game.exception.TooManyObjectsException;
-import com.dreamteam.powerofwar.game.object.Base;
-import com.dreamteam.powerofwar.game.object.GameObjectType;
+import com.dreamteam.powerofwar.game.object.*;
+import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 
 /**
  * Фабрика игровых объектов. Добавляет проверки перед созданием объектов.
@@ -18,11 +18,12 @@ public class GameObjectFactory {
     /**
      * TODO: JavaDoc
      */
-    public Base createBase(double x, double y) throws TooManyObjectsException {
-        if (player.getContext().getCount(GameObjectType.BASE) >= 1) {
-            throw new TooManyObjectsException(GameObjectType.BASE, player);
+    public GameObject createObject(double x, double y, GameObjectType type) throws TooManyObjectsException {
+        PlayerContext context = player.getContext();
+        if (context.isFullOf(type)) {
+            throw new TooManyObjectsException(type, player);
         }
-        player.getContext().addCount(GameObjectType.BASE);
-        return new Base(x, y, player);
+        context.addCount(type);
+        return GameObjectContext.getByType(type).create(x, y, player);
     }
 }

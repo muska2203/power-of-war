@@ -1,6 +1,8 @@
 package com.dreamteam.powerofwar.game.player;
 
-import com.dreamteam.powerofwar.game.object.GameObjectType;
+import com.dreamteam.powerofwar.game.object.GameObjectContext;
+import com.dreamteam.powerofwar.game.object.type.BuildingType;
+import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,16 +13,23 @@ import java.util.Map;
  */
 public class PlayerContext {
 
+    private static final int MAX_COUNT = 1000;
+
+    //TODO: JavaDocs
     private Map<GameObjectType, Integer> countByObjectTypes = new HashMap<>();
 
+    //TODO: JavaDocs
+    private Map<GameObjectType, Integer> objectLimitMap = new HashMap<>();
+
     public PlayerContext () {
-        for (GameObjectType type : GameObjectType.values()) {
+        for (GameObjectType type : GameObjectContext.getTypes()) {
             countByObjectTypes.put(type, 0);
         }
+        objectLimitMap.put(BuildingType.BASE, 1);
     }
 
-    public int getCount(GameObjectType type) {
-        return countByObjectTypes.get(type);
+    public boolean isFullOf(GameObjectType type) {
+        return countByObjectTypes.get(type) >= getLimit(type);
     }
 
     public void addCount(GameObjectType type) {
@@ -29,5 +38,10 @@ public class PlayerContext {
 
     public void minusCount(GameObjectType type) {
         countByObjectTypes.replace(type, countByObjectTypes.get(type) - 1);
+    }
+
+    public int getLimit(GameObjectType type) {
+        Integer limit = objectLimitMap.get(type);
+        return limit != null ? limit : MAX_COUNT;
     }
 }

@@ -3,8 +3,11 @@ package com.dreamteam.powerofwar.renderer.swing;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.event.AddGameObjectEvent;
 import com.dreamteam.powerofwar.game.event.EventListener;
-import com.dreamteam.powerofwar.game.object.GameObject;
-import com.dreamteam.powerofwar.game.object.GameObjectType;
+import com.dreamteam.powerofwar.game.object.*;
+import com.dreamteam.powerofwar.game.object.type.BuildingType;
+import com.dreamteam.powerofwar.game.object.type.UnitType;
+import com.dreamteam.powerofwar.game.object.type.GameObjectType;
+import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 
 import javax.swing.*;
@@ -65,9 +68,9 @@ public class SwingGameRenderer extends JFrame {
         Button goldMiner = new Button("Gold Miner");
         Button gold = new Button("Gold");
         Button base = new Button("Base");
-        suicideFactory.addActionListener(e -> this.selectedGameObjectType = GameObjectType.SUICIDE_FACTORY);
-        suicideObject.addActionListener(e -> this.selectedGameObjectType = GameObjectType.SUICIDE);
-        cowardMinion.addActionListener(e -> this.selectedGameObjectType = GameObjectType.COWARD);
+        suicideFactory.addActionListener(e -> this.selectedGameObjectType = BuildingType.SUICIDE_FACTORY);
+        suicideObject.addActionListener(e -> this.selectedGameObjectType = UnitType.SUICIDE);
+        cowardMinion.addActionListener(e -> this.selectedGameObjectType = UnitType.COWARD);
         resetChoice.addActionListener(e -> {
             this.selectedGameObjectType = null;
             this.selectedPlayer = null;
@@ -75,9 +78,9 @@ public class SwingGameRenderer extends JFrame {
         cleanField.addActionListener(e -> this.killAllObject());
         firstUser.addActionListener(e -> this.selectedPlayer = this.firstPlayer);
         secondUser.addActionListener(e -> this.selectedPlayer = this.secondPlayer);
-        goldMiner.addActionListener(e -> this.selectedGameObjectType = GameObjectType.GOLD_MINER);
-        gold.addActionListener(e -> this.selectedGameObjectType = GameObjectType.GOLD);
-        base.addActionListener(e -> this.selectedGameObjectType = GameObjectType.BASE);
+        goldMiner.addActionListener(e -> this.selectedGameObjectType = UnitType.GOLD_MINER);
+        gold.addActionListener(e -> this.selectedGameObjectType = ResourceType.GOLD);
+        base.addActionListener(e -> this.selectedGameObjectType = BuildingType.BASE);
         Dimension dimension = new Dimension(70, 70);
         for (Button button : Arrays.asList(
 //                suicideFactory,
@@ -145,7 +148,7 @@ public class SwingGameRenderer extends JFrame {
                     int y = fromUICoordinateY(e.getY());
 
                     switch (e.getButton()) {
-                        case 1: eventListener.registerEvent(new AddGameObjectEvent(x, y, selectedGameObjectType, selectedPlayer)); break;
+                        case 1: eventListener.registerEvent(new AddGameObjectEvent(x, y, selectedPlayer, selectedGameObjectType)); break;
                     }
                 }
             });
@@ -184,11 +187,11 @@ public class SwingGameRenderer extends JFrame {
             List<GameObject> gameObjectsSecondUser =
                     Optional.ofNullable(gameObjectByUser.get(secondPlayer)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsSuicide =
-                    Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.SUICIDE)).orElse(Collections.emptyList());
+                    Optional.ofNullable(gameObjectTypeListMap.get(UnitType.SUICIDE)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsCoward =
-                    Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.COWARD)).orElse(Collections.emptyList());
+                    Optional.ofNullable(gameObjectTypeListMap.get(UnitType.COWARD)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsSuicideFactories =
-                    Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.SUICIDE_FACTORY)).orElse(Collections.emptyList());
+                    Optional.ofNullable(gameObjectTypeListMap.get(BuildingType.SUICIDE_FACTORY)).orElse(Collections.emptyList());
 
 
 
@@ -222,7 +225,7 @@ public class SwingGameRenderer extends JFrame {
             if (visionColor != null) {
                 g.setColor(visionColor);
                 for (GameObject gameObject : gameObjects) {
-                    if (gameObject.getType().equals(GameObjectType.COWARD)) {
+                    if (gameObject.getType().equals(UnitType.COWARD)) {
                         int size = toUICoordinate(gameObject.getVisibilityRadius() * 2);
                         int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getVisibilityRadius());
                         int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getVisibilityRadius());

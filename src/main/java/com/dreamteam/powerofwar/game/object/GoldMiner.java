@@ -1,5 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
+import com.dreamteam.powerofwar.game.object.type.UnitType;
+import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 
@@ -10,8 +12,8 @@ public class GoldMiner extends Miner {
     }
 
     @Override
-    public GameObjectType getResourceType() {
-        return GameObjectType.GOLD;
+    public ResourceType getResourceType() {
+        return ResourceType.GOLD;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class GoldMiner extends Miner {
     }
 
     @Override
-    public GameObjectType getType() {
-        return GameObjectType.GOLD_MINER;
+    public UnitType getType() {
+        return UnitType.GOLD_MINER;
     }
 }

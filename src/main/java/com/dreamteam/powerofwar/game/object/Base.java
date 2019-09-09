@@ -1,5 +1,6 @@
 package com.dreamteam.powerofwar.game.object;
 
+import com.dreamteam.powerofwar.game.object.type.BuildingType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 
@@ -33,8 +34,8 @@ public class Base extends BaseGameObject {
     }
 
     @Override
-    public GameObjectType getType() {
-        return GameObjectType.BASE;
+    public BuildingType getType() {
+        return BuildingType.BASE;
     }
 
     @Override

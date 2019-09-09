@@ -3,6 +3,8 @@ package com.dreamteam.powerofwar.game.object;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.action.StoreResourcesAction;
 import com.dreamteam.powerofwar.game.action.MineResourceAction;
+import com.dreamteam.powerofwar.game.object.type.BuildingType;
+import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Vector;
 
@@ -43,7 +45,7 @@ public abstract class Miner extends BaseGameObject {
         if (target != null) {
             // если дошли до цели
             if (GameObjectUtils.checkCollision(this, target)) {
-                if (GameObjectType.BASE.equals(target.getType())) {
+                if (BuildingType.BASE.equals(target.getType())) {
                     board.addAction(new StoreResourcesAction(this));
                 } else {
                     board.addAction(new MineResourceAction((Resource) target, this));
@@ -65,7 +67,7 @@ public abstract class Miner extends BaseGameObject {
         if (this.isFull()) {
             List<GameObject> bases = board.getGameObjects()
                     .stream()
-                    .filter(gameObject -> GameObjectType.BASE.equals(gameObject.getType()) && !gameObject.getOwner().isEnemyFor(this.getOwner()))
+                    .filter(gameObject -> BuildingType.BASE.equals(gameObject.getType()) && !gameObject.getOwner().isEnemyFor(this.getOwner()))
                     .collect(Collectors.toList());
             return GameObjectUtils.getNearestObject(this, bases);
         } else {
@@ -77,7 +79,7 @@ public abstract class Miner extends BaseGameObject {
         }
     }
 
-    public abstract GameObjectType getResourceType();
+    public abstract ResourceType getResourceType();
 
     public abstract int getCapacity();
 

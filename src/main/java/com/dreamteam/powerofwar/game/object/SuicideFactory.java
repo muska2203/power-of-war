@@ -2,10 +2,12 @@ package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.action.AddGameObjectAction;
+import com.dreamteam.powerofwar.game.object.type.BuildingType;
+import com.dreamteam.powerofwar.game.object.type.UnitType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 
-
+//TODO: JavaDocs
 public class SuicideFactory extends BaseGameObject {
 
     private static final long reloadingTime = 4;
@@ -31,15 +33,15 @@ public class SuicideFactory extends BaseGameObject {
     }
 
     @Override
-    public GameObjectType getType() {
-        return GameObjectType.SUICIDE_FACTORY;
+    public BuildingType getType() {
+        return BuildingType.SUICIDE_FACTORY;
     }
 
     @Override
     public void update(Board board) {
         if (timeAfterLastAction > reloadingTime) {
             timeAfterLastAction -= reloadingTime;
-            board.addAction(new AddGameObjectAction(board, getX(), getY(), GameObjectType.SUICIDE, this.getOwner()));
+            board.addAction(new AddGameObjectAction(board, getX(), getY(), this.getOwner(), UnitType.SUICIDE));
         }
     }
 

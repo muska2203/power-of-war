@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.object.type.UnitType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
@@ -37,15 +38,15 @@ public class CowardMinion extends BaseGameObject {
     }
 
     @Override
-    public GameObjectType getType() {
-        return GameObjectType.COWARD;
+    public UnitType getType() {
+        return UnitType.COWARD;
     }
 
     @Override
     public void update(Board board) {
         Vector resultVector = new Vector();
         for (GameObject gameObject : board.getGameObjects()) {
-            if (gameObject != this && !gameObject.getType().equals(GameObjectType.COWARD)
+            if (gameObject != this && !gameObject.getType().equals(UnitType.COWARD)
                     && GameObjectUtils.checkVisibility(this, gameObject) && !gameObject.isDead()
                     && gameObject.getOwner() != this.getOwner()
             ) {

@@ -1,12 +1,14 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.object.type.UnitType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
 
 import java.util.Random;
 
+//TODO: JavaDocs
 public class SuicideObject extends BaseGameObject {
 
     private GameObject target;
@@ -36,8 +38,8 @@ public class SuicideObject extends BaseGameObject {
     }
 
     @Override
-    public GameObjectType getType() {
-        return GameObjectType.SUICIDE;
+    public UnitType getType() {
+        return UnitType.SUICIDE;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.player.Player;
 
 public interface GameObject {
