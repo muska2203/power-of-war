@@ -50,8 +50,9 @@ public class SuicideObject extends BaseGameObject {
 
         this.target = GameObjectUtils.getNearestObject(this,
                 board.getGameObjects(),
-                gameObject -> gameObject != this && !gameObject.isDead() && gameObject.getOwner() != this.getOwner()
-                        && GameObjectUtils.checkVisibility(this, gameObject));
+                gameObject -> !gameObject.isDead(),
+                gameObject -> !gameObject.getOwner().equals(this.getOwner()),
+                gameObject -> GameObjectUtils.checkVisibility(this, gameObject));
         if (target != null) {
             Vector vector = new Vector(target.getX() - this.getX(), target.getY() - this.getY());
             this.setSpeedVector(vector);

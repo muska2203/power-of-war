@@ -18,6 +18,7 @@ public class StoreResourcesAction implements Action {
 
     @Override
     public void execute() {
+        this.miner.getOwner().getContext().addCount(this.miner.getResourceType(), this.miner.getValue());
         this.miner.resetValue();
     }
 

@@ -32,8 +32,12 @@ public class PlayerContext {
         return countByObjectTypes.get(type) >= getLimit(type);
     }
 
+    public void addCount(GameObjectType type, Integer count) {
+        countByObjectTypes.replace(type, countByObjectTypes.get(type) + count);
+    }
+
     public void addCount(GameObjectType type) {
-        countByObjectTypes.replace(type, countByObjectTypes.get(type) + 1);
+        this.addCount(type, 1);
     }
 
     public void minusCount(GameObjectType type) {
