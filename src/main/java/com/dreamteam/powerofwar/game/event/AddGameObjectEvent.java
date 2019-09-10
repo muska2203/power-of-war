@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.event;
 
 import com.dreamteam.powerofwar.game.GameProgram;
+import com.dreamteam.powerofwar.game.exception.TooLessResourcesException;
 import com.dreamteam.powerofwar.game.exception.TooManyObjectsException;
 import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.player.Player;
@@ -23,6 +24,6 @@ public class AddGameObjectEvent extends BaseEvent {
     public void execute(GameProgram gameProgram) {
         try {
             gameProgram.addGameObject(owner.getObjectFactory().createObject(x, y, type));
-        } catch (TooManyObjectsException ignore) {}
+        } catch (TooManyObjectsException | TooLessResourcesException ignore) {}
     }
 }

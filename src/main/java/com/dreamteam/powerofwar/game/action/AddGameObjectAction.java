@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.action;
 
 import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.exception.TooLessResourcesException;
 import com.dreamteam.powerofwar.game.exception.TooManyObjectsException;
 import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.player.Player;
@@ -37,7 +38,7 @@ public class AddGameObjectAction implements Action {
     public void execute() {
         try {
             board.addGameObject(owner.getObjectFactory().createObject(x, y, type));
-        } catch (TooManyObjectsException ignore) {}
+        } catch (TooManyObjectsException | TooLessResourcesException ignore) {}
     }
 
     @Override

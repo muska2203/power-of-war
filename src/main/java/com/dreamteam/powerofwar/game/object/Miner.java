@@ -8,9 +8,6 @@ import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Vector;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * TODO: JavaDoc
  */
@@ -44,7 +41,6 @@ public abstract class Miner extends BaseGameObject {
 
     @Override
     public void update(Board board) {
-        System.out.println(this.state);
         switch (this.state) {
             case NONE: {
                 // target == null

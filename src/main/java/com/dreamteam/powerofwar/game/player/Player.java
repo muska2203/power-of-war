@@ -1,5 +1,7 @@
 package com.dreamteam.powerofwar.game.player;
 
+import com.dreamteam.powerofwar.game.object.type.ResourceType;
+
 /**
  * TODO: JavaDoc
  */
@@ -16,6 +18,7 @@ public class Player {
     public Player(String name) {
         this.name = name;
         this.playerContext = new PlayerContext();
+        this.playerContext.addResource(ResourceType.GOLD, 20);
         this.gameObjectFactory = new GameObjectFactory(this);
     }
 

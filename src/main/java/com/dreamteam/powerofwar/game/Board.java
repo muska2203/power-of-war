@@ -38,6 +38,9 @@ public class Board {
     }
 
     public void cleanDeadObjects() {
+        gameObjects.stream()
+                .filter(GameObject::isDead)
+                .forEach(obj -> obj.getOwner().getContext().minusObjectCount(obj.getType()));
         gameObjects.removeIf(GameObject::isDead);
     }
 
