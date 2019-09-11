@@ -5,6 +5,7 @@ import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.object.type.UnitType;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class PlayerContext {
 
     PlayerContext () {
         objectLimitMap.put(BuildingType.BASE, 1);
-        gameObjectCosts.put(UnitType.GOLD_MINER, Map.of(ResourceType.GOLD, 10));
+        gameObjectCosts.put(UnitType.GOLD_MINER, Collections.singletonMap(ResourceType.GOLD, 10));
     }
 
     /**
