@@ -4,11 +4,6 @@ package com.dreamteam.powerofwar.game.object.type;
 public enum BuildingType implements GameObjectType {
 
     /**
-     * Фабрика любителей обнимашек.
-     */
-    SUICIDE_FACTORY,
-
-    /**
      * База
      */
     BASE

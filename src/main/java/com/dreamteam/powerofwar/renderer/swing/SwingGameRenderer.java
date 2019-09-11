@@ -58,8 +58,7 @@ public class SwingGameRenderer extends JFrame {
 
     private Component createControlPanel() {
         Box box = Box.createHorizontalBox();
-        Button suicideFactory = new Button("Suicide Factory");
-        Button suicideObject = new Button("Suicide Object");
+        Button warrior = new Button("Warrior");
         Button cowardMinion = new Button("Coward Minion");
         Button resetChoice = new Button("Reset choice");
         Button cleanField = new Button("Clean field");
@@ -68,8 +67,7 @@ public class SwingGameRenderer extends JFrame {
         Button goldMiner = new Button("Gold Miner");
         Button gold = new Button("Gold");
         Button base = new Button("Base");
-        suicideFactory.addActionListener(e -> this.selectedGameObjectType = BuildingType.SUICIDE_FACTORY);
-        suicideObject.addActionListener(e -> this.selectedGameObjectType = UnitType.SUICIDE);
+        warrior.addActionListener(e -> this.selectedGameObjectType = UnitType.WARRIOR);
         cowardMinion.addActionListener(e -> this.selectedGameObjectType = UnitType.COWARD);
         resetChoice.addActionListener(e -> {
             this.selectedGameObjectType = null;
@@ -83,12 +81,12 @@ public class SwingGameRenderer extends JFrame {
         base.addActionListener(e -> this.selectedGameObjectType = BuildingType.BASE);
         Dimension dimension = new Dimension(70, 70);
         for (Button button : Arrays.asList(
-//                suicideFactory,
-//                suicideObject,
+//                warrior,
 //                cowardMinion,
                 gold,
                 goldMiner,
                 base,
+                warrior,
                 resetChoice,
                 cleanField,
                 firstUser,
@@ -187,17 +185,14 @@ public class SwingGameRenderer extends JFrame {
             List<GameObject> gameObjectsSecondUser =
                     Optional.ofNullable(gameObjectByUser.get(secondPlayer)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsSuicide =
-                    Optional.ofNullable(gameObjectTypeListMap.get(UnitType.SUICIDE)).orElse(Collections.emptyList());
+                    Optional.ofNullable(gameObjectTypeListMap.get(UnitType.WARRIOR)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsCoward =
                     Optional.ofNullable(gameObjectTypeListMap.get(UnitType.COWARD)).orElse(Collections.emptyList());
-            List<GameObject> gameObjectsSuicideFactories =
-                    Optional.ofNullable(gameObjectTypeListMap.get(BuildingType.SUICIDE_FACTORY)).orElse(Collections.emptyList());
 
 
 
             g.drawString("Suicide         : " + gameObjectsSuicide.size(), 50, 10);
             g.drawString("Coward          : " + gameObjectsCoward.size(), 50, 30);
-            g.drawString("Suicide factory : " + gameObjectsSuicideFactories.size(), 50, 50);
             g.drawString("Selected object : " + selectedGameObjectType, 200, 10);
             g.drawString("Selected Player   : " + selectedPlayer, 200, 30);
             g.drawString("Gold miner      : ", 200, 50);

@@ -8,7 +8,6 @@ public interface GameObject {
 
     /**
      * Возвращает уникальный идентификатор объекта
-     * @return
      */
     int getId();
 

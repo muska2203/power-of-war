@@ -24,8 +24,7 @@ public class GameObjectContext {
         constructorMap.put(ResourceType.GOLD, GoldResource::new);
         constructorMap.put(UnitType.GOLD_MINER, GoldMiner::new);
         constructorMap.put(BuildingType.BASE, Base::new);
-        constructorMap.put(BuildingType.SUICIDE_FACTORY, SuicideFactory::new);
-        constructorMap.put(UnitType.SUICIDE, SuicideObject::new);
+        constructorMap.put(UnitType.WARRIOR, Warrior::new);
         constructorMap.put(UnitType.COWARD, CowardMinion::new);
     }
 

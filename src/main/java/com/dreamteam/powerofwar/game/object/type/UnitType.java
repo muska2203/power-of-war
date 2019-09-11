@@ -4,9 +4,9 @@ package com.dreamteam.powerofwar.game.object.type;
 public enum UnitType implements GameObjectType {
 
     /**
-     * Любитель обнимашек.
+     * Аттакующий юнит, атакует ближайшую вражескую цель.
      */
-    SUICIDE,
+    WARRIOR,
 
     /**
      * Бегун.

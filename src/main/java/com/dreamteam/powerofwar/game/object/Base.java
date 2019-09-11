@@ -11,6 +11,7 @@ public class Base extends BaseGameObject {
 
     public Base(double x, double y, Player player) {
         super(x, y, player);
+        super.setHealth(1000);
     }
 
     @Override

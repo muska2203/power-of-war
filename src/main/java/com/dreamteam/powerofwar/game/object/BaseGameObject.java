@@ -19,7 +19,7 @@ public abstract class BaseGameObject implements GameObject {
     private int id;
     private double x;
     private double y;
-    private Vector speedVector;
+    private Vector speedVector = new Vector();
     private int health = 1;
     private Player player;
 
@@ -48,6 +48,10 @@ public abstract class BaseGameObject implements GameObject {
     @Override
     public double getY() {
         return y;
+    }
+
+    protected void setHealth(int health) {
+        this.health = health;
     }
 
     @Override
