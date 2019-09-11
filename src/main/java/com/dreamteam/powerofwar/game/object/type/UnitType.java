@@ -4,7 +4,7 @@ package com.dreamteam.powerofwar.game.object.type;
 public enum UnitType implements GameObjectType {
 
     /**
-     * Аттакующий юнит, атакует ближайшую вражескую цель.
+     * Атакующий юнит, атакует ближайшую вражескую цель.
      */
     WARRIOR,
 
