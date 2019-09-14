@@ -1,13 +1,22 @@
 package com.dreamteam.powerofwar.game.object;
 
+import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.action.AddResourceAction;
 import com.dreamteam.powerofwar.game.object.type.BuildingType;
+import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
+
+import static com.dreamteam.powerofwar.phisics.Units.SPEED;
 
 /**
  * TODO: JavaDoc
  */
 public class Base extends BaseGameObject {
+
+    private int resourceCountByTime = 5;
+    private int castTime = 4;
+    private double timeAfterLastResourceCreation = 0;
 
     public Base(double x, double y, Player player) {
         super(x, y, player);
@@ -40,8 +49,16 @@ public class Base extends BaseGameObject {
     }
 
     @Override
+    public void update(Board board) {
+        if (castTime <= timeAfterLastResourceCreation) {
+            board.addAction(new AddResourceAction(ResourceType.GOLD, resourceCountByTime, this.getOwner()));
+            timeAfterLastResourceCreation = 0;
+        }
+    }
+
+    @Override
     public void move(long loopTime) {
-        // do nothing
+        timeAfterLastResourceCreation += loopTime * SPEED;
     }
 
     @Override

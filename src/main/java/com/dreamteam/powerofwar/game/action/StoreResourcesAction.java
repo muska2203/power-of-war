@@ -5,7 +5,7 @@ import com.dreamteam.powerofwar.game.object.Miner;
 /**
  * Действие складирования ресурсов указаного добывающего юнита.
  */
-public class StoreResourcesAction implements Action {
+public class StoreResourcesAction extends AddResourceAction {
 
     private Miner miner;
 
@@ -13,22 +13,13 @@ public class StoreResourcesAction implements Action {
      * @param miner добывающий юнит, который должен переложить свои ресурсы в казну игрока-владельца.
      */
     public StoreResourcesAction(Miner miner) {
+        super(miner.getResourceType(), miner.getValue(), miner.getOwner());
         this.miner = miner;
     }
 
     @Override
     public void execute() {
-        this.miner.getOwner().getContext().addResource(this.miner.getResourceType(), this.miner.getValue());
-        this.miner.resetValue();
-    }
-
-    @Override
-    public boolean isReady(long gameLoop) {
-        return true;
-    }
-
-    @Override
-    public boolean isCompleted() {
-        return true;
+        super.execute();
+        miner.resetValue();
     }
 }

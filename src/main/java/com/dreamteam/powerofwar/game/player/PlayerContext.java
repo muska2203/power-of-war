@@ -45,6 +45,7 @@ public class PlayerContext {
     PlayerContext () {
         objectLimitMap.put(BuildingType.BASE, 1);
         gameObjectCosts.put(UnitType.GOLD_MINER, Collections.singletonMap(ResourceType.GOLD, 10));
+        gameObjectCosts.put(UnitType.WARRIOR, Collections.singletonMap(ResourceType.GOLD, 25));
     }
 
     /**
