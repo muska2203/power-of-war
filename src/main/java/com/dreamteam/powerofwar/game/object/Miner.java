@@ -8,18 +8,21 @@ import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Vector;
 
+import static com.dreamteam.powerofwar.game.object.Miner.State.*;
+
 /**
  * TODO: JavaDoc
  */
 public abstract class Miner extends BaseGameObject {
 
+    private static final double MINIMAL_SPEED_FACTOR = 0.5;
     protected int value = 0;
     protected GameObject target;
-    private MinerState state;
+    private State state;
 
     Miner(double x, double y, Player player) {
         super(x, y, new Vector(), player);
-        this.state = MinerState.NONE;
+        this.state = NONE;
     }
 
     public int getValue() {
@@ -41,67 +44,55 @@ public abstract class Miner extends BaseGameObject {
 
     @Override
     public void update(Board board) {
-        switch (this.state) {
-            case NONE: {
-                // target == null
+        System.out.println(this.state + " " + this.target);
+        if (!this.state.equals(NONE) && (target == null || target.isDead())) {
+            this.state = NONE;
+            this.target = null;
+        }
+        if (this.state.equals(NONE)) {
+            if (!this.isFull()) {
                 this.target = getNearestResource(board);
-                this.state = MinerState.SEARCH;
-                // Если ресурс не найден или майнер уже не может больше набрать ресурса, то идем на базу.
-                if (this.target == null) {
-                    this.target = getNearestBase(board);
-                    if (this.target != null) {
-                        this.state = MinerState.DELIVERY;
-                    }
-                }
-                this.setSpeedVector(this.target == null ? new Vector() : Vector.byTarget(this, target));
-                break;
+                this.state = SEARCH;
             }
-            case SEARCH: {
-                // target == Resource
-                if (this.target == null || this.target.isDead()) {
-                    this.target = null;
-                    this.state = MinerState.NONE;
-                    this.setSpeedVector(new Vector());
-                } else {
-                    if (GameObjectUtils.checkPossibilityAction(this, target)) {
-                        this.state = MinerState.MINING;
-                        this.setSpeedVector(new Vector());
-                    }
-                }
-                break;
-            }
-            case MINING: {
-                // target == Resource
-                if (this.target == null || this.target.isDead()) {
-                    this.state = MinerState.NONE;
-                    this.target = null;
-                    this.setSpeedVector(new Vector());
-                } else {
-                    if (this.isFull()) {
-                        this.target = this.getNearestBase(board);
-                        this.state = this.target == null ? MinerState.NONE : MinerState.DELIVERY;
-                        this.setSpeedVector(this.target == null ? new Vector() : Vector.byTarget(this, this.target));
-                    } else {
-                        board.addAction(new MineResourceAction((Resource) this.target, this));
-                    }
-                }
-                break;
-            }
-            case DELIVERY: {
-                // target == Base
-                // На каждом ходу обновляем местонахождение базы.
-                // Вдруг уже построен еще один "склад", тогда меняем цель для движения.
-                // TODO: проверить необходимость этого обновления.
+            if (this.target == null) {
                 this.target = getNearestBase(board);
-                if (GameObjectUtils.checkPossibilityAction(this, this.target)) {
-                    board.addAction(new StoreResourcesAction(this));
-                    this.state = MinerState.NONE;
-                    this.target = null;
-                    this.setSpeedVector(new Vector());
-                }
-                break;
+                this.state = DELIVERY;
+            }
+            if (this.target == null) {
+                this.state = NONE;
             }
         }
+        if (this.state.equals(SEARCH) && GameObjectUtils.checkPossibilityAction(this, target)) {
+            this.state = MINING;
+        }
+        if (this.state.equals(DELIVERY) && GameObjectUtils.checkPossibilityAction(this, target)) {
+            board.addAction(new StoreResourcesAction(this));
+            this.state = NONE;
+            this.target = null;
+        }
+        if (this.state.equals(MINING)) {
+            if (!this.isFull()) {
+                board.addAction(new MineResourceAction((Resource) this.target, this));
+            } else {
+                this.state = NONE;
+                this.target = null;
+            }
+        }
+
+        switch (this.state) {
+            case NONE:
+            case MINING:
+                this.setSpeedVector(new Vector());
+                break;
+            case DELIVERY:
+            case SEARCH:
+                this.setSpeedVector(Vector.byTarget(this, this.target));
+        }
+    }
+
+    @Override
+    public double getSpeedFactor() {
+        return MINIMAL_SPEED_FACTOR + (1 - MINIMAL_SPEED_FACTOR) * (1 - 1.0D * getValue() / getCapacity());
     }
 
     private GameObject getNearestResource(Board board) {
@@ -123,7 +114,7 @@ public abstract class Miner extends BaseGameObject {
         return value >= getCapacity();
     }
 
-    private enum MinerState {
+    public enum State {
         /**
          * Бездействует
          */

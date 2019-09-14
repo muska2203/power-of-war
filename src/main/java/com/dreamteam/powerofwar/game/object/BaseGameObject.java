@@ -61,8 +61,8 @@ public abstract class BaseGameObject implements GameObject {
 
     @Override
     public void move(long loopTime) {
-        x += speedVector.getX() * Units.SPEED * loopTime;
-        y += speedVector.getY() * Units.SPEED * loopTime;
+        x += speedVector.getX() * Units.SPEED * loopTime * getSpeedFactor();
+        y += speedVector.getY() * Units.SPEED * loopTime * getSpeedFactor();
     }
 
     @Override
@@ -78,6 +78,11 @@ public abstract class BaseGameObject implements GameObject {
     @Override
     public boolean isDead() {
         return getHealth() <= 0;
+    }
+
+    @Override
+    public double getSpeedFactor() {
+        return 1;
     }
 
     @Override
