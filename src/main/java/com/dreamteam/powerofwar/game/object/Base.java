@@ -15,7 +15,7 @@ import static com.dreamteam.powerofwar.phisics.Units.SPEED;
 public class Base extends BaseGameObject {
 
     private int resourceCountByTime = 5;
-    private int castTime = 4;
+    private int castTime = 10;
     private double timeAfterLastResourceCreation = 0;
 
     public Base(double x, double y, Player player) {

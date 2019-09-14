@@ -30,23 +30,23 @@ public class SwingGameRenderer extends JFrame {
     private Thread gameThread = new Thread(this::gameLoop);
     private boolean running;
     private GameObjectType selectedGameObjectType = null;
-    private Player selectedPlayer = null;
     private Player firstPlayer = new Player("First Player");
     private Player secondPlayer = new Player("Second Player");
+    private Player selectedPlayer = firstPlayer;
 
     public SwingGameRenderer(Board board, EventListener eventListener) {
         this.board = board;
         this.eventListener = eventListener;
         setTitle("Power of War");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Box contentBox = Box.createVerticalBox();
         setSize(new Dimension(700, 700));
-        GameComponent gameComponent = new GameComponent();
-        contentBox.add(gameComponent);
-        contentBox.add(createControlPanel());
+        Container container = this.getContentPane();
+        container.add(BorderLayout.NORTH, new InfoComponent());
+        container.add(BorderLayout.CENTER, new GameComponent());
+        container.add(BorderLayout.SOUTH, createControlPanel());
+        container.setSize(new Dimension(700, 700));
         setMinimumSize(getSize());// enforces the minimum size of both frame and component
         setVisible(true);
-        this.setContentPane(contentBox);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -81,8 +81,6 @@ public class SwingGameRenderer extends JFrame {
         base.addActionListener(e -> this.selectedGameObjectType = BuildingType.BASE);
         Dimension dimension = new Dimension(70, 70);
         for (Button button : Arrays.asList(
-//                warrior,
-//                cowardMinion,
                 gold,
                 goldMiner,
                 base,
@@ -126,6 +124,36 @@ public class SwingGameRenderer extends JFrame {
                 e.printStackTrace();
             }
         }
+    }
+
+    private class InfoComponent extends JComponent {
+
+        InfoComponent() {
+            super();
+        }
+
+        @Override
+        public Dimension getMinimumSize() {
+            return new Dimension((int) board.getWidth(), 25);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return getMinimumSize();
+        }
+
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Dimension dim = getSize();
+            g.setColor(Color.black);
+            g.fillRect(0, 0, dim.width, dim.height);
+            g.setColor(Color.white);
+            g.drawString("Gold: " + selectedPlayer.getContext().getResource(ResourceType.GOLD), 0, 10);
+            g.drawString("Warriors: " + selectedPlayer.getContext().getObjectCount(UnitType.WARRIOR), 0, 20);
+            g.drawString("Gold Miners: " + selectedPlayer.getContext().getObjectCount(UnitType.GOLD_MINER), 100, 20);
+        }
+
     }
 
     private class GameComponent extends JComponent {
@@ -184,20 +212,9 @@ public class SwingGameRenderer extends JFrame {
                     Optional.ofNullable(gameObjectByUser.get(firstPlayer)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsSecondUser =
                     Optional.ofNullable(gameObjectByUser.get(secondPlayer)).orElse(Collections.emptyList());
-            List<GameObject> gameObjectsSuicide =
-                    Optional.ofNullable(gameObjectTypeListMap.get(UnitType.WARRIOR)).orElse(Collections.emptyList());
             List<GameObject> gameObjectsCoward =
                     Optional.ofNullable(gameObjectTypeListMap.get(UnitType.COWARD)).orElse(Collections.emptyList());
 
-
-
-            g.drawString("Suicide         : " + gameObjectsSuicide.size(), 50, 10);
-            g.drawString("Coward          : " + gameObjectsCoward.size(), 50, 30);
-            g.drawString("Selected object : " + selectedGameObjectType, 200, 10);
-            g.drawString("Selected Player   : " + selectedPlayer, 200, 30);
-            g.drawString("Gold miner      : ", 200, 50);
-            g.drawString("Gold mine       : ", 350, 10);
-            g.drawString("Base            : ", 350, 30);
             drawObjects(g, Color.GREEN, Color.GREEN, null, gameObjectsFirstUser);
             drawObjects(g, Color.red, Color.red, null, gameObjectsSecondUser);
             drawObjects(g, null, null, Color.WHITE, gameObjectsCoward);
