@@ -8,6 +8,8 @@ import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
 
+import java.util.Collection;
+
 import static com.dreamteam.powerofwar.game.object.Warrior.State.*;
 import static com.dreamteam.powerofwar.phisics.Units.SPEED;
 
@@ -54,49 +56,59 @@ public class Warrior extends BaseGameObject {
 
     @Override
     public void update(Board board) {
-        if (!state.equals(WAITING_FOR_ENEMY) && (target.isDead() || !GameObjectUtils.checkVisibility(this, target))) {
-            state = WAITING_FOR_ENEMY;
-            target = null;
-        }
-        if (!state.equals(CASTING_ACTION)) {
-            target = GameObjectUtils.getNearestObject(this, board.getGameObjects(),
-                    gameObject -> !gameObject.isDead(),
-                    gameObject -> !gameObject.getOwner().equals(this.getOwner()),
-                    gameObject -> GameObjectUtils.checkVisibility(this, gameObject),
-                    gameObject -> !(gameObject.getType() instanceof ResourceType));
-            if (target != null) {
-                state = CHASING_FOR_ENEMY;
-            }
-
-        }
-        if (state.equals(CHASING_FOR_ENEMY) && GameObjectUtils.checkPossibilityAction(this, target)) {
-            state = READY_TO_CAST;
-        }
-        if (state.equals(READY_TO_CAST) && timeAfterLastAction >= reloadTime) {
-            state = CASTING_ACTION;
-            timeAfterStartedCast = 0;
-        }
-
-        if (state.equals(CASTING_ACTION) && timeAfterStartedCast >= castTime) {
-            board.addAction(new DamageAction(damage, target, 0));
-            timeAfterLastAction = 0;
-            timeAfterStartedCast = 0;
-        }
-
-        if (target == null) {
-            state = WAITING_FOR_ENEMY;
-        }
-
         switch (state) {
-            case CHASING_FOR_ENEMY:
-                Vector vector = new Vector(target.getX() - this.getX(), target.getY() - this.getY());
-                this.setSpeedVector(vector);
-                break;
             case WAITING_FOR_ENEMY:
-            case CASTING_ACTION:
-                this.setSpeedVector(new Vector());
+                target = this.getNearestEnemy(board.getGameObjects());
+                if (target != null) {
+                    state = CHASING_FOR_ENEMY;
+                }
                 break;
+            case CHASING_FOR_ENEMY:
+                target = this.getNearestEnemy(board.getGameObjects());
+                if (target == null) {
+                    state = WAITING_FOR_ENEMY;
+                    break;
+                }
+                if (GameObjectUtils.checkPossibilityAction(this, target)) {
+                    state = READY_TO_CAST;
+                }
+                break;
+            case READY_TO_CAST:
+                if (target.isDead() || !GameObjectUtils.checkPossibilityAction(this, target)) {
+                    state = WAITING_FOR_ENEMY;
+                    break;
+                }
+                if (timeAfterLastAction >= reloadTime) {
+                    state = CASTING_ACTION;
+                    timeAfterStartedCast = 0;
+                }
+            case CASTING_ACTION:
+                if (target.isDead() || !GameObjectUtils.checkPossibilityAction(this, target)) {
+                    state = WAITING_FOR_ENEMY;
+                    break;
+                }
+                if (timeAfterStartedCast >= castTime) {
+                    board.addAction(new DamageAction(damage, target, 0));
+                    timeAfterLastAction = 0;
+                    timeAfterStartedCast = 0;
+                    state = READY_TO_CAST;
+                }
         }
+
+        if (state.equals(CHASING_FOR_ENEMY) && target != null) {
+            Vector vector = new Vector(target.getX() - this.getX(), target.getY() - this.getY());
+            this.setSpeedVector(vector);
+        } else {
+            this.setSpeedVector(new Vector());
+        }
+    }
+
+    private GameObject getNearestEnemy(Collection<GameObject> objects) {
+        return GameObjectUtils.getNearestObject(this, objects,
+                gameObject -> !gameObject.isDead(),
+                gameObject -> !gameObject.getOwner().equals(this.getOwner()),
+                gameObject -> GameObjectUtils.checkVisibility(this, gameObject),
+                gameObject -> !(gameObject.getType() instanceof ResourceType));
     }
 
     @Override
