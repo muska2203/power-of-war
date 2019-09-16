@@ -55,6 +55,9 @@ public class Vector {
     }
 
     public static Vector byTarget(GameObject current, GameObject target) {
+        if (target == null) {
+            return new Vector();
+        }
         return new Vector(target.getX() - current.getX(), target.getY() - current.getY());
     }
 
