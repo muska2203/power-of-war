@@ -44,49 +44,75 @@ public abstract class Miner extends BaseGameObject {
 
     @Override
     public void update(Board board) {
-        System.out.println(this.state + " " + this.target);
-        if (!this.state.equals(NONE) && (target == null || target.isDead())) {
-            this.state = NONE;
-            this.target = null;
-        }
-        if (this.state.equals(NONE)) {
-            if (!this.isFull()) {
-                this.target = getNearestResource(board);
-                this.state = SEARCH;
-            }
-            if (this.target == null) {
-                this.target = getNearestBase(board);
-                this.state = DELIVERY;
-            }
-            if (this.target == null) {
-                this.state = NONE;
-            }
-        }
-        if (this.state.equals(SEARCH) && GameObjectUtils.checkPossibilityAction(this, target)) {
-            this.state = MINING;
-        }
-        if (this.state.equals(DELIVERY) && GameObjectUtils.checkPossibilityAction(this, target)) {
-            board.addAction(new StoreResourcesAction(this));
-            this.state = NONE;
-            this.target = null;
-        }
-        if (this.state.equals(MINING)) {
-            if (!this.isFull()) {
-                board.addAction(new MineResourceAction((Resource) this.target, this));
-            } else {
-                this.state = NONE;
-                this.target = null;
-            }
-        }
-
-        switch (this.state) {
-            case NONE:
-            case MINING:
-                this.setSpeedVector(new Vector());
+        switch (state) {
+            case NONE: {
+                // target == null
+                if (!this.isFull()) {
+                    target = this.getNearestResource(board);
+                    state = SEARCH;
+                }
+                // Если ресурс не найден или майнер уже не может больше набрать ресурса, то идем на базу.
+                if (target == null) {
+                    target = this.getNearestBase(board);
+                    if (target != null) {
+                        state = DELIVERY;
+                    }
+                }
+                this.setSpeedVector(target == null ? new Vector() : Vector.byTarget(this, target));
                 break;
-            case DELIVERY:
-            case SEARCH:
-                this.setSpeedVector(Vector.byTarget(this, this.target));
+            }
+            case SEARCH: {
+                // target == Resource
+                if (target == null || target.isDead()) {
+                    target = null;
+                    state = NONE;
+                    this.setSpeedVector(new Vector());
+                } else {
+                    if (GameObjectUtils.checkPossibilityAction(this, target)) {
+                        state = MINING;
+                        this.setSpeedVector(new Vector());
+                    }
+                }
+                break;
+            }
+            case MINING: {
+                // target == Resource
+                if (target == null || target.isDead()) {
+                    state = NONE;
+                    target = null;
+                    this.setSpeedVector(new Vector());
+                } else {
+                    if (!isFull()) {
+                        board.addAction(new MineResourceAction((Resource) target, this));
+                    } else {
+                        target = this.getNearestBase(board);
+                        if (target == null) {
+                            state = NONE;
+                            this.setSpeedVector(new Vector());
+                        } else {
+                            state = DELIVERY;
+                            this.setSpeedVector(Vector.byTarget(this, target));
+                        }
+                    }
+                }
+                break;
+            }
+            case DELIVERY: {
+                // target == Base
+                if (target == null || target.isDead()) {
+                    target = null;
+                    state = NONE;
+                    this.setSpeedVector(new Vector());
+                } else {
+                    if (GameObjectUtils.checkPossibilityAction(this, target)) {
+                        board.addAction(new StoreResourcesAction(this));
+                        state = NONE;
+                        target = null;
+                        this.setSpeedVector(new Vector());
+                    }
+                }
+                break;
+            }
         }
     }
 
