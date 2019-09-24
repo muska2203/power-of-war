@@ -22,7 +22,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.dreamteam.powerofwar.SwingGameStarter</mainClass>
+                            <mainClass>com.dreamteam.powerofwar.client.ClientApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
