@@ -15,15 +15,15 @@ public class TestConnection {
      */
     public static void main(String[] args) {
         if (args.length > 0 && args[0].equals("server")) {
-            Server server = new Server(IP, PORT);
             try {
+                Server server = new Server(IP, PORT);
                 server.start();
             } catch (IOException e) {
                 System.out.println("Server has been closed.");
             }
         } else {
-            Client client = new Client(IP, PORT);
             try {
+                Client client = new Client(IP, PORT);
                 client.start();
             } catch (IOException e) {
                 System.out.println("Connection has been refused.");

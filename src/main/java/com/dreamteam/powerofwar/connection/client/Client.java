@@ -2,35 +2,28 @@ package com.dreamteam.powerofwar.connection.client;
 
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 
 public class Client {
 
-    private InetSocketAddress address;
-    private static SocketChannel clientSocket;
+    private static ClientConnection clientConnection;
     private static BufferedReader consoleReader;
 
-    public Client(String ip, int port) {
-        address = new InetSocketAddress(ip, port);
+    public Client(String ip, int port) throws IOException {
+        clientConnection = new ClientConnection(new InetSocketAddress(ip, port));
+        consoleReader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     public void start() throws IOException {
         try {
-            clientSocket = SocketChannel.open(address);
-            consoleReader = new BufferedReader(new InputStreamReader(System.in));
-
-            while (clientSocket.isOpen()) {
+            clientConnection.startListeningServer(System.out::println);
+            while (clientConnection.isOpen()) {
                 String word = consoleReader.readLine();
-                byte[] bytes = word.getBytes();
-                ByteBuffer buffer = ByteBuffer.wrap(bytes);
-                clientSocket.write(buffer);
-                buffer.clear();
+                clientConnection.write(word);
             }
         } finally { // в любом случае необходимо закрыть сокет и потоки
-            if (clientSocket != null && clientSocket.isOpen()) {
+            if (clientConnection.isOpen()) {
                 System.out.println("Client has been closed");
-                clientSocket.close();
+                clientConnection.close();
             }
         }
     }
