@@ -59,7 +59,7 @@ public class PlaygroundComponent extends JComponent {
             public void mouseReleased(MouseEvent e) {
                 SelectedPlayer selectedPlayer = selectedPlayerState.get();
                 SelectedGameObject selectedGameObject = selectedGameObjectState.get();
-                if (secondPlayer == null || selectedGameObject == null) {
+                if (selectedPlayer == null || selectedGameObject == null) {
                     return;
                 }
 

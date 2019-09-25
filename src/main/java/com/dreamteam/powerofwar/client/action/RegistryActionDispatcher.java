@@ -11,7 +11,7 @@ public class RegistryActionDispatcher implements ActionDispatcher {
         this.handlers = new HashMap<>();
     }
 
-    public <T extends Action> void register(Class<T> actionClass, ActionHandler<? extends T> handler) {
+    public <T extends Action> void register(Class<T> actionClass, ActionHandler<T> handler) {
         this.handlers.put(actionClass, handler);
     }
 
