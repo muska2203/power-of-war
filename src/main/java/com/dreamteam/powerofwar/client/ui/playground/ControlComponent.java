@@ -14,7 +14,12 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import javax.swing.*;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ControlComponent extends JPanel {
 
     private ActionDispatcher actionDispatcher;
