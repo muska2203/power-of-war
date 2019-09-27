@@ -5,20 +5,25 @@ import com.dreamteam.powerofwar.game.object.GameObject;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.springframework.stereotype.Component;
 
 /**
  * Игровое поле.
  */
+@Component
 public class Board {
+
+    public static final int BOARD_WIDTH = 800;
+    public static final int BOARD_HEIGHT = 480;
 
     private double width;
     private double height;
     private List<GameObject> gameObjects = new CopyOnWriteArrayList<>();
     private List<Action> actions = new CopyOnWriteArrayList<>();
 
-    public Board(double width, double height) {
-        this.width = width;
-        this.height = height;
+    public Board() {
+        this.width = BOARD_WIDTH;
+        this.height = BOARD_HEIGHT;
     }
 
     public List<GameObject> getGameObjects() {
