@@ -1,34 +1,25 @@
 package com.dreamteam.powerofwar.client.ui;
 
-import com.dreamteam.powerofwar.client.action.ActionDispatcher;
 import com.dreamteam.powerofwar.client.ui.playground.GameContainer;
-import com.dreamteam.powerofwar.client.state.State;
-import com.dreamteam.powerofwar.client.state.subject.SelectedGameObject;
-import com.dreamteam.powerofwar.client.state.subject.SelectedPlayer;
-import com.dreamteam.powerofwar.game.Board;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
+import org.springframework.stereotype.Component;
 
 /**
  * Main Window Frame of the application.
  */
+// TODO: Most likely it should be a prototype bean
+@Component
 public class MainWindow extends JFrame {
 
-    private Board board;
-    private ActionDispatcher actionDispatcher;
-
-    public MainWindow(Board board, ActionDispatcher actionDispatcher, State<SelectedPlayer> selectedPlayerState,
-                      State<SelectedGameObject> selectedGameObjectState) {
-        this.board = board;
-        this.actionDispatcher = actionDispatcher;
-
+    public MainWindow(GameContainer gameContainer) {
         setTitle("Power of War");
         setSize(new Dimension(700, 700));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setContentPane(new GameContainer(this.board, this.actionDispatcher, selectedPlayerState, selectedGameObjectState));
+        setContentPane(gameContainer);
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -40,6 +31,8 @@ public class MainWindow extends JFrame {
         });
 
         setMinimumSize(getSize());// enforces the minimum size of both frame and component
+
+        // TODO: Do it outside the constructor. Maybe ClientApplication class or other starting code.
         setVisible(true);
     }
 }

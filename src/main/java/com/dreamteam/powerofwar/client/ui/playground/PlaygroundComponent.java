@@ -19,7 +19,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.swing.*;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PlaygroundComponent extends JComponent {
 
     private Board board;
@@ -36,9 +41,12 @@ public class PlaygroundComponent extends JComponent {
     private int xBoardStart = 0;
     private int yBoardStart = 0;
 
-    public PlaygroundComponent(Board board, ActionDispatcher actionDispatcher,
-                               State<SelectedPlayer> selectedPlayerState, State<SelectedGameObject> selectedGameObjectState,
-                               Player firstPlayer, Player secondPlayer) {
+    public PlaygroundComponent(Board board,
+                               ActionDispatcher actionDispatcher,
+                               State<SelectedPlayer> selectedPlayerState,
+                               State<SelectedGameObject> selectedGameObjectState,
+                               Player firstPlayer,
+                               Player secondPlayer) {
         super();
 
         this.board = board;
