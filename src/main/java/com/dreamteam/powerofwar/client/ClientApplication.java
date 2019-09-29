@@ -9,7 +9,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication(scanBasePackages = "com.dreamteam.powerofwar")
+@SpringBootApplication(scanBasePackages = {"com.dreamteam.powerofwar.client", "com.dreamteam.powerofwar.game"})
 public class ClientApplication {
 
     public static void main(String[] args) {

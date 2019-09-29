@@ -1,5 +1,6 @@
 package com.dreamteam.powerofwar.connection.server;
 
+import com.dreamteam.powerofwar.connection.ConnectionInfo;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.GameProgram;
 
@@ -12,17 +13,26 @@ public class Server {
     private Board board;
     private GameProgram gameProgram;
 
+    public static void main(String[] args) {
+        try {
+            Server server = new Server(ConnectionInfo.IP, ConnectionInfo.PORT);
+            server.start();
+        } catch (IOException e) {
+            System.out.println("Server has been closed.");
+        }
+    }
+
     public Server(String ip, int port) throws IOException {
         serverConnection = new ServerConnection(new InetSocketAddress(ip, port));
     }
 
     public void start() throws IOException {
         try {
-            serverConnection.waitForPlayers();
-            board = new Board(800, 480);
+            Thread serverThread = new Thread(serverConnection);
+            board = new Board();
             gameProgram = new GameProgram(board);
             gameProgram.startGame();
-            serverConnection.startListeningPlayers(gameProgram);
+            serverThread.start();
             serverConnection.startMailingBoardInfoToPlayers(board);
         } finally {
             serverConnection.close();

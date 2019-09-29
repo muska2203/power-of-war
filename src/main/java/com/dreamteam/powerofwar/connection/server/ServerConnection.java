@@ -1,97 +1,72 @@
 package com.dreamteam.powerofwar.connection.server;
 
-import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.event.EventListener;
-import com.dreamteam.powerofwar.game.player.Player;
+import com.dreamteam.powerofwar.connection.ConnectionInfo;
+import com.dreamteam.powerofwar.connection.message.MessageDispatcher;
+import com.dreamteam.powerofwar.connection.message.Message;
+import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ServerConnection implements Closeable {
+@Component
+public class ServerConnection implements Runnable, Closeable {
 
-    public static final int MAX_CONNECTIONS = 2;
-
+    private Thread serverConnectionThread = new Thread(this);
+    private MessageDispatcher messageDispatcher;
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
     private ByteBuffer buffer = ByteBuffer.allocate(256);
 
-    private Map<SocketChannel, Player> players = new ConcurrentHashMap<>();
+    private List<SocketChannel> channels = new CopyOnWriteArrayList<>();
 
-    public ServerConnection(InetSocketAddress socketAddress) throws IOException {
+    public ServerConnection(MessageDispatcher messageDispatcher) throws IOException {
+        this.messageDispatcher = messageDispatcher;
         selector = Selector.open();
         serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.socket().bind(socketAddress);
+        serverSocketChannel.socket().bind(new InetSocketAddress(ConnectionInfo.IP, ConnectionInfo.PORT));
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
     }
 
-    public void waitForPlayers() throws IOException {
-        Iterator<SelectionKey> keys;
-        SelectionKey key;
-        while (players.size() != MAX_CONNECTIONS) {
-            selector.select();
-            keys = selector.selectedKeys().iterator();
-            while (keys.hasNext()) {
-                key = keys.next();
-                keys.remove();
-
-                if (!key.isValid()) {
-                    continue;
-                }
-
-                if (key.isAcceptable()) {
-                    handleAccept(key);
-                }
-            }
-        }
+    public void start() {
+        serverConnectionThread.start();
     }
 
-    public void startListeningPlayers(EventListener eventListener) {
-        new Thread(() -> {
-            try {
-                Iterator<SelectionKey> keys;
-                SelectionKey key;
-                while (serverSocketChannel.isOpen() && players.size() == MAX_CONNECTIONS) {
-                    selector.select();
-                    keys = selector.selectedKeys().iterator();
-                    while (keys.hasNext()) {
-                        key = keys.next();
-                        keys.remove();
+    @Override
+    public void run() {
+        try {
+            Iterator<SelectionKey> keys;
+            SelectionKey key;
+            while (serverSocketChannel.isOpen()) {
+                selector.select();
+                keys = selector.selectedKeys().iterator();
+                while (keys.hasNext()) {
+                    key = keys.next();
+                    keys.remove();
 
-                        if (key.isValid() && key.isReadable()) {
-                            handleRead(key);
-                        }
+                    if (!key.isValid()) {
+                        continue;
+                    }
+
+                    if (key.isAcceptable()) {
+                        handleAccept(key);
+                    }
+                    if (key.isValid() && key.isReadable()) {
+                        handleRead(key);
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }).start();
-    }
-
-    public void startMailingBoardInfoToPlayers(Board board) {
-        try {
-            while (serverSocketChannel.isOpen() && players.size() == MAX_CONNECTIONS) {
-                Thread.sleep(1000);
-                ByteBuffer buffer = ByteBuffer.wrap(Integer.toString(board.getGameObjects().size()).getBytes());
-                for (SocketChannel channel : players.keySet()) {
-                    buffer.mark();
-                    channel.write(buffer);
-                    buffer.reset();
-                }
-                buffer.clear();
-            }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -103,45 +78,48 @@ public class ServerConnection implements Closeable {
             channel.configureBlocking(false);
             channel.register(selector, SelectionKey.OP_READ);
             System.out.println("accepted connection from: " + address);
-            players.put(channel, new Player("player" + (players.size() + 1)));
+            channels.add(channel);
         } catch (IOException e) {
             System.out.println("Connection refused.");
         }
     }
 
-    private void handleRead(SelectionKey key) throws IOException {
+    private void handleRead(SelectionKey key) throws IOException, ClassNotFoundException {
         SocketChannel channel = (SocketChannel) key.channel();
-
-        buffer.clear();
-        int numRead = -1;
-        try {
+        byte[] data = new byte[0];
+        int numRead;
+        do {
+            buffer.clear();
             numRead = channel.read(buffer);
-        } catch (IOException ignored) {
+            if (numRead == -1) {
+                return;
+            }
+            byte[] tmp = data;
+            data = new byte[tmp.length + numRead];
+            System.arraycopy(tmp, 0, data, 0, tmp.length);
+            System.arraycopy(buffer.array(), 0, data, tmp.length, numRead);
         }
-        if (numRead == -1) {
-            players.remove(channel);
-            Socket socket = channel.socket();
-            SocketAddress remoteAddr = socket.getRemoteSocketAddress();
-            System.out.println("Connection closed by client: " + remoteAddr);
-            channel.close();
-            key.cancel();
-            return;
-        }
-        byte[] data = new byte[numRead];
-        System.arraycopy(buffer.array(), 0, data, 0, numRead);
+        while (numRead == buffer.capacity());
 
-        String msg = new String(data);
-
-        registerMessage(msg);
-    }
-
-    private void registerMessage(String message) {
-        System.out.println(message);
+        ObjectInputStream reader = new ObjectInputStream(new ByteArrayInputStream(data));
+        Message message = (Message) reader.readObject();
+        messageDispatcher.dispatch(message);
     }
 
     @Override
     public void close() throws IOException {
         serverSocketChannel.close();
         selector.close();
+        serverConnectionThread.interrupt();
+    }
+
+    public void closeChannel(int connectionId) {
+        try {
+            SocketChannel socketChannel = channels.get(connectionId);
+            if (socketChannel != null) {
+                channels.remove(socketChannel);
+                socketChannel.close();
+            }
+        } catch (IOException ignore) { }
     }
 }
