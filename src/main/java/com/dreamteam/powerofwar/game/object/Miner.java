@@ -44,7 +44,6 @@ public abstract class Miner extends BaseGameObject {
 
     @Override
     public void update(Board board) {
-        System.out.println(this.state + " " + this.target);
         switch (state) {
             case WAITING_FOR_RESOURCE:
                 target = getNearestResource(board);
@@ -74,7 +73,6 @@ public abstract class Miner extends BaseGameObject {
                 break;
             case MINING:
                 if (target == null || target.isDead()) {
-                    System.out.println("We are here");
                     state = WAITING_FOR_RESOURCE;
                     break;
                 }
