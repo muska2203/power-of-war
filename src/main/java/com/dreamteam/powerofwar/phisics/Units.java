@@ -3,7 +3,9 @@ package com.dreamteam.powerofwar.phisics;
 /**
  * Все единицы измерения, используемые в игре.
  */
-public class Units {
+final public class Units {
+
+    private Units() {}
 
     /**
      * Количество пикселей, которое пройдет объект с скоростью = 1 за 1 наносекунду.

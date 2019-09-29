@@ -2,7 +2,8 @@ package com.dreamteam.powerofwar.game.player;
 
 import com.dreamteam.powerofwar.game.exception.TooLessResourcesException;
 import com.dreamteam.powerofwar.game.exception.TooManyObjectsException;
-import com.dreamteam.powerofwar.game.object.*;
+import com.dreamteam.powerofwar.game.object.GameObject;
+import com.dreamteam.powerofwar.game.object.GameObjectContext;
 import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 
 /**
@@ -27,7 +28,8 @@ public class GameObjectFactory {
      * @throws TooManyObjectsException если лимит игрока для объектов указанного типа был превышен.
      * @throws TooLessResourcesException если у игрока не хватает ресурсов для создания объекта указанного типа.
      */
-    public GameObject createObject(double x, double y, GameObjectType type) throws TooManyObjectsException, TooLessResourcesException {
+    public GameObject createObject(double x, double y, GameObjectType type)
+            throws TooManyObjectsException, TooLessResourcesException {
         PlayerContext context = player.getContext();
         if (context.isFullOf(type)) {
             throw new TooManyObjectsException(type, player);

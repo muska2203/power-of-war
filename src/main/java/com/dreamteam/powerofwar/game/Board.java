@@ -1,11 +1,12 @@
 package com.dreamteam.powerofwar.game;
 
-import com.dreamteam.powerofwar.game.action.Action;
-import com.dreamteam.powerofwar.game.object.GameObject;
-
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.springframework.stereotype.Component;
+
+import com.dreamteam.powerofwar.game.action.Action;
+import com.dreamteam.powerofwar.game.object.GameObject;
 
 /**
  * Игровое поле.
@@ -50,7 +51,8 @@ public class Board {
     }
 
     public void cleanOverboardObjects() {
-        gameObjects.removeIf(object -> object.getX() < 0 || object.getX() > width || object.getY() < 0 || object.getY() > height);
+        gameObjects.removeIf(object -> object.getX() < 0 || object.getX() > width ||
+                object.getY() < 0 || object.getY() > height);
     }
 
     public void doActions(long loopTime) {

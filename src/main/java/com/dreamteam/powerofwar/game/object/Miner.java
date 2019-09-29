@@ -1,14 +1,12 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.action.StoreResourcesAction;
 import com.dreamteam.powerofwar.game.action.MineResourceAction;
+import com.dreamteam.powerofwar.game.action.StoreResourcesAction;
 import com.dreamteam.powerofwar.game.object.type.BuildingType;
 import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Vector;
-
-import static com.dreamteam.powerofwar.game.object.Miner.State.*;
 
 /**
  * TODO: JavaDoc
@@ -22,7 +20,7 @@ public abstract class Miner extends BaseGameObject {
 
     Miner(double x, double y, Player player) {
         super(x, y, new Vector(), player);
-        this.state = SEARCH_RESOURCE;
+        this.state = State.SEARCH_RESOURCE;
     }
 
     public int getValue() {
@@ -52,14 +50,14 @@ public abstract class Miner extends BaseGameObject {
                 }
                 if (target != null &&
                         GameObjectUtils.checkPossibilityAction(this, target)) {
-                    state = MINING;
+                    state = State.MINING;
                     this.setSpeedVector(new Vector());
                     break;
                 }
                 if (target == null) {
                     target = this.getNearestBase(board);
                     if (target != null) {
-                        state = DELIVERY;
+                        state = State.DELIVERY;
                         this.setSpeedVector(Vector.byTarget(this, target));
                     }
                 }
@@ -77,7 +75,7 @@ public abstract class Miner extends BaseGameObject {
 
                 target = getNearestBase(board);
                 if (target != null) {
-                    state = DELIVERY;
+                    state = State.DELIVERY;
                     this.setSpeedVector(Vector.byTarget(this, target));
                 }
                 break;
@@ -99,7 +97,7 @@ public abstract class Miner extends BaseGameObject {
 
     private void resetState() {
         target = null;
-        state = SEARCH_RESOURCE;
+        state = State.SEARCH_RESOURCE;
         this.setSpeedVector(new Vector());
     }
 

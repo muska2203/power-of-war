@@ -1,5 +1,22 @@
 package com.dreamteam.powerofwar.client.ui.playground;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.swing.JComponent;
+import javax.swing.Timer;
+
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.dreamteam.powerofwar.client.action.ActionDispatcher;
 import com.dreamteam.powerofwar.client.action.type.AddGameObjectAction;
 import com.dreamteam.powerofwar.client.state.State;
@@ -10,18 +27,6 @@ import com.dreamteam.powerofwar.game.object.GameObject;
 import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.object.type.UnitType;
 import com.dreamteam.powerofwar.game.player.Player;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.swing.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -107,7 +112,8 @@ public class PlaygroundComponent extends JComponent {
         g.setColor(Color.black);
         g.fillRect(0, 0, dim.width, dim.height);
         g.setColor(Color.white);
-        g.drawRect(toUICoordinateX(0), toUICoordinateY(0), toUICoordinate(board.getWidth()), toUICoordinate(board.getHeight()));
+        g.drawRect(toUICoordinateX(0), toUICoordinateY(0), toUICoordinate(board.getWidth()),
+                toUICoordinate(board.getHeight()));
 
         Map<GameObjectType, java.util.List<GameObject>> gameObjectTypeListMap = board.getGameObjects()
                 .stream()
@@ -129,7 +135,8 @@ public class PlaygroundComponent extends JComponent {
         drawObjects(g, null, null, Color.WHITE, gameObjectsCoward);
     }
 
-    private void drawObjects(Graphics g, Color bodyColor, Color visionColor, Color actionColor, List<GameObject> gameObjects) {
+    private void drawObjects(Graphics g, Color bodyColor, Color visionColor,
+                             Color actionColor, List<GameObject> gameObjects) {
         if (gameObjects == null || gameObjects.size() == 0) {
             return;
         }

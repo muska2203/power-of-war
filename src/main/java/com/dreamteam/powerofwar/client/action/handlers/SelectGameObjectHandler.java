@@ -1,10 +1,11 @@
 package com.dreamteam.powerofwar.client.action.handlers;
 
+import org.springframework.stereotype.Component;
+
 import com.dreamteam.powerofwar.client.action.ActionHandler;
 import com.dreamteam.powerofwar.client.action.type.SelectGameObjectAction;
 import com.dreamteam.powerofwar.client.state.StateDispatcher;
 import com.dreamteam.powerofwar.client.state.subject.SelectedGameObject;
-import org.springframework.stereotype.Component;
 
 @Component
 public class SelectGameObjectHandler implements ActionHandler<SelectGameObjectAction> {

@@ -6,7 +6,9 @@ import java.util.function.Predicate;
 /**
  * Утилитарный класс, который предоставляет часто используемые расчеты, связанные с игровыми объектами.
  */
-class GameObjectUtils {
+final class GameObjectUtils {
+
+    private GameObjectUtils() {}
 
     /**
      * Проверяет 2 объекта на столкновение.

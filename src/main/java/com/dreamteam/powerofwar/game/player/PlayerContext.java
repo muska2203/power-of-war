@@ -1,13 +1,13 @@
 package com.dreamteam.powerofwar.game.player;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.dreamteam.powerofwar.game.object.type.BuildingType;
 import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.object.type.UnitType;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -38,7 +38,8 @@ public class PlayerContext {
 
     /**
      * Стоимость указанного вида игровых объектов.
-     * По умолчанию все объекты являются бесплатными, для добавления стоимости требуется добавить запись в указанную map-у.
+     * По умолчанию все объекты являются бесплатными,
+     * для добавления стоимости требуется добавить запись в указанную map-у.
      */
     private Map<GameObjectType, Map<ResourceType, Integer>> gameObjectCosts = new HashMap<>();
 
