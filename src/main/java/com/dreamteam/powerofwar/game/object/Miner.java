@@ -22,7 +22,7 @@ public abstract class Miner extends BaseGameObject {
 
     Miner(double x, double y, Player player) {
         super(x, y, new Vector(), player);
-        this.state = SEARCH_RESOURCE;
+        this.state = WAITING_FOR_RESOURCE;
     }
 
     public int getValue() {
@@ -44,63 +44,69 @@ public abstract class Miner extends BaseGameObject {
 
     @Override
     public void update(Board board) {
+        System.out.println(this.state + " " + this.target);
         switch (state) {
-            case SEARCH_RESOURCE: {
-                if (!this.isFull()) {
-                    target = this.getNearestResource(board);
+            case WAITING_FOR_RESOURCE:
+                target = getNearestResource(board);
+                if (target != null && !this.isFull()) {
                     this.setSpeedVector(Vector.byPoints(this.getPoint(), target.getPoint()));
-                }
-                if (target != null &&
-                        GameObjectUtils.checkPossibilityAction(this, target)) {
-                    state = MINING;
-                    this.setSpeedVector(new Vector());
-                    break;
-                }
-                if (target == null) {
-                    target = this.getNearestBase(board);
-                    if (target != null) {
-                        state = DELIVERY;
-                        this.setSpeedVector(Vector.byPoints(this.getPoint(), target.getPoint()));
-                    }
-                }
-                break;
-            }
-            case MINING: {
-                if (target == null || target.isDead()) {
-                    this.resetState();
-                    break;
-                }
-                if (!this.isFull()) {
-                    board.addAction(new MineResourceAction((Resource) target, this));
+                    state = GOING_TO_RESOURCE;
                     break;
                 }
 
                 target = getNearestBase(board);
                 if (target != null) {
-                    state = DELIVERY;
                     this.setSpeedVector(Vector.byPoints(this.getPoint(), target.getPoint()));
-                }
-                break;
-            }
-            case DELIVERY: {
-                if (target == null || target.isDead()) {
-                    this.resetState();
+                    state = GOING_TO_BASE;
                     break;
                 }
-
+                this.setSpeedVector(new Vector());
+                break;
+            case GOING_TO_RESOURCE:
+                if (target == null || target.isDead()) {
+                    state = WAITING_FOR_RESOURCE;
+                    break;
+                }
                 if (GameObjectUtils.checkPossibilityAction(this, target)) {
-                    this.resetState();
-                    board.addAction(new StoreResourcesAction(this));
+                    this.setSpeedVector(new Vector());
+                    state = MINING;
                 }
                 break;
-            }
+            case MINING:
+                if (target == null || target.isDead()) {
+                    System.out.println("We are here");
+                    state = WAITING_FOR_RESOURCE;
+                    break;
+                }
+                if (this.isFull()) {
+                    target = getNearestBase(board);
+                    if (target != null && !target.isDead()) {
+                        this.setSpeedVector(Vector.byPoints(this.getPoint(), target.getPoint()));
+                        state = GOING_TO_BASE;
+                    }
+                    break;
+                }
+                board.addAction(new MineResourceAction((Resource) target, this));
+                break;
+            case GOING_TO_BASE:
+                if (target == null || target.isDead()) {
+                    state = WAITING_FOR_RESOURCE;
+                    break;
+                }
+                if (GameObjectUtils.checkPossibilityAction(this, target)) {
+                    this.setSpeedVector(new Vector());
+                    state = DELIVERY;
+                }
+                break;
+            case DELIVERY:
+                if (target == null || target.isDead()) {
+                    state = WAITING_FOR_RESOURCE;
+                    break;
+                }
+                board.addAction(new StoreResourcesAction(this));
+                state = WAITING_FOR_RESOURCE;
+                break;
         }
-    }
-
-    private void resetState() {
-        target = null;
-        state = SEARCH_RESOURCE;
-        this.setSpeedVector(new Vector());
     }
 
     @Override
@@ -128,20 +134,10 @@ public abstract class Miner extends BaseGameObject {
     }
 
     public enum State {
-        /**
-         * Поиск ресурса. Состояние майнера по умолчанию. Майнер всегда хочет работать/добывать ресурсы.
-         * Ищет ресурс и направляется к нему (по ходу может находить более близкие источники).
-         */
-        SEARCH_RESOURCE,
-
-        /**
-         * Добыча ресурса. Может занимать некоторое время
-         */
+        WAITING_FOR_RESOURCE,
+        GOING_TO_RESOURCE,
         MINING,
-
-        /**
-         * Доставка ресурса на базу/Возвращение на базу
-         */
+        GOING_TO_BASE,
         DELIVERY
     }
 }
