@@ -29,8 +29,8 @@ class GameObjectUtils {
      */
     public static boolean checkVisibility(GameObject currentObject, GameObject checkedObject) {
         double criticalDist2 = Math.pow(currentObject.getVisibilityRadius() + checkedObject.getSize(), 2);
-        double distByX = checkedObject.getX() - currentObject.getX();
-        double distByY = checkedObject.getY() - currentObject.getY();
+        double distByX = checkedObject.getPoint().getX() - currentObject.getPoint().getX();
+        double distByY = checkedObject.getPoint().getY() - currentObject.getPoint().getY();
         double actualDist2 = distByX * distByX + distByY * distByY;
         return actualDist2 <= criticalDist2;
     }
@@ -44,8 +44,8 @@ class GameObjectUtils {
      *         <code>false</code> - в противном случае
      */
     public static boolean checkPossibilityAction(GameObject currentObject, GameObject checkedObject) {
-        double distByX = checkedObject.getX() - currentObject.getX();
-        double distByY = checkedObject.getY() - currentObject.getY();
+        double distByX = checkedObject.getPoint().getX() - currentObject.getPoint().getX();
+        double distByY = checkedObject.getPoint().getY() - currentObject.getPoint().getY();
         double actualDist2 = distByX * distByX + distByY * distByY;
         return actualDist2 <= Math.pow(currentObject.getActionRadius(), 2);
     }
@@ -58,8 +58,8 @@ class GameObjectUtils {
      * @return расстояние между цетрами объектов
      */
     public static double getDistance(GameObject firstObject, GameObject secondObject) {
-        double distByX = secondObject.getX() - firstObject.getX();
-        double distByY = secondObject.getY() - firstObject.getY();
+        double distByX = secondObject.getPoint().getX() - firstObject.getPoint().getX();
+        double distByY = secondObject.getPoint().getY() - firstObject.getPoint().getY();
         double actualDist2 = distByX * distByX + distByY * distByY;
         return Math.sqrt(actualDist2);
     }

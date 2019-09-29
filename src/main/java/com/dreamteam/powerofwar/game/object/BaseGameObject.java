@@ -17,8 +17,7 @@ public abstract class BaseGameObject implements GameObject {
     private static int objectsCount = 0;
 
     private int id;
-    private double x;
-    private double y;
+    private Point point;
     private Vector speedVector = new Vector();
     private int health = 1;
     private Player player;
@@ -30,8 +29,7 @@ public abstract class BaseGameObject implements GameObject {
 
     BaseGameObject(double x, double y, Player player) {
         this.id = ++objectsCount;
-        this.x = x;
-        this.y = y;
+        this.point = new Point(x, y);
         this.player = player;
     }
 
@@ -41,13 +39,8 @@ public abstract class BaseGameObject implements GameObject {
     }
 
     @Override
-    public double getX() {
-        return x;
-    }
-
-    @Override
-    public double getY() {
-        return y;
+    public Point getPoint() {
+        return point;
     }
 
     protected void setHealth(int health) {
@@ -61,8 +54,10 @@ public abstract class BaseGameObject implements GameObject {
 
     @Override
     public void move(long loopTime) {
-        x += speedVector.getX() * Units.SPEED * loopTime * getSpeedFactor();
-        y += speedVector.getY() * Units.SPEED * loopTime * getSpeedFactor();
+        double dx = speedVector.getX() * Units.SPEED * loopTime * getSpeedFactor();
+        double dy = speedVector.getY() * Units.SPEED * loopTime * getSpeedFactor();
+
+        this.point = new Point(this.point.getX() + dx, this.point.getY() + dy);
     }
 
     @Override

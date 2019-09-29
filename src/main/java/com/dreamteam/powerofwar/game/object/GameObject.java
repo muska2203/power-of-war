@@ -12,14 +12,10 @@ public interface GameObject {
     int getId();
 
     /**
-     * Возвращает позицию объекта по оси "OX" относительно игровой доски.
+     * All game objects have point on game board. Point is defining gameobject location.
+     * @return point on game board
      */
-    double getX();
-
-    /**
-     * Возвращает позицию объекта по оси "OY" относительно игровой доски.
-     */
-    double getY();
+    Point getPoint();
 
     /**
      * Возвращает размер объекта.

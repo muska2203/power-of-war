@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.phisics;
 
 import com.dreamteam.powerofwar.game.object.GameObject;
+import com.dreamteam.powerofwar.game.object.Point;
 
 public class Vector {
 
@@ -54,11 +55,8 @@ public class Vector {
         return vector;
     }
 
-    public static Vector byTarget(GameObject current, GameObject target) {
-        if (target == null) {
-            return new Vector();
-        }
-        return new Vector(target.getX() - current.getX(), target.getY() - current.getY());
+    public static Vector byPoints(Point from, Point to) {
+        return new Vector(to.getX() - from.getX(), to.getY() - from.getY());
     }
 
     public Vector negate() {

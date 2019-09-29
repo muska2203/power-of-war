@@ -48,7 +48,7 @@ public abstract class Miner extends BaseGameObject {
             case SEARCH_RESOURCE: {
                 if (!this.isFull()) {
                     target = this.getNearestResource(board);
-                    this.setSpeedVector(Vector.byTarget(this, target));
+                    this.setSpeedVector(Vector.byPoints(this.getPoint(), target.getPoint()));
                 }
                 if (target != null &&
                         GameObjectUtils.checkPossibilityAction(this, target)) {
@@ -60,7 +60,7 @@ public abstract class Miner extends BaseGameObject {
                     target = this.getNearestBase(board);
                     if (target != null) {
                         state = DELIVERY;
-                        this.setSpeedVector(Vector.byTarget(this, target));
+                        this.setSpeedVector(Vector.byPoints(this.getPoint(), target.getPoint()));
                     }
                 }
                 break;
@@ -78,7 +78,7 @@ public abstract class Miner extends BaseGameObject {
                 target = getNearestBase(board);
                 if (target != null) {
                     state = DELIVERY;
-                    this.setSpeedVector(Vector.byTarget(this, target));
+                    this.setSpeedVector(Vector.byPoints(this.getPoint(), target.getPoint()));
                 }
                 break;
             }

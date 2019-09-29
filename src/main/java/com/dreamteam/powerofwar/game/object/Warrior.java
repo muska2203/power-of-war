@@ -96,7 +96,7 @@ public class Warrior extends BaseGameObject {
         }
 
         if (state.equals(CHASING_FOR_ENEMY) && target != null) {
-            Vector vector = new Vector(target.getX() - this.getX(), target.getY() - this.getY());
+            Vector vector = Vector.byPoints(this.getPoint(), target.getPoint());
             this.setSpeedVector(vector);
         } else {
             this.setSpeedVector(new Vector());

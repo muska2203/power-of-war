@@ -50,7 +50,7 @@ public class CowardMinion extends BaseGameObject {
                     && GameObjectUtils.checkVisibility(this, gameObject) && !gameObject.isDead()
                     && gameObject.getOwner() != this.getOwner()
             ) {
-                Vector vector = new Vector(gameObject.getX() - this.getX(), gameObject.getY() - this.getY());
+                Vector vector = Vector.byPoints(this.getPoint(), gameObject.getPoint());
                 resultVector.addVector(vector);
             }
         }

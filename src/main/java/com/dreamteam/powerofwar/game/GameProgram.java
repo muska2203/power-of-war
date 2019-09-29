@@ -34,7 +34,6 @@ public class GameProgram implements EventListener, Runnable {
         board.addGameObject(gameObject);
     }
 
-
     @Override
     public void registerEvent(Event event) {
         events.add(event);
@@ -47,8 +46,8 @@ public class GameProgram implements EventListener, Runnable {
             long loopTime = calculateLoopTime();
             board.doActions(loopTime);
 
-            board.getGameObjects().forEach((gameObject -> gameObject.update(board)));
-            board.getGameObjects().forEach((gameObject -> gameObject.move(loopTime)));
+            board.getGameObjects().forEach(gameObject -> gameObject.update(board));
+            board.getGameObjects().forEach(gameObject -> gameObject.move(loopTime));
             board.cleanOverboardObjects();
             board.cleanDeadObjects();
             try {
@@ -64,7 +63,6 @@ public class GameProgram implements EventListener, Runnable {
             events.poll().execute(this);
         }
     }
-
 
     private long calculateLoopTime() {
         Long now = System.nanoTime();

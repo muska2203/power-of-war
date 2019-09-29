@@ -50,7 +50,10 @@ public class Board {
     }
 
     public void cleanOverboardObjects() {
-        gameObjects.removeIf(object -> object.getX() < 0 || object.getX() > width || object.getY() < 0 || object.getY() > height);
+        gameObjects.removeIf(object -> object.getPoint().getX() < 0
+                || object.getPoint().getX() > width
+                || object.getPoint().getY() < 0
+                || object.getPoint().getY() > height);
     }
 
     public void doActions(long loopTime) {

@@ -137,8 +137,8 @@ public class PlaygroundComponent extends JComponent {
             g.setColor(bodyColor);
             for (GameObject gameObject : gameObjects) {
                 int size = toUICoordinate(gameObject.getSize() * 2);
-                int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getSize());
-                int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getSize());
+                int xPosition = toUICoordinateX(gameObject.getPoint().getX() - gameObject.getSize());
+                int yPosition = toUICoordinateY(gameObject.getPoint().getY() - gameObject.getSize());
                 g.drawString(gameObject.toString(), xPosition - 2, yPosition - 2);
                 g.fillOval(xPosition, yPosition, size, size);
             }
@@ -148,8 +148,8 @@ public class PlaygroundComponent extends JComponent {
             for (GameObject gameObject : gameObjects) {
                 if (gameObject.getType().equals(UnitType.COWARD)) {
                     int size = toUICoordinate(gameObject.getVisibilityRadius() * 2);
-                    int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getVisibilityRadius());
-                    int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getVisibilityRadius());
+                    int xPosition = toUICoordinateX(gameObject.getPoint().getX() - gameObject.getVisibilityRadius());
+                    int yPosition = toUICoordinateY(gameObject.getPoint().getY() - gameObject.getVisibilityRadius());
                     g.drawOval(xPosition, yPosition, size, size);
                 }
             }
@@ -158,8 +158,8 @@ public class PlaygroundComponent extends JComponent {
             g.setColor(actionColor);
             for (GameObject gameObject : gameObjects) {
                 int size = toUICoordinate(gameObject.getActionRadius() * 2);
-                int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getActionRadius());
-                int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getActionRadius());
+                int xPosition = toUICoordinateX(gameObject.getPoint().getX() - gameObject.getActionRadius());
+                int yPosition = toUICoordinateY(gameObject.getPoint().getY() - gameObject.getActionRadius());
                 g.drawOval(xPosition, yPosition, size, size);
             }
         }
