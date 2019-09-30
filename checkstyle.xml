@@ -130,8 +130,36 @@
             <property name="separateLineBetweenGroups" value="true"/>
         </module>
 
+        <!--
+            Coding
+            https://checkstyle.org/config_coding.html
+        -->
+        <module name="CovariantEquals"/>
+        <module name="DeclarationOrder"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode"/>
+        <module name="FallThrough"/>
+        <module name="IllegalThrows"/>
+        <module name="InnerAssignment"/>
+        <module name="MagicNumber"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <module name="NoFinalizer"/>
+        <module name="OneStatementPerLine"/>
+        <module name="RequireThis">
+            <property name="checkFields" value="true"/>
+            <property name="checkMethods" value="false"/>
+        </module>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <module name="UnnecessaryParentheses"/>
 
-        <!-- TODO: Coding https://checkstyle.org/config_coding.html   -->
+
+
         <!-- TODO: Javadoc https://checkstyle.org/config_javadoc.html   -->
         <!-- TODO: Whitespace https://checkstyle.org/config_whitespace.html   -->
         <!-- TODO: Miscellaneous https://checkstyle.org/config_misc.html   -->

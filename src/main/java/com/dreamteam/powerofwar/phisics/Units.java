@@ -5,8 +5,6 @@ package com.dreamteam.powerofwar.phisics;
  */
 final public class Units {
 
-    private Units() {}
-
     /**
      * Количество пикселей, которое пройдет объект с скоростью = 1 за 1 наносекунду.
      */
@@ -18,4 +16,5 @@ final public class Units {
     public static final double BUILDING_DEFAULT_VISIBILITY_RADIUS = 70;
     public static final double BUILDING_DEFAULT_ACTION_RADIUS = 40;
 
+    private Units() {}
 }

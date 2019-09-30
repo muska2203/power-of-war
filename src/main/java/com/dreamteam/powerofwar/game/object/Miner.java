@@ -92,6 +92,8 @@ public abstract class Miner extends BaseGameObject {
                 }
                 break;
             }
+            default:
+                // do nothing
         }
     }
 

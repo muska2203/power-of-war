@@ -52,6 +52,7 @@ public class Warrior extends BaseGameObject {
         return UnitType.WARRIOR;
     }
 
+    @SuppressWarnings("checkstyle:FallThrough")
     @Override
     public void update(Board board) {
         switch (state) {
@@ -80,6 +81,7 @@ public class Warrior extends BaseGameObject {
                     state = State.CASTING_ACTION;
                     timeAfterStartedCast = 0;
                 }
+                break;
             case CASTING_ACTION:
                 if (target.isDead() || !GameObjectUtils.checkPossibilityAction(this, target)) {
                     state = State.WAITING_FOR_ENEMY;
@@ -91,6 +93,9 @@ public class Warrior extends BaseGameObject {
                     timeAfterStartedCast = 0;
                     state = State.READY_TO_CAST;
                 }
+                break;
+            default:
+                // do nothing
         }
 
         if (state.equals(State.CHASING_FOR_ENEMY) && target != null) {
@@ -118,6 +123,8 @@ public class Warrior extends BaseGameObject {
             case CHASING_FOR_ENEMY:
                 super.move(loopTime);
                 break;
+            default:
+                // maybe move on default and do something else in other cases?
         }
         timeAfterLastAction += loopTime * Units.SPEED;
     }

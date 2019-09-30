@@ -74,7 +74,7 @@ final class GameObjectUtils {
      * @return найденный объект, или <code>null</code>, если такого объекта не существует.
      */
     public static GameObject getNearestObject(GameObject current, Collection<GameObject> objects) {
-        return getNearestObject(current, objects, (obj) -> true);
+        return getNearestObject(current, objects, obj -> true);
     }
 
     /**
@@ -95,7 +95,7 @@ final class GameObjectUtils {
         double minDistance = Double.MAX_VALUE;
         GameObject nearest = null;
 
-        Predicate<GameObject> predicate = (gameObject) -> true;
+        Predicate<GameObject> predicate = gameObject -> true;
         for (Predicate<GameObject> objectPredicate : predicates) {
             predicate = predicate.and(objectPredicate);
         }

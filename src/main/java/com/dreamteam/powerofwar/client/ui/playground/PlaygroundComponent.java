@@ -89,6 +89,8 @@ public class PlaygroundComponent extends JComponent {
                     case 1: // Left Button
                         PlaygroundComponent.this.actionDispatcher.dispatch(new AddGameObjectAction(x, y, player, type));
                         break;
+                    default:
+                        // process ordinary clicks on the map?
                 }
             }
         });

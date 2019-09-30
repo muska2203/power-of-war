@@ -48,8 +48,8 @@ public class GameProgram implements EventListener, Runnable {
             long loopTime = calculateLoopTime();
             board.doActions(loopTime);
 
-            board.getGameObjects().forEach((gameObject -> gameObject.update(board)));
-            board.getGameObjects().forEach((gameObject -> gameObject.move(loopTime)));
+            board.getGameObjects().forEach(gameObject -> gameObject.update(board));
+            board.getGameObjects().forEach(gameObject -> gameObject.move(loopTime));
             board.cleanOverboardObjects();
             board.cleanDeadObjects();
             try {
