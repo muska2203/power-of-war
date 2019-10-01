@@ -28,7 +28,7 @@ public class MainWindow extends JFrame {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
                 // TODO: Action and state
-//                stopGame();
+                // stopGame();
             }
         });
 

@@ -23,13 +23,8 @@
         <property name="lineSeparator" value="lf"/>
     </module>
 
-    <!-- Checks for whitespace -->
-    <!-- See https://checkstyle.org/config_whitespace.html -->
+    <!-- No tab characters ('\t') in the source code -->
     <module name="FileTabCharacter"/>
-
-
-    <!-- TODO: tabWidth or FileTabCharacter ??? -->
-
 
     <module name="TreeWalker">
 
@@ -47,11 +42,11 @@
         <module name="HideUtilityClassConstructor"/>
         <!-- Inner (nested) classes/interfaces/enums should be at the bottom of the class after all methods. -->
         <module name="InnerTypeLast"/>
-        <!--TODO: marker interfaces?-->
+        <!-- TODO: should we allow marker interfaces? -->
         <module name="InterfaceIsType"/>
         <!-- Exception classes should have only final fields. -->
         <module name="MutableException"/>
-        <!--TODO-->
+        <!-- Each java file should have only one top-level class, interface or enum declaration. -->
         <module name="OneTopLevelClass"/>
         <!--
             A method should declare no more than 3 exceptions as the "throws" signature.
@@ -71,7 +66,6 @@
             Block Checks
             See https://checkstyle.org/config_blocks.html
         -->
-
         <module name="AvoidNestedBlocks">
             <property name="allowInSwitchCase" value="true"/>
         </module>
@@ -99,17 +93,11 @@
         <!--
             Import
             See https://checkstyle.org/config_imports.html
-        -->
-        <!-- TODO: Comment star and static import -->
-        <module name="AvoidStarImport"/>
-        <module name="AvoidStaticImport"/>
-        <!-- Do not import sun.* packages -->
-        <module name="IllegalImport"/>
-        <module name="RedundantImport"/>
-        <module name="UnusedImports">
-            <property name="processJavadoc" value="false"/>
-        </module>
-        <!--
+
+            Do not use "star" import like java.util.* or java.awt.*
+            Do not use static import or methods or constants. That may bring ambiguity and
+            non-obviousness about the source of these methods.
+
             Import order:
             * import standard java packages (java.* followed by javax.*)
             * [blank line]
@@ -121,6 +109,14 @@
 
             Each group of packages should be sorted alphabetically.
         -->
+        <module name="AvoidStarImport"/>
+        <module name="AvoidStaticImport"/>
+        <!-- Do not import sun.* packages -->
+        <module name="IllegalImport"/>
+        <module name="RedundantImport"/>
+        <module name="UnusedImports">
+            <property name="processJavadoc" value="false"/>
+        </module>
         <module name="CustomImportOrder">
             <property name="customImportOrderRules"
                       value="STANDARD_JAVA_PACKAGE###THIRD_PARTY_PACKAGE###SPECIAL_IMPORTS###STATIC"/>
@@ -158,10 +154,48 @@
         <module name="StringLiteralEquality"/>
         <module name="UnnecessaryParentheses"/>
 
+        <!-- Whitespace
+             https://checkstyle.org/config_whitespace.html
+        -->
+        <module name="EmptyLineSeparator">
+            <property name="allowNoEmptyLineBetweenFields" value="true"/>
+        </module>
+        <module name="MethodParamPad"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="OperatorWrap"/>
+        <module name="ParenPad"/>
+        <module name="SeparatorWrap">
+            <property name="id" value="SeparatorWrapDot"/>
+            <property name="tokens" value="DOT"/>
+            <property name="option" value="nl"/>
+        </module>
+        <module name="SeparatorWrap">
+            <property name="id" value="SeparatorWrapComma"/>
+            <property name="tokens" value="COMMA"/>
+            <property name="option" value="EOL"/>
+        </module>
+        <module name="WhitespaceAround">
+            <property name="allowEmptyConstructors" value="true"/>
+        </module>
 
+        <!--
+            Miscellaneous
+            https://checkstyle.org/config_misc.html
+        -->
+        <module name="ArrayTypeStyle"/>
+        <module name="CommentsIndentation"/>
+        <module name="Indentation">
+            <property name="lineWrappingIndentation" value="8"/>
+        </module>
+        <module name="UpperEll"/>
 
-        <!-- TODO: Javadoc https://checkstyle.org/config_javadoc.html   -->
-        <!-- TODO: Whitespace https://checkstyle.org/config_whitespace.html   -->
-        <!-- TODO: Miscellaneous https://checkstyle.org/config_misc.html   -->
+        <!--
+            Javadoc
+            https://checkstyle.org/config_javadoc.html
+            // TODO: Javadoc for public methods?
+        -->
+        <module name="MissingJavadocType"/>
+        <module name="MissingJavadocPackage"/>
     </module>
 </module>

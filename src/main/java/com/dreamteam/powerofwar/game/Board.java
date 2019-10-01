@@ -51,8 +51,8 @@ public class Board {
     }
 
     public void cleanOverboardObjects() {
-        gameObjects.removeIf(object -> object.getX() < 0 || object.getX() > width ||
-                object.getY() < 0 || object.getY() > height);
+        gameObjects.removeIf(object -> object.getX() < 0 || object.getX() > width
+                || object.getY() < 0 || object.getY() > height);
     }
 
     public void doActions(long loopTime) {

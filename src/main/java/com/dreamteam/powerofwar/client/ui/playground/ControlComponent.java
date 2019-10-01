@@ -65,8 +65,8 @@ public class ControlComponent extends JPanel {
             button.setSize(dimension);
             box.add(button);
         }
-//        box.setSize(500, 80);
-//        setSize(500, 80);
+        // box.setSize(500, 80);
+        // setSize(500, 80);
         add(box);
     }
 
@@ -79,7 +79,7 @@ public class ControlComponent extends JPanel {
     }
 
     private ActionListener reset() {
-        return e-> {
+        return e -> {
             this.actionDispatcher.dispatch(new SelectGameObjectAction(null));
             this.actionDispatcher.dispatch(new SelectPlayerAction(null));
         };

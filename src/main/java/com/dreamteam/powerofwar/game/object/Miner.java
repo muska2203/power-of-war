@@ -48,8 +48,7 @@ public abstract class Miner extends BaseGameObject {
                     target = this.getNearestResource(board);
                     this.setSpeedVector(Vector.byTarget(this, target));
                 }
-                if (target != null &&
-                        GameObjectUtils.checkPossibilityAction(this, target)) {
+                if (target != null && GameObjectUtils.checkPossibilityAction(this, target)) {
                     state = State.MINING;
                     this.setSpeedVector(new Vector());
                     break;

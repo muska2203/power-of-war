@@ -10,8 +10,9 @@ import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
 
-
-//TODO: JavaDocs
+/**
+ * TODO: Javadoc
+ */
 public class Warrior extends BaseGameObject {
 
     private GameObject target;
