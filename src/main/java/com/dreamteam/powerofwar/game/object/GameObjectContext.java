@@ -1,16 +1,16 @@
 package com.dreamteam.powerofwar.game.object;
 
-import com.dreamteam.powerofwar.game.object.type.BuildingType;
-import com.dreamteam.powerofwar.game.object.type.UnitType;
-import com.dreamteam.powerofwar.game.object.type.GameObjectType;
-import com.dreamteam.powerofwar.game.object.type.ResourceType;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dreamteam.powerofwar.game.object.type.BuildingType;
+import com.dreamteam.powerofwar.game.object.type.GameObjectType;
+import com.dreamteam.powerofwar.game.object.type.ResourceType;
+import com.dreamteam.powerofwar.game.object.type.UnitType;
+
 
 //TODO: JavaDocs
-public class GameObjectContext {
+final public class GameObjectContext {
 
     private static Map<GameObjectType,  GameObjectCreator> constructorMap;
 
@@ -18,6 +18,8 @@ public class GameObjectContext {
     static {
         fillMap();
     }
+
+    private GameObjectContext() {}
 
     private static void fillMap() {
         constructorMap = new HashMap<>();

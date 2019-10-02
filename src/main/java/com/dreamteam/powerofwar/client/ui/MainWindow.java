@@ -1,11 +1,13 @@
 package com.dreamteam.powerofwar.client.ui;
 
-import com.dreamteam.powerofwar.client.ui.playground.GameContainer;
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.*;
+import javax.swing.JFrame;
+
 import org.springframework.stereotype.Component;
+
+import com.dreamteam.powerofwar.client.ui.playground.GameContainer;
 
 /**
  * Main Window Frame of the application.
@@ -26,7 +28,7 @@ public class MainWindow extends JFrame {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
                 // TODO: Action and state
-//                stopGame();
+                // stopGame();
             }
         });
 

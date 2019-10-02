@@ -1,5 +1,16 @@
 package com.dreamteam.powerofwar.client.ui.playground;
 
+import java.awt.Button;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import javax.swing.Box;
+import javax.swing.JPanel;
+
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.dreamteam.powerofwar.client.action.ActionDispatcher;
 import com.dreamteam.powerofwar.client.action.type.SelectGameObjectAction;
 import com.dreamteam.powerofwar.client.action.type.SelectPlayerAction;
@@ -10,13 +21,6 @@ import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.object.type.UnitType;
 import com.dreamteam.powerofwar.game.player.Player;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
-import javax.swing.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -61,8 +65,8 @@ public class ControlComponent extends JPanel {
             button.setSize(dimension);
             box.add(button);
         }
-//        box.setSize(500, 80);
-//        setSize(500, 80);
+        // box.setSize(500, 80);
+        // setSize(500, 80);
         add(box);
     }
 
@@ -75,7 +79,7 @@ public class ControlComponent extends JPanel {
     }
 
     private ActionListener reset() {
-        return e-> {
+        return e -> {
             this.actionDispatcher.dispatch(new SelectGameObjectAction(null));
             this.actionDispatcher.dispatch(new SelectPlayerAction(null));
         };

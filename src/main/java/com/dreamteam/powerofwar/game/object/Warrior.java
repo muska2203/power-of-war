@@ -1,5 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
+import java.util.Collection;
+
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.action.DamageAction;
 import com.dreamteam.powerofwar.game.object.type.ResourceType;
@@ -8,12 +10,9 @@ import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
 
-import java.util.Collection;
-
-import static com.dreamteam.powerofwar.game.object.Warrior.State.*;
-import static com.dreamteam.powerofwar.phisics.Units.SPEED;
-
-//TODO: JavaDocs
+/**
+ * TODO: Javadoc
+ */
 public class Warrior extends BaseGameObject {
 
     private GameObject target;
@@ -22,7 +21,7 @@ public class Warrior extends BaseGameObject {
     private double timeAfterStartedCast = 0;
     private int reloadTime = 6;
     private double timeAfterLastAction = 6;
-    private State state = WAITING_FOR_ENEMY;
+    private State state = State.WAITING_FOR_ENEMY;
 
     Warrior(double x, double y, Player player) {
         super(x, y, player);
@@ -54,48 +53,53 @@ public class Warrior extends BaseGameObject {
         return UnitType.WARRIOR;
     }
 
+    @SuppressWarnings("checkstyle:FallThrough")
     @Override
     public void update(Board board) {
         switch (state) {
             case WAITING_FOR_ENEMY:
                 target = this.getNearestEnemy(board.getGameObjects());
                 if (target != null) {
-                    state = CHASING_FOR_ENEMY;
+                    state = State.CHASING_FOR_ENEMY;
                 }
                 break;
             case CHASING_FOR_ENEMY:
                 target = this.getNearestEnemy(board.getGameObjects());
                 if (target == null) {
-                    state = WAITING_FOR_ENEMY;
+                    state = State.WAITING_FOR_ENEMY;
                     break;
                 }
                 if (GameObjectUtils.checkPossibilityAction(this, target)) {
-                    state = READY_TO_CAST;
+                    state = State.READY_TO_CAST;
                 }
                 break;
             case READY_TO_CAST:
                 if (target.isDead() || !GameObjectUtils.checkPossibilityAction(this, target)) {
-                    state = WAITING_FOR_ENEMY;
+                    state = State.WAITING_FOR_ENEMY;
                     break;
                 }
                 if (timeAfterLastAction >= reloadTime) {
-                    state = CASTING_ACTION;
+                    state = State.CASTING_ACTION;
                     timeAfterStartedCast = 0;
                 }
+                break;
             case CASTING_ACTION:
                 if (target.isDead() || !GameObjectUtils.checkPossibilityAction(this, target)) {
-                    state = WAITING_FOR_ENEMY;
+                    state = State.WAITING_FOR_ENEMY;
                     break;
                 }
                 if (timeAfterStartedCast >= castTime) {
                     board.addAction(new DamageAction(damage, target, 0));
                     timeAfterLastAction = 0;
                     timeAfterStartedCast = 0;
-                    state = READY_TO_CAST;
+                    state = State.READY_TO_CAST;
                 }
+                break;
+            default:
+                // do nothing
         }
 
-        if (state.equals(CHASING_FOR_ENEMY) && target != null) {
+        if (state.equals(State.CHASING_FOR_ENEMY) && target != null) {
             Vector vector = new Vector(target.getX() - this.getX(), target.getY() - this.getY());
             this.setSpeedVector(vector);
         } else {
@@ -115,13 +119,15 @@ public class Warrior extends BaseGameObject {
     public void move(long loopTime) {
         switch (state) {
             case CASTING_ACTION:
-                timeAfterStartedCast += loopTime * SPEED;
+                timeAfterStartedCast += loopTime * Units.SPEED;
                 break;
             case CHASING_FOR_ENEMY:
                 super.move(loopTime);
                 break;
+            default:
+                // maybe move on default and do something else in other cases?
         }
-        timeAfterLastAction += loopTime * SPEED;
+        timeAfterLastAction += loopTime * Units.SPEED;
     }
 
     @Override

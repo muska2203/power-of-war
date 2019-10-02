@@ -1,8 +1,8 @@
 package com.dreamteam.powerofwar.game.object.type;
 
-//TODO: JavaDocs
+// TODO: JavaDocs
 public enum ResourceType implements GameObjectType {
 
-    //TODO: JavaDocs
+    // TODO: JavaDocs
     GOLD
 }

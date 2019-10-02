@@ -1,12 +1,13 @@
 package com.dreamteam.powerofwar.game;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
+
+import org.springframework.stereotype.Component;
+
 import com.dreamteam.powerofwar.game.event.Event;
 import com.dreamteam.powerofwar.game.event.EventListener;
 import com.dreamteam.powerofwar.game.object.GameObject;
-
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import org.springframework.stereotype.Component;
 
 @Component
 public class GameProgram implements EventListener, Runnable {
@@ -47,8 +48,8 @@ public class GameProgram implements EventListener, Runnable {
             long loopTime = calculateLoopTime();
             board.doActions(loopTime);
 
-            board.getGameObjects().forEach((gameObject -> gameObject.update(board)));
-            board.getGameObjects().forEach((gameObject -> gameObject.move(loopTime)));
+            board.getGameObjects().forEach(gameObject -> gameObject.update(board));
+            board.getGameObjects().forEach(gameObject -> gameObject.move(loopTime));
             board.cleanOverboardObjects();
             board.cleanDeadObjects();
             try {
