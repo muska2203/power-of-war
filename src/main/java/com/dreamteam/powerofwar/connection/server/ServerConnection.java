@@ -1,10 +1,5 @@
 package com.dreamteam.powerofwar.connection.server;
 
-import com.dreamteam.powerofwar.connection.ConnectionInfo;
-import com.dreamteam.powerofwar.connection.message.MessageDispatcher;
-import com.dreamteam.powerofwar.connection.message.Message;
-import org.springframework.stereotype.Component;
-
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
@@ -15,8 +10,15 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.springframework.stereotype.Component;
+
+import com.dreamteam.powerofwar.connection.ConnectionInfo;
+import com.dreamteam.powerofwar.connection.message.Message;
+import com.dreamteam.powerofwar.connection.message.MessageDispatcher;
 
 @Component
 public class ServerConnection implements Runnable, Closeable {

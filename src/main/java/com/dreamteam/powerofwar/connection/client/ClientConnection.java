@@ -1,15 +1,14 @@
 package com.dreamteam.powerofwar.connection.client;
 
-import com.dreamteam.powerofwar.connection.message.Message;
-
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.SocketChannel;
+
+import com.dreamteam.powerofwar.connection.message.Message;
 
 public class ClientConnection implements Closeable {
 

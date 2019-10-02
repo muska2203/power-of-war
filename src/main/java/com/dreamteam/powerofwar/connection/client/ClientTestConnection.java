@@ -1,10 +1,12 @@
 package com.dreamteam.powerofwar.connection.client;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+
 import com.dreamteam.powerofwar.connection.ConnectionInfo;
 import com.dreamteam.powerofwar.connection.message.type.CloseConnectionMessage;
-
-import java.io.*;
-import java.net.InetSocketAddress;
 
 public class ClientTestConnection {
 
