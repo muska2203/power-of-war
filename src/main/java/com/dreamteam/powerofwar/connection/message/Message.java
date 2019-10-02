@@ -2,5 +2,9 @@ package com.dreamteam.powerofwar.connection.message;
 
 import java.io.Serializable;
 
-public interface Event extends Serializable {
+/**
+ * Is used to communicate between the server and the client.
+ */
+public interface Message extends Serializable {
+
 }

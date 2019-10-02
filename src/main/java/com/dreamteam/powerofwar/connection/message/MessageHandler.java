@@ -1,6 +1,16 @@
 package com.dreamteam.powerofwar.connection.message;
 
-public interface EventHandler<A extends Event> {
+/**
+ * Defines a class which handles a message of type {@code A}.
+ *
+ * @param <A> message type.
+ */
+public interface MessageHandler<A extends Message> {
 
-    void handleMessage(A message);
+    /**
+     * Handles a message that was received.
+     *
+     * @param message the message that was received.
+     */
+    void handle(A message);
 }

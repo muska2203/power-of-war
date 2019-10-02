@@ -9,17 +9,17 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class RegistryEventDispatcher implements EventDispatcher {
+public class RegistryMessageDispatcher implements MessageDispatcher {
 
-    private Map<Class<? extends Event>, EventHandler<? extends Event>> handlers;
+    private Map<Class<? extends Message>, MessageHandler<? extends Message>> handlers;
 
-    public RegistryEventDispatcher() {
+    public RegistryMessageDispatcher() {
         this.handlers = new HashMap<>();
     }
 
     @Autowired
     @SuppressWarnings("unchecked")
-    public <A extends Event> RegistryEventDispatcher(List<EventHandler<A>> handlers) {
+    public <A extends Message> RegistryMessageDispatcher(List<MessageHandler<A>> handlers) {
         this();
         handlers.forEach(actionHandler -> {
             ParameterizedType genericInterface = (ParameterizedType) actionHandler.getClass().getGenericInterfaces()[0];
@@ -28,18 +28,18 @@ public class RegistryEventDispatcher implements EventDispatcher {
         });
     }
 
-    public <T extends Event> void register(Class<T> actionClass, EventHandler<T> handler) {
+    public <T extends Message> void register(Class<T> actionClass, MessageHandler<T> handler) {
         this.handlers.put(actionClass, handler);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <A extends Event> void dispatch(A message) {
-        EventHandler<A> actionHandler = (EventHandler<A>) this.handlers.get(message.getClass());
+    public <A extends Message> void dispatch(A message) {
+        MessageHandler<A> actionHandler = (MessageHandler<A>) this.handlers.get(message.getClass());
         if (actionHandler == null) {
             // TODO: Log unusual situation
             return;
         }
-        actionHandler.handleMessage(message);
+        actionHandler.handle(message);
     }
 }

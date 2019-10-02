@@ -1,22 +1,15 @@
 package com.dreamteam.powerofwar.connection.message.handler;
 
-import com.dreamteam.powerofwar.connection.message.EventHandler;
-import com.dreamteam.powerofwar.connection.message.type.CloseConnectionEvent;
-import com.dreamteam.powerofwar.connection.server.ServerConnection;
+import com.dreamteam.powerofwar.connection.message.MessageHandler;
+import com.dreamteam.powerofwar.connection.message.type.CloseConnectionMessage;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CloseConnectionEventHandler implements EventHandler<CloseConnectionEvent> {
+public class CloseConnectionMessageHandler implements MessageHandler<CloseConnectionMessage> {
 
-    private ServerConnection serverConnection;
-
-    public CloseConnectionEventHandler(ServerConnection serverConnection) {
-        this.serverConnection = serverConnection;
-    }
 
     @Override
-    public void handleMessage(CloseConnectionEvent message) {
-        System.out.println("handled");
-//        serverConnection.closeChannel(message.getConnectionId());
+    public void handle(CloseConnectionMessage message) {
+        System.out.println("CloseConnectionMessage handled");
     }
 }

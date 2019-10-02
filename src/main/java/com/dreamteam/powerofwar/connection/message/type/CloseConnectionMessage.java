@@ -1,12 +1,12 @@
 package com.dreamteam.powerofwar.connection.message.type;
 
-import com.dreamteam.powerofwar.connection.message.Event;
+import com.dreamteam.powerofwar.connection.message.Message;
 
-public class CloseConnectionEvent implements Event {
+public class CloseConnectionMessage implements Message {
 
     private int connectionId;
 
-    public CloseConnectionEvent(int connectionId) {
+    public CloseConnectionMessage(int connectionId) {
         this.connectionId = connectionId;
     }
 

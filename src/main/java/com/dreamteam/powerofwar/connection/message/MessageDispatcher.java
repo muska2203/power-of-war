@@ -1,6 +1,6 @@
 package com.dreamteam.powerofwar.connection.message;
 
-public interface EventDispatcher {
+public interface MessageDispatcher {
 
-    <A extends Event> void dispatch(A message);
+    <A extends Message> void dispatch(A message);
 }
