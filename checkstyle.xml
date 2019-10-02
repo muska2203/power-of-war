@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+    <!-- All packages must have package documentation, i.e. package-info.java file -->
+    <!--<module name="JavadocPackage"/>-->
+
+    <!-- File length is no more than 2000 lines of code -->
+    <!-- Line length should not exceed 120 characters -->
+    <!-- See https://checkstyle.org/config_sizes.html -->
+    <module name="FileLength"/>
+    <module name="LineLength">
+        <property name="fileExtensions" value="java"/>
+        <property name="max" value="120"/>
+    </module>
+
+    <!-- Checks whether files end with a new line. -->
+    <!-- See https://checkstyle.org/config_misc.html#NewlineAtEndOfFile -->
+    <module name="NewlineAtEndOfFile">
+        <property name="fileExtensions" value="java, xml, properties"/>
+        <property name="lineSeparator" value="lf"/>
+    </module>
+
+    <!-- No tab characters ('\t') in the source code -->
+    <module name="FileTabCharacter"/>
+
+    <module name="TreeWalker">
+
+        <module name="EmptyBlock"/>
+
+        <!-- Classes -->
+        <!-- See https://checkstyle.org/config_design.html -->
+
+        <!-- A class that has only private constructors should be declared is final -->
+        <module name="FinalClass"/>
+        <!--
+            Classes that have only static methods and properties are utility classes.
+            An utility class should have explicitly defined private constructor.
+        -->
+        <module name="HideUtilityClassConstructor"/>
+        <!-- Inner (nested) classes/interfaces/enums should be at the bottom of the class after all methods. -->
+        <module name="InnerTypeLast"/>
+        <!-- TODO: should we allow marker interfaces? -->
+        <module name="InterfaceIsType"/>
+        <!-- Exception classes should have only final fields. -->
+        <module name="MutableException"/>
+        <!-- Each java file should have only one top-level class, interface or enum declaration. -->
+        <module name="OneTopLevelClass"/>
+        <!--
+            A method should declare no more than 3 exceptions as the "throws" signature.
+            Private methods have no limit as they do not cause problems for other classes.
+        -->
+        <module name="ThrowsCount">
+            <property name="max" value="3"/>
+        </module>
+        <!--
+            Only static final, immutable or annotated by specified annotation members may be public.
+            Other class members must be private.
+            TODO: allow protected fields?
+        -->
+        <module name="VisibilityModifier"/>
+
+        <!--
+            Block Checks
+            See https://checkstyle.org/config_blocks.html
+        -->
+        <module name="AvoidNestedBlocks">
+            <property name="allowInSwitchCase" value="true"/>
+        </module>
+        <module name="EmptyBlock"/>
+        <!--<module name="EmptyCatchBlock"/>-->
+        <module name="LeftCurly"/>
+        <module name="NeedBraces"/>
+        <module name="RightCurly"/>
+
+        <!--
+            Naming Convention
+        -->
+        <!-- Constants name should be in UPPER_CASE -->
+        <module name="ConstantName" />
+        <module name="LambdaParameterName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="MethodName"/>
+        <module name="PackageName"/>
+        <module name="ParameterName"/>
+        <module name="StaticVariableName"/>
+        <module name="TypeName"/>
+
+        <!--
+            Import
+            See https://checkstyle.org/config_imports.html
+
+            Do not use "star" import like java.util.* or java.awt.*
+            Do not use static import or methods or constants. That may bring ambiguity and
+            non-obviousness about the source of these methods.
+
+            Import order:
+            * import standard java packages (java.* followed by javax.*)
+            * [blank line]
+            * import third party packages (libraries or frameworks like org.springframework.*)
+            * [blank line]
+            * import project packages
+            * [blank line]
+            * import static members
+
+            Each group of packages should be sorted alphabetically.
+        -->
+        <module name="AvoidStarImport"/>
+        <module name="AvoidStaticImport"/>
+        <!-- Do not import sun.* packages -->
+        <module name="IllegalImport"/>
+        <module name="RedundantImport"/>
+        <module name="UnusedImports">
+            <property name="processJavadoc" value="false"/>
+        </module>
+        <module name="CustomImportOrder">
+            <property name="customImportOrderRules"
+                      value="STANDARD_JAVA_PACKAGE###THIRD_PARTY_PACKAGE###SPECIAL_IMPORTS###STATIC"/>
+            <property name="specialImportsRegExp" value="^com\.dreamteam"/>
+            <property name="thirdPartyPackageRegExp" value="^(org\.|com\.[^dreamteam])"/>
+            <property name="sortImportsInGroupAlphabetically" value="true"/>
+            <property name="separateLineBetweenGroups" value="true"/>
+        </module>
+
+        <!--
+            Coding
+            https://checkstyle.org/config_coding.html
+        -->
+        <module name="CovariantEquals"/>
+        <module name="DeclarationOrder"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode"/>
+        <module name="FallThrough"/>
+        <module name="IllegalThrows"/>
+        <module name="InnerAssignment"/>
+        <module name="MagicNumber"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <module name="NoFinalizer"/>
+        <module name="OneStatementPerLine"/>
+        <module name="RequireThis">
+            <property name="checkFields" value="true"/>
+            <property name="checkMethods" value="false"/>
+        </module>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StringLiteralEquality"/>
+        <module name="UnnecessaryParentheses"/>
+
+        <!-- Whitespace
+             https://checkstyle.org/config_whitespace.html
+        -->
+        <module name="EmptyLineSeparator">
+            <property name="allowNoEmptyLineBetweenFields" value="true"/>
+        </module>
+        <module name="MethodParamPad"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="OperatorWrap"/>
+        <module name="ParenPad"/>
+        <module name="SeparatorWrap">
+            <property name="id" value="SeparatorWrapDot"/>
+            <property name="tokens" value="DOT"/>
+            <property name="option" value="nl"/>
+        </module>
+        <module name="SeparatorWrap">
+            <property name="id" value="SeparatorWrapComma"/>
+            <property name="tokens" value="COMMA"/>
+            <property name="option" value="EOL"/>
+        </module>
+        <module name="WhitespaceAround">
+            <property name="allowEmptyConstructors" value="true"/>
+        </module>
+
+        <!--
+            Miscellaneous
+            https://checkstyle.org/config_misc.html
+        -->
+        <module name="ArrayTypeStyle"/>
+        <module name="CommentsIndentation"/>
+        <module name="Indentation">
+            <property name="lineWrappingIndentation" value="8"/>
+        </module>
+        <module name="UpperEll"/>
+
+        <!--
+            Javadoc
+            https://checkstyle.org/config_javadoc.html
+            // TODO: Javadoc for public methods?
+        -->
+        <module name="MissingJavadocType"/>
+        <module name="MissingJavadocPackage"/>
+    </module>
+</module>

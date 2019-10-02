@@ -16,6 +16,7 @@ public class AddGameObjectAction implements Action {
     private double y;
     private Player owner;
     private GameObjectType type;
+
     /**
      * Запоминает контекст, в который требуется добавить игровой объект.
      * Само добавленгие производится после вызова основного метода {@link Action#execute()}.
@@ -38,7 +39,9 @@ public class AddGameObjectAction implements Action {
     public void execute() {
         try {
             board.addGameObject(owner.getObjectFactory().createObject(x, y, type));
-        } catch (TooManyObjectsException | TooLessResourcesException ignore) {}
+        } catch (TooManyObjectsException | TooLessResourcesException ignore) {
+            // TODO: we have to notify the owner somehow
+        }
     }
 
     @Override

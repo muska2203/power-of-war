@@ -6,7 +6,9 @@ import java.util.function.Predicate;
 /**
  * Утилитарный класс, который предоставляет часто используемые расчеты, связанные с игровыми объектами.
  */
-class GameObjectUtils {
+final class GameObjectUtils {
+
+    private GameObjectUtils() {}
 
     /**
      * Проверяет 2 объекта на столкновение.
@@ -72,7 +74,7 @@ class GameObjectUtils {
      * @return найденный объект, или <code>null</code>, если такого объекта не существует.
      */
     public static GameObject getNearestObject(GameObject current, Collection<GameObject> objects) {
-        return getNearestObject(current, objects, (obj) -> true);
+        return getNearestObject(current, objects, obj -> true);
     }
 
     /**
@@ -93,7 +95,7 @@ class GameObjectUtils {
         double minDistance = Double.MAX_VALUE;
         GameObject nearest = null;
 
-        Predicate<GameObject> predicate = (gameObject) -> true;
+        Predicate<GameObject> predicate = gameObject -> true;
         for (Predicate<GameObject> objectPredicate : predicates) {
             predicate = predicate.and(objectPredicate);
         }

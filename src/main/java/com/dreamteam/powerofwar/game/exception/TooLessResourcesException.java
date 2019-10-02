@@ -4,7 +4,8 @@ import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.player.Player;
 
 /**
- * Исключение, которое обозначает, что объект не может быть создан, так как был достигнут лимит для указанного пользователя.
+ * Исключение, которое обозначает, что объект не может быть создан,
+ * так как был достигнут лимит для указанного пользователя.
  */
 public class TooLessResourcesException extends RuntimeException {
 

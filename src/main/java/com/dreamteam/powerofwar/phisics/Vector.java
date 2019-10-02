@@ -79,7 +79,7 @@ public class Vector {
     }
 
     public Vector multiply(double number) {
-        return new Vector(this.x *= number, this.y *= number);
+        return new Vector(this.x * number, this.y * number);
     }
 
     public void set(Vector vector) {

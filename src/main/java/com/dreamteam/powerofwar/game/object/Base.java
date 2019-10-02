@@ -7,8 +7,6 @@ import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 
-import static com.dreamteam.powerofwar.phisics.Units.SPEED;
-
 /**
  * TODO: JavaDoc
  */
@@ -58,7 +56,7 @@ public class Base extends BaseGameObject {
 
     @Override
     public void move(long loopTime) {
-        timeAfterLastResourceCreation += loopTime * SPEED;
+        timeAfterLastResourceCreation += loopTime * Units.SPEED;
     }
 
     @Override

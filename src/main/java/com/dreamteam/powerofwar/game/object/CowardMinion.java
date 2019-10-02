@@ -1,12 +1,12 @@
 package com.dreamteam.powerofwar.game.object;
 
+import java.util.Random;
+
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.object.type.UnitType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
-
-import java.util.Random;
 
 /**
  * Трусливый миньон. От всех убегает. Старается даже ни с кем не видится. Атаки не наносит

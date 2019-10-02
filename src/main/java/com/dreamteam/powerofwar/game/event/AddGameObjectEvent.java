@@ -24,6 +24,8 @@ public class AddGameObjectEvent extends BaseEvent {
     public void execute(GameProgram gameProgram) {
         try {
             gameProgram.addGameObject(owner.getObjectFactory().createObject(x, y, type));
-        } catch (TooManyObjectsException | TooLessResourcesException ignore) {}
+        } catch (TooManyObjectsException | TooLessResourcesException ignore) {
+            // TODO: we have to notify the owner somehow
+        }
     }
 }
