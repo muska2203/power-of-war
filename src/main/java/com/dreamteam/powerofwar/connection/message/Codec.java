@@ -30,4 +30,40 @@ public interface Codec<T extends Message> {
      * @throws IOException if buffer doesn't have enough bytes to write or any message data fails to encode.
      */
     ByteBuffer encode(ByteBuffer byteBuffer, T message) throws IOException;
+
+    //todo: JavaDocs
+    class CodecRegistration {
+        private final int opcode;
+        private final Codec<?> codec;
+
+        public CodecRegistration(int opcode, Codec<?> codec) {
+            this.opcode = opcode;
+            this.codec = codec;
+        }
+
+        public int getOpcode() {
+            return opcode;
+        }
+
+        public <M extends Message> Codec<M> getCodec() {
+            return (Codec<M>) codec;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 5;
+            hash = 67 * hash + this.opcode;
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            final CodecRegistration other = (CodecRegistration) obj;
+            return this.opcode == other.opcode;
+        }
+    }
 }
