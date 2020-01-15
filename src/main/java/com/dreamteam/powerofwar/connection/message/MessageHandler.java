@@ -3,14 +3,14 @@ package com.dreamteam.powerofwar.connection.message;
 /**
  * Defines a class which handles a message of type {@code A}.
  *
- * @param <A> message type.
+ * @param <T> message type.
  */
-public interface MessageHandler<A extends Message> {
+public interface MessageHandler<T extends Message> extends GenericHandler<T> {
 
     /**
      * Handles a message that was received.
      *
      * @param message the message that was received.
      */
-    void handle(A message);
+    void handle(T message);
 }

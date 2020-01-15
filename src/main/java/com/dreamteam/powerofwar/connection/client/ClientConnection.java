@@ -8,14 +8,18 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 import com.dreamteam.powerofwar.connection.message.Message;
+import com.dreamteam.powerofwar.connection.message.session.ChannelSession;
 
-public class ClientConnection implements Closeable {
+public abstract class ClientConnection implements Closeable {
 
-    private static SocketChannel clientSocketChannel;
+    private SocketChannel clientSocketChannel;
+    private ChannelSession channelSession;
 
     public ClientConnection(InetSocketAddress inetSocketAddress) throws IOException {
         clientSocketChannel = SocketChannel.open(inetSocketAddress);
+        channelSession = this.createChannelSession(clientSocketChannel);
     }
 
 //    public void startListeningServer(ServerListener serverListener) {
@@ -48,14 +52,12 @@ public class ClientConnection implements Closeable {
     }
 
     public void sendMessage(Message message) {
-        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-             ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
-            objectOutputStream.writeObject(message);
-            byte[] array = byteArrayOutputStream.toByteArray();
-            ByteBuffer buffer = ByteBuffer.wrap(array);
-            clientSocketChannel.write(buffer);
-            buffer.clear();
-        } catch (IOException ignore) {
+        try {
+            channelSession.send(message);
+        } catch (ConnectionClosedException e) {
+            System.out.println("Connection has been closed");
         }
     }
+
+    abstract ChannelSession createChannelSession(SocketChannel socketChannel);
 }

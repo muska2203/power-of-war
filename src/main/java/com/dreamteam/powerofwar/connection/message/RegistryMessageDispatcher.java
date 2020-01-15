@@ -1,14 +1,9 @@
 package com.dreamteam.powerofwar.connection.message;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-@Component
 public class RegistryMessageDispatcher implements MessageDispatcher {
 
     private Map<Class<? extends Message>, MessageHandler<? extends Message>> handlers;
@@ -17,19 +12,13 @@ public class RegistryMessageDispatcher implements MessageDispatcher {
         this.handlers = new HashMap<>();
     }
 
-    @Autowired
-    @SuppressWarnings("unchecked")
-    public <A extends Message> RegistryMessageDispatcher(List<MessageHandler<A>> handlers) {
+    public RegistryMessageDispatcher(List<MessageHandler<? extends Message>> handlers) {
         this();
-        handlers.forEach(actionHandler -> {
-            ParameterizedType genericInterface = (ParameterizedType) actionHandler.getClass().getGenericInterfaces()[0];
-            Class<A> actionClass = (Class<A>) genericInterface.getActualTypeArguments()[0];
-            this.register(actionClass, actionHandler);
-        });
+        handlers.forEach(this::register);
     }
 
-    public <T extends Message> void register(Class<T> actionClass, MessageHandler<T> handler) {
-        this.handlers.put(actionClass, handler);
+    public <T extends Message> void register(MessageHandler<T> handler) {
+        this.handlers.put(handler.getHandledClass(), handler);
     }
 
     @Override

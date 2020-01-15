@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.dreamteam.powerofwar.connection.exception.ChannelClosedException;
+import com.dreamteam.powerofwar.connection.message.Codec;
 import com.dreamteam.powerofwar.connection.message.CodecLookupService;
 import com.dreamteam.powerofwar.connection.message.Message;
 import com.dreamteam.powerofwar.connection.message.MessageDispatcher;
@@ -30,13 +31,15 @@ public class BaseSession implements Session {
     }
 
     @Override
-    public void send(Message message) throws ChannelClosedException {
+    @SuppressWarnings("unchecked")
+    public <T extends Message> void send(T message) throws ChannelClosedException {
         if (!channel.isOpen()) {
             throw new ChannelClosedException();
         }
         ByteBuffer buffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
         try {
-            codecLookupService.getCodecRegistration(message.getClass()).getCodec().encode(buffer, message);
+            Codec<T> codec = (Codec<T>) codecLookupService.find(message.getClass());
+            codec.encode(buffer, message);
             channel.write(buffer);
         } catch (IOException ignore) {
             //todo: handle
@@ -51,7 +54,7 @@ public class BaseSession implements Session {
         ByteBuffer buffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE * messages.length);
         try {
             for (Message message : messages) {
-                codecLookupService.getCodecRegistration(message.getClass()).getCodec().encode(buffer, message);
+                codecLookupService.find(message.getClass()).encode(buffer, message);
             }
             channel.write(buffer);
         } catch (IOException ignore) {

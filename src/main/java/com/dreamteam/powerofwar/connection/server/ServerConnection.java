@@ -1,38 +1,29 @@
 package com.dreamteam.powerofwar.connection.server;
 
-import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.springframework.stereotype.Component;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.dreamteam.powerofwar.connection.ConnectionInfo;
-import com.dreamteam.powerofwar.connection.message.Message;
-import com.dreamteam.powerofwar.connection.message.MessageDispatcher;
+import com.dreamteam.powerofwar.connection.message.session.ChannelSession;
+import com.dreamteam.powerofwar.connection.message.session.Session;
 
-@Component
-public class ServerConnection implements Runnable, Closeable {
+public abstract class ServerConnection implements Runnable, Closeable {
 
     private Thread serverConnectionThread = new Thread(this);
-    private MessageDispatcher messageDispatcher;
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
-    private ByteBuffer buffer = ByteBuffer.allocate(256);
 
-    private List<SocketChannel> channels = new CopyOnWriteArrayList<>();
+    private Map<SocketChannel, Session> sessions = new ConcurrentHashMap<>();
 
-    public ServerConnection(MessageDispatcher messageDispatcher) throws IOException {
-        this.messageDispatcher = messageDispatcher;
+    public ServerConnection() throws IOException {
         selector = Selector.open();
         serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.socket().bind(new InetSocketAddress(ConnectionInfo.IP, ConnectionInfo.PORT));
@@ -68,7 +59,7 @@ public class ServerConnection implements Runnable, Closeable {
                     }
                 }
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -80,32 +71,16 @@ public class ServerConnection implements Runnable, Closeable {
             channel.configureBlocking(false);
             channel.register(selector, SelectionKey.OP_READ);
             System.out.println("accepted connection from: " + address);
-            channels.add(channel);
+            sessions.put(channel, createChannelSession(channel));
         } catch (IOException e) {
             System.out.println("Connection refused.");
         }
     }
 
-    private void handleRead(SelectionKey key) throws IOException, ClassNotFoundException {
+    private void handleRead(SelectionKey key) {
         SocketChannel channel = (SocketChannel) key.channel();
-        byte[] data = new byte[0];
-        int numRead;
-        do {
-            buffer.clear();
-            numRead = channel.read(buffer);
-            if (numRead == -1) {
-                return;
-            }
-            byte[] tmp = data;
-            data = new byte[tmp.length + numRead];
-            System.arraycopy(tmp, 0, data, 0, tmp.length);
-            System.arraycopy(buffer.array(), 0, data, tmp.length, numRead);
-        }
-        while (numRead == buffer.capacity());
-
-        ObjectInputStream reader = new ObjectInputStream(new ByteArrayInputStream(data));
-        Message message = (Message) reader.readObject();
-        messageDispatcher.dispatch(message);
+        Session session = sessions.get(channel);
+        session.receiveMessage();
     }
 
     @Override
@@ -115,13 +90,5 @@ public class ServerConnection implements Runnable, Closeable {
         serverConnectionThread.interrupt();
     }
 
-    public void closeChannel(int connectionId) {
-        try {
-            SocketChannel socketChannel = channels.get(connectionId);
-            if (socketChannel != null) {
-                channels.remove(socketChannel);
-                socketChannel.close();
-            }
-        } catch (IOException ignore) { }
-    }
+    abstract ChannelSession createChannelSession(SocketChannel socketChannel);
 }
