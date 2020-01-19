@@ -1,4 +1,4 @@
-package com.dreamteam.powerofwar.connection.codec;
+package com.dreamteam.powerofwar.connection.message.codec;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

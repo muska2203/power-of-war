@@ -1,9 +1,12 @@
-package com.dreamteam.powerofwar.connection.server.handler;
+package com.dreamteam.powerofwar.connection.server.message.handler;
 
+
+import org.springframework.stereotype.Component;
 
 import com.dreamteam.powerofwar.connection.message.MessageHandler;
-import com.dreamteam.powerofwar.connection.message.type.PrintTextMessage;
+import com.dreamteam.powerofwar.connection.server.message.PrintTextMessage;
 
+@Component
 public class PrintTextMessageHandler implements MessageHandler<PrintTextMessage> {
 
     @Override

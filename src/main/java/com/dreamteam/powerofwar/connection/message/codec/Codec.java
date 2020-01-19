@@ -1,4 +1,4 @@
-package com.dreamteam.powerofwar.connection.codec;
+package com.dreamteam.powerofwar.connection.message.codec;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -28,7 +28,7 @@ public interface Codec<T extends Message> {
      * @return the buffer after writing.
      * @throws IOException if buffer doesn't have enough bytes to write or any message data fails to encode.
      */
-    default ByteBuffer encode(ByteBuffer byteBuffer, T message) throws IOException {
+    default boolean encode(ByteBuffer byteBuffer, T message) throws IOException {
         throw new UnsupportedOperationException("Encode for message type" + getHandledClass() + " not supported");
     }
 

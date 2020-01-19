@@ -10,7 +10,7 @@ import com.dreamteam.powerofwar.connection.server.message.MessageTypes;
 import com.dreamteam.powerofwar.connection.server.message.PrintTextMessage;
 
 @Component
-public class PrintTextMessageCodec implements Codec<PrintTextMessage> {
+public class PrintTextMessageDecoder implements Codec<PrintTextMessage> {
 
     public static final int MESSAGE_SIZE = 60;
 
