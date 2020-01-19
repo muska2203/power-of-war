@@ -5,7 +5,7 @@ package com.dreamteam.powerofwar.connection.message;
  *
  * @param <T> message type.
  */
-public interface MessageHandler<T extends Message> extends GenericHandler<T> {
+public interface MessageHandler<T extends Message> {
 
     /**
      * Handles a message that was received.
@@ -13,4 +13,6 @@ public interface MessageHandler<T extends Message> extends GenericHandler<T> {
      * @param message the message that was received.
      */
     void handle(T message);
+
+    Class<T> getHandledClass();
 }

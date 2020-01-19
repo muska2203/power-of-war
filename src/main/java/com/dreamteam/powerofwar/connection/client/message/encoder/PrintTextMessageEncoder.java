@@ -12,13 +12,14 @@ import com.dreamteam.powerofwar.connection.message.type.PrintTextMessage;
 public class PrintTextMessageEncoder implements Encoder<PrintTextMessage> {
 
     @Override
-    public ByteBuffer encode(ByteBuffer byteBuffer, PrintTextMessage message) throws IOException {
+    public boolean encode(ByteBuffer byteBuffer, PrintTextMessage message) throws IOException {
         byte[] messageBytes = new byte[PrintTextMessage.MESSAGE_SIZE];
         byte[] textMessageBytes = message.getTextMessage().getBytes();
         for (int i = 0; i < textMessageBytes.length && i < messageBytes.length; i++) {
             messageBytes[i] = textMessageBytes[i];
         }
-        return byteBuffer.put(messageBytes);
+        byteBuffer.put(messageBytes);
+        return true;
     }
 
     @Override

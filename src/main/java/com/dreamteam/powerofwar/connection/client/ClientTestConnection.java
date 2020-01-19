@@ -13,16 +13,16 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import com.dreamteam.powerofwar.connection.ConnectionInfo;
-import com.dreamteam.powerofwar.connection.message.CodecDispatcher;
-import com.dreamteam.powerofwar.connection.message.Decoder;
-import com.dreamteam.powerofwar.connection.message.Encoder;
+import com.dreamteam.powerofwar.connection.client.message.PrintTextMessage;
 import com.dreamteam.powerofwar.connection.message.Message;
+import com.dreamteam.powerofwar.connection.message.MessageDispatcher;
 import com.dreamteam.powerofwar.connection.message.MessageHandler;
-import com.dreamteam.powerofwar.connection.message.MessageMappingRegisterer;
 import com.dreamteam.powerofwar.connection.message.RegistryMessageDispatcher;
-import com.dreamteam.powerofwar.connection.server.handler.PrintTextMessageHandler;
+import com.dreamteam.powerofwar.connection.message.codec.Codec;
+import com.dreamteam.powerofwar.connection.message.codec.CodecDispatcher;
+import com.dreamteam.powerofwar.connection.message.codec.RegistryCodecDispatcher;
+import com.dreamteam.powerofwar.connection.server.message.handler.PrintTextMessageHandler;
 import com.dreamteam.powerofwar.connection.message.session.ChannelSession;
-import com.dreamteam.powerofwar.connection.message.type.PrintTextMessage;
 
 @SpringBootApplication(scanBasePackages = {
         "com.dreamteam.powerofwar.connection.message",
@@ -54,28 +54,25 @@ public class ClientTestConnection {
     }
 
     @Bean
-    RegistryMessageDispatcher registryMessageDispatcher(List<MessageHandler<? extends Message>> handlers) {
+    MessageDispatcher registryMessageDispatcher(List<MessageHandler<? extends Message>> handlers) {
         return new RegistryMessageDispatcher(handlers);
     }
 
     @Bean
-    CodecDispatcher codecDispatcher(List<Encoder<?>> encoders, List<Decoder<?>> decoders) {
-        return new CodecDispatcher(encoders, decoders);
+    CodecDispatcher codecDispatcher(List<Codec<?>> codecs) {
+        RegistryCodecDispatcher dispatcher = new RegistryCodecDispatcher();
+        for (Codec<?> codec : codecs) {
+            dispatcher.register(codec);
+        }
+        return dispatcher;
     }
 
     @Bean
-    MessageMappingRegisterer registerer() {
-        MessageMappingRegisterer registerer = new MessageMappingRegisterer();
-        registerer.register(1, PrintTextMessage.class);
-        return registerer;
-    }
-
-    @Bean
-    ClientConnection clientConnection(RegistryMessageDispatcher registryMessageDispatcher, CodecDispatcher codecDispatcher, MessageMappingRegisterer registerer) throws IOException {
+    ClientConnection clientConnection(MessageDispatcher messageDispatcher, CodecDispatcher codecDispatcher) throws IOException {
         return new ClientConnection(new InetSocketAddress(ConnectionInfo.IP, ConnectionInfo.PORT)) {
             @Override
             ChannelSession createChannelSession(SocketChannel socketChannel) {
-                return new ChannelSession(socketChannel, registryMessageDispatcher, codecDispatcher, registerer);
+                return new ChannelSession(socketChannel, messageDispatcher, codecDispatcher);
             }
         };
     }

@@ -5,12 +5,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
-import com.dreamteam.powerofwar.connection.message.CodecDispatcher;
-import com.dreamteam.powerofwar.connection.message.Decoder;
-import com.dreamteam.powerofwar.connection.message.Encoder;
 import com.dreamteam.powerofwar.connection.message.Message;
 import com.dreamteam.powerofwar.connection.message.MessageDispatcher;
-import com.dreamteam.powerofwar.connection.message.MessageMappingRegisterer;
+import com.dreamteam.powerofwar.connection.message.codec.CodecDispatcher;
 
 //todo: JavaDocs
 public class ChannelSession implements Session {
@@ -19,14 +16,12 @@ public class ChannelSession implements Session {
     private SocketChannel channel;
     private MessageDispatcher messageDispatcher;
     private CodecDispatcher codecDispatcher;
-    private MessageMappingRegisterer registerer;
     private ByteBuffer buffer = ByteBuffer.allocate(256);
 
-    public ChannelSession(SocketChannel channel, MessageDispatcher messageDispatcher, CodecDispatcher codecDispatcher, MessageMappingRegisterer registerer) {
+    public ChannelSession(SocketChannel channel, MessageDispatcher messageDispatcher, CodecDispatcher codecDispatcher) {
         this.channel = channel;
         this.messageDispatcher = messageDispatcher;
         this.codecDispatcher = codecDispatcher;
-        this.registerer = registerer;
         onReady();
     }
 
@@ -43,9 +38,7 @@ public class ChannelSession implements Session {
                     return;
                 }
                 buffer.rewind();
-                byte code = buffer.get();
-                Decoder<T> decoder = (Decoder<T>) this.codecDispatcher.findDecoder(registerer.getMessageTypeByCode((int) code));
-                T message = decoder.decode(buffer);
+                T message = (T) this.codecDispatcher.decode(buffer);
                 this.messageDispatcher.dispatch(message);
             }
             while (numRead == buffer.capacity());
@@ -55,16 +48,13 @@ public class ChannelSession implements Session {
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
     public <T extends Message> void send(T message) throws ConnectionClosedException {
         if (!this.channel.isOpen()) {
             throw new ConnectionClosedException();
         }
         ByteBuffer buffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
         try {
-            buffer.put(registerer.getCodeByMessageType(message.getClass()).byteValue());
-            Encoder<T> codec = (Encoder<T>) this.codecDispatcher.findEncoder(message.getClass());
-            codec.encode(buffer, message);
+            this.codecDispatcher.encode(buffer, message);
             buffer.rewind();
             this.channel.write(buffer);
         } catch (IOException ignore) {

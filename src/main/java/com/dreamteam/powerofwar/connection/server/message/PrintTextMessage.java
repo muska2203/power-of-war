@@ -1,10 +1,9 @@
-package com.dreamteam.powerofwar.connection.message.type;
+package com.dreamteam.powerofwar.connection.server.message;
 
 import com.dreamteam.powerofwar.connection.message.Message;
 
 public class PrintTextMessage implements Message {
 
-    public static final int MESSAGE_SIZE = 60;
 
     private String textMessage;
 
