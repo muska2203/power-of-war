@@ -21,8 +21,8 @@ import com.dreamteam.powerofwar.connection.message.RegistryMessageDispatcher;
 import com.dreamteam.powerofwar.connection.message.codec.Codec;
 import com.dreamteam.powerofwar.connection.message.codec.CodecDispatcher;
 import com.dreamteam.powerofwar.connection.message.codec.RegistryCodecDispatcher;
-import com.dreamteam.powerofwar.connection.server.message.handler.PrintTextMessageHandler;
 import com.dreamteam.powerofwar.connection.message.session.ChannelSession;
+import com.dreamteam.powerofwar.connection.message.session.Session;
 
 @SpringBootApplication(scanBasePackages = {
         "com.dreamteam.powerofwar.connection.message",
@@ -39,18 +39,13 @@ public class ClientTestConnection {
         ;
         try (ClientConnection clientConnection = context.getBean(ClientConnection.class)) {
             BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
-            while (clientConnection.isOpen()) {
+            while (true) {
                 String word = consoleReader.readLine();
                 clientConnection.sendMessage(new PrintTextMessage(word));
             }
         } catch (IOException e) {
             System.out.println("Connection has been refused.");
         }
-    }
-
-    @Bean
-    public PrintTextMessageHandler closeConnectionMessageHandler() {
-        return new PrintTextMessageHandler();
     }
 
     @Bean
@@ -68,12 +63,8 @@ public class ClientTestConnection {
     }
 
     @Bean
-    ClientConnection clientConnection(MessageDispatcher messageDispatcher, CodecDispatcher codecDispatcher) throws IOException {
-        return new ClientConnection(new InetSocketAddress(ConnectionInfo.IP, ConnectionInfo.PORT)) {
-            @Override
-            ChannelSession createChannelSession(SocketChannel socketChannel) {
-                return new ChannelSession(socketChannel, messageDispatcher, codecDispatcher);
-            }
-        };
+    Session session(MessageDispatcher messageDispatcher, CodecDispatcher codecDispatcher) throws IOException {
+        SocketChannel channel = SocketChannel.open(new InetSocketAddress(ConnectionInfo.IP, ConnectionInfo.PORT));
+        return new ChannelSession(channel, messageDispatcher, codecDispatcher);
     }
 }

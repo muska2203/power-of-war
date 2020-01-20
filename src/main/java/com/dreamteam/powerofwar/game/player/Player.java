@@ -7,8 +7,6 @@ import com.dreamteam.powerofwar.game.object.type.ResourceType;
  */
 public class Player {
 
-    public static final Player NEUTRAL_PLAYER = new Player("Neutral Player");
-
     private String name;
 
     private PlayerContext playerContext;

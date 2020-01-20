@@ -16,7 +16,6 @@ public class ChannelSession implements Session {
     private SocketChannel channel;
     private MessageDispatcher messageDispatcher;
     private CodecDispatcher codecDispatcher;
-    private ByteBuffer buffer = ByteBuffer.allocate(256);
 
     public ChannelSession(SocketChannel channel, MessageDispatcher messageDispatcher, CodecDispatcher codecDispatcher) {
         this.channel = channel;
@@ -28,20 +27,18 @@ public class ChannelSession implements Session {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Message> void receiveMessage() {
+        ByteBuffer buffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
         int numRead;
         try {
-            do {
-                buffer.clear();
-                numRead = this.channel.read(buffer);
-                if (numRead == -1) {
-                    disconnect();
-                    return;
-                }
-                buffer.rewind();
-                T message = (T) this.codecDispatcher.decode(buffer);
-                this.messageDispatcher.dispatch(message);
+            buffer.clear();
+            numRead = this.channel.read(buffer);
+            if (numRead == -1) {
+                disconnect();
+                return;
             }
-            while (numRead == buffer.capacity());
+            buffer.rewind();
+            T message = (T) this.codecDispatcher.decode(buffer);
+            this.messageDispatcher.dispatch(message);
         } catch (IOException ignore) {
             //todo: handle
         }
@@ -56,7 +53,9 @@ public class ChannelSession implements Session {
         try {
             this.codecDispatcher.encode(buffer, message);
             buffer.rewind();
-            this.channel.write(buffer);
+            while (buffer.hasRemaining()) {
+                this.channel.write(buffer);
+            }
         } catch (IOException ignore) {
             //todo: handle
         }
@@ -64,17 +63,8 @@ public class ChannelSession implements Session {
 
     @Override
     public void sendAll(Message... messages) throws ConnectionClosedException {
-        if (!this.channel.isOpen()) {
-            throw new ConnectionClosedException();
-        }
-        ByteBuffer buffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE * messages.length);
-        try {
-            for (Message message : messages) {
-                send(message);
-            }
-            channel.write(buffer);
-        } catch (IOException ignore) {
-            //todo: handle
+        for (Message message : messages) {
+            send(message);
         }
     }
 

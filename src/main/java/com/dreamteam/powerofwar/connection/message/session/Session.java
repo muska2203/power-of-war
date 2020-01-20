@@ -43,5 +43,4 @@ public interface Session extends MessageListener {
     default void onReady() {
 
     }
-
 }

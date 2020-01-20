@@ -1,5 +1,6 @@
-package com.dreamteam.powerofwar.connection.server.message.decoder;
+package com.dreamteam.powerofwar.connection.server.message.codec;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import com.dreamteam.powerofwar.connection.server.message.MessageTypes;
 import com.dreamteam.powerofwar.connection.server.message.PrintTextMessage;
 
 @Component
-public class PrintTextMessageDecoder implements Codec<PrintTextMessage> {
+public class PrintTextMessageCodec implements Codec<PrintTextMessage> {
 
     public static final int MESSAGE_SIZE = 60;
 
@@ -20,6 +21,17 @@ public class PrintTextMessageDecoder implements Codec<PrintTextMessage> {
         byteBuffer.get(messageBytes);
         String textMessage = new String(messageBytes);
         return new PrintTextMessage(textMessage);
+    }
+
+    @Override
+    public boolean encode(ByteBuffer byteBuffer, PrintTextMessage message) throws IOException {
+        byte[] messageBytes = new byte[MESSAGE_SIZE];
+        byte[] textMessageBytes = message.getTextMessage().getBytes();
+        for (int i = 0; i < textMessageBytes.length && i < messageBytes.length; i++) {
+            messageBytes[i] = textMessageBytes[i];
+        }
+        byteBuffer.put(messageBytes);
+        return true;
     }
 
     @Override

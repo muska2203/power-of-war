@@ -1,4 +1,4 @@
-package com.dreamteam.powerofwar.connection.client.message.encoder;
+package com.dreamteam.powerofwar.connection.client.message.codec;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -11,7 +11,7 @@ import com.dreamteam.powerofwar.connection.message.codec.OPCode;
 import com.dreamteam.powerofwar.connection.client.message.MessageTypes;
 
 @Component
-public class PrintTextMessageEncoder implements Codec<PrintTextMessage> {
+public class PrintTextMessageCodec implements Codec<PrintTextMessage> {
 
     public static final int MESSAGE_SIZE = 60;
 
@@ -23,6 +23,14 @@ public class PrintTextMessageEncoder implements Codec<PrintTextMessage> {
     @Override
     public OPCode getOPCode() {
         return MessageTypes.PRINT_TEXT_MESSAGE;
+    }
+
+    @Override
+    public PrintTextMessage decode(ByteBuffer byteBuffer) {
+        byte[] messageBytes = new byte[MESSAGE_SIZE];
+        byteBuffer.get(messageBytes);
+        String textMessage = new String(messageBytes);
+        return new PrintTextMessage(textMessage);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.dreamteam.powerofwar.connection.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 import com.dreamteam.powerofwar.connection.message.Message;
 import com.dreamteam.powerofwar.connection.message.MessageDispatcher;
 import com.dreamteam.powerofwar.connection.message.MessageHandler;
@@ -25,7 +28,7 @@ import com.dreamteam.powerofwar.connection.message.session.ChannelSession;
 })
 public class ServerTestConnection {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         ConfigurableApplicationContext context = new SpringApplicationBuilder(ServerTestConnection.class)
                 // Disable default headless mode which prevents AWT instantiation
                 .headless(false)
@@ -33,6 +36,14 @@ public class ServerTestConnection {
 
         ServerConnection server = context.getBean(ServerConnection.class);
         server.start();
+        while (true) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String message = reader.readLine();
+            server.sendMessage(message);
+            if (message.equalsIgnoreCase("exit")) {
+                break;
+            }
+        }
     }
 
     @Bean

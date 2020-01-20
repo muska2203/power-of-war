@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.dreamteam.powerofwar.connection.ConnectionInfo;
 import com.dreamteam.powerofwar.connection.message.session.ChannelSession;
 import com.dreamteam.powerofwar.connection.message.session.Session;
+import com.dreamteam.powerofwar.connection.server.message.PrintTextMessage;
 
 public abstract class ServerConnection implements Runnable, Closeable {
 
@@ -91,4 +92,10 @@ public abstract class ServerConnection implements Runnable, Closeable {
     }
 
     abstract ChannelSession createChannelSession(SocketChannel socketChannel);
+
+    public void sendMessage(String message) {
+        for (Session session : sessions.values()) {
+            session.send(new PrintTextMessage(message));
+        }
+    }
 }
