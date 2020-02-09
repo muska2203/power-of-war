@@ -17,7 +17,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.dreamteam.powerofwar.client.action.ActionDispatcher;
+import com.dreamteam.powerofwar.client.action.Action;
 import com.dreamteam.powerofwar.client.action.type.AddGameObjectAction;
 import com.dreamteam.powerofwar.client.state.State;
 import com.dreamteam.powerofwar.client.state.subject.SelectedGameObject;
@@ -27,6 +27,7 @@ import com.dreamteam.powerofwar.game.object.GameObject;
 import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.object.type.UnitType;
 import com.dreamteam.powerofwar.game.player.Player;
+import com.dreamteam.powerofwar.handler.Dispatcher;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -34,7 +35,7 @@ public class PlaygroundComponent extends JComponent {
 
     private Board board;
 
-    private ActionDispatcher actionDispatcher;
+    private Dispatcher<Action> actionDispatcher;
     private State<SelectedPlayer> selectedPlayerState;
     private State<SelectedGameObject> selectedGameObjectState;
     private Player firstPlayer;
@@ -47,7 +48,7 @@ public class PlaygroundComponent extends JComponent {
     private int yBoardStart = 0;
 
     public PlaygroundComponent(Board board,
-                               ActionDispatcher actionDispatcher,
+                               Dispatcher<Action> actionDispatcher,
                                State<SelectedPlayer> selectedPlayerState,
                                State<SelectedGameObject> selectedGameObjectState,
                                Player firstPlayer,

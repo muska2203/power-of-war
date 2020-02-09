@@ -2,13 +2,13 @@ package com.dreamteam.powerofwar.client.action.handlers;
 
 import org.springframework.stereotype.Component;
 
-import com.dreamteam.powerofwar.client.action.ActionHandler;
+import com.dreamteam.powerofwar.handler.Handler;
 import com.dreamteam.powerofwar.client.action.type.AddGameObjectAction;
 import com.dreamteam.powerofwar.game.event.AddGameObjectEvent;
 import com.dreamteam.powerofwar.game.event.EventListener;
 
 @Component
-public class AddGameObjectHandler implements ActionHandler<AddGameObjectAction> {
+public class AddGameObjectHandler implements Handler<AddGameObjectAction> {
 
     private EventListener eventListener;
 
@@ -17,7 +17,7 @@ public class AddGameObjectHandler implements ActionHandler<AddGameObjectAction> 
     }
 
     @Override
-    public void onAction(AddGameObjectAction action) {
+    public void handle(AddGameObjectAction action) {
         eventListener.registerEvent(new AddGameObjectEvent(
                 action.getX(), action.getY(), action.getPlayer(), action.getType()));
     }

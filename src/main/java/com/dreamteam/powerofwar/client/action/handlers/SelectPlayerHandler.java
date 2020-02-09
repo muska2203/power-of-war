@@ -2,13 +2,13 @@ package com.dreamteam.powerofwar.client.action.handlers;
 
 import org.springframework.stereotype.Component;
 
-import com.dreamteam.powerofwar.client.action.ActionHandler;
+import com.dreamteam.powerofwar.handler.Handler;
 import com.dreamteam.powerofwar.client.action.type.SelectPlayerAction;
 import com.dreamteam.powerofwar.client.state.StateDispatcher;
 import com.dreamteam.powerofwar.client.state.subject.SelectedPlayer;
 
 @Component
-public class SelectPlayerHandler implements ActionHandler<SelectPlayerAction> {
+public class SelectPlayerHandler implements Handler<SelectPlayerAction> {
 
     private StateDispatcher<SelectedPlayer> dispatcher;
 
@@ -17,7 +17,7 @@ public class SelectPlayerHandler implements ActionHandler<SelectPlayerAction> {
     }
 
     @Override
-    public void onAction(SelectPlayerAction action) {
+    public void handle(SelectPlayerAction action) {
         this.dispatcher.dispatch(new SelectedPlayer(action.getPlayer()));
     }
 }

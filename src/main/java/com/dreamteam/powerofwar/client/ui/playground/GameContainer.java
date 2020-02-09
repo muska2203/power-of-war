@@ -6,12 +6,14 @@ import java.awt.Dimension;
 
 import org.springframework.stereotype.Component;
 
-import com.dreamteam.powerofwar.client.action.ActionDispatcher;
+import com.dreamteam.powerofwar.client.action.Action;
 import com.dreamteam.powerofwar.client.state.State;
+import com.dreamteam.powerofwar.client.state.StateDispatcher;
 import com.dreamteam.powerofwar.client.state.subject.SelectedGameObject;
 import com.dreamteam.powerofwar.client.state.subject.SelectedPlayer;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.player.Player;
+import com.dreamteam.powerofwar.handler.Dispatcher;
 
 @Component
 public class GameContainer extends Container {
@@ -22,10 +24,12 @@ public class GameContainer extends Container {
     private Player selectedPlayer = firstPlayer;
 
     public GameContainer(Board board,
-                         ActionDispatcher actionDispatcher,
+                         Dispatcher<Action> actionDispatcher,
                          State<SelectedPlayer> selectedPlayerState,
-                         State<SelectedGameObject> selectedGameObjectState) {
+                         State<SelectedGameObject> selectedGameObjectState,
+                         StateDispatcher<SelectedPlayer> selectedPlayerStateDispatcher) {
         this.board = board;
+        selectedPlayerStateDispatcher.dispatch(new SelectedPlayer(firstPlayer));
 
         this.setLayout(new BorderLayout());
         // TODO: Resolve the "current player" issue (move data to State) and inject as a dependency

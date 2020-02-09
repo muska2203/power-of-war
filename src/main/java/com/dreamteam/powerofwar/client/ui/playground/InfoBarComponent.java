@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JComponent;
+import javax.swing.Timer;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -18,6 +19,7 @@ import com.dreamteam.powerofwar.game.player.Player;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoBarComponent extends JComponent {
 
+    private final Timer repaintTimer;
     private Player player;
     // TODO: удалить board после исправления размеров компонента
     private Board board;
@@ -26,6 +28,9 @@ public class InfoBarComponent extends JComponent {
         super();
         this.player = player;
         this.board = board;
+        this.repaintTimer = new Timer(20, e -> this.repaint());
+        // TODO: Implement a game state. Start and stop the timer according to the state
+        this.repaintTimer.start();
     }
 
     @Override

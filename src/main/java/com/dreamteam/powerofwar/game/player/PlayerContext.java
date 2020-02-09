@@ -132,6 +132,20 @@ public class PlayerContext {
         return  count != null ? count : 0;
     }
 
+
+    /**
+     * Returns map which contains all resources.
+     *
+     * @return all resources map.
+     */
+    public Map<ResourceType, Integer> getResources() {
+        return new HashMap<>(resources);
+    }
+
+    public void setResources(Map<ResourceType, Integer> resources) {
+        this.resources = resources;
+    }
+
     /**
      * Определяет, достаточно ли ресурсов находится в "казне" игрока для постройки игрового объекта указанного типа.
      *

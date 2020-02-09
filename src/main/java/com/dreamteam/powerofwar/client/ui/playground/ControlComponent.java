@@ -11,7 +11,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.dreamteam.powerofwar.client.action.ActionDispatcher;
+import com.dreamteam.powerofwar.client.action.Action;
 import com.dreamteam.powerofwar.client.action.type.SelectGameObjectAction;
 import com.dreamteam.powerofwar.client.action.type.SelectPlayerAction;
 import com.dreamteam.powerofwar.game.Board;
@@ -21,15 +21,16 @@ import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.object.type.UnitType;
 import com.dreamteam.powerofwar.game.player.Player;
+import com.dreamteam.powerofwar.handler.Dispatcher;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ControlComponent extends JPanel {
 
-    private ActionDispatcher actionDispatcher;
+    private Dispatcher<Action> actionDispatcher;
     private Board board;
 
-    public ControlComponent(ActionDispatcher actionDispatcher, Board board, Player firstPlayer, Player secondPlayer) {
+    public ControlComponent(Dispatcher<Action> actionDispatcher, Board board, Player firstPlayer, Player secondPlayer) {
         this.actionDispatcher = actionDispatcher;
         this.board = board;
 

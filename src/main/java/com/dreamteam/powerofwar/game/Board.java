@@ -3,15 +3,12 @@ package com.dreamteam.powerofwar.game;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.springframework.stereotype.Component;
-
 import com.dreamteam.powerofwar.game.action.Action;
 import com.dreamteam.powerofwar.game.object.GameObject;
 
 /**
  * Игровое поле.
  */
-@Component
 public class Board {
 
     public static final int BOARD_WIDTH = 800;
