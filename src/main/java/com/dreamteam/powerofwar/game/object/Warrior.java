@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.action.DamageAction;
-import com.dreamteam.powerofwar.game.object.type.ResourceType;
-import com.dreamteam.powerofwar.game.object.type.UnitType;
+import com.dreamteam.powerofwar.game.object.type.GameObjectType;
+import com.dreamteam.powerofwar.game.object.type.ObjectFunctionType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Units;
 import com.dreamteam.powerofwar.phisics.Vector;
@@ -49,8 +49,8 @@ public class Warrior extends BaseGameObject {
     }
 
     @Override
-    public UnitType getType() {
-        return UnitType.WARRIOR;
+    public GameObjectType getType() {
+        return GameObjectType.WARRIOR;
     }
 
     @SuppressWarnings("checkstyle:FallThrough")
@@ -112,7 +112,7 @@ public class Warrior extends BaseGameObject {
                 gameObject -> !gameObject.isDead(),
                 gameObject -> !gameObject.getOwner().equals(this.getOwner()),
                 gameObject -> GameObjectUtils.checkVisibility(this, gameObject),
-                gameObject -> !(gameObject.getType() instanceof ResourceType));
+                gameObject -> gameObject.getType().getFunctionType() != ObjectFunctionType.RESOURCE);
     }
 
     @Override

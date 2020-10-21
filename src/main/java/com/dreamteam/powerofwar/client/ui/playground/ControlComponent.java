@@ -16,10 +16,7 @@ import com.dreamteam.powerofwar.client.action.type.SelectGameObjectAction;
 import com.dreamteam.powerofwar.client.action.type.SelectPlayerAction;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.object.GameObject;
-import com.dreamteam.powerofwar.game.object.type.BuildingType;
 import com.dreamteam.powerofwar.game.object.type.GameObjectType;
-import com.dreamteam.powerofwar.game.object.type.ResourceType;
-import com.dreamteam.powerofwar.game.object.type.UnitType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.handler.Dispatcher;
 
@@ -44,15 +41,15 @@ public class ControlComponent extends JPanel {
         Button goldMiner = new Button("Gold Miner");
         Button gold = new Button("Gold");
         Button base = new Button("Base");
-        warrior.addActionListener(selectGameObject(UnitType.WARRIOR));
-        cowardMinion.addActionListener(selectGameObject(UnitType.COWARD));
+        warrior.addActionListener(selectGameObject(GameObjectType.WARRIOR));
+        cowardMinion.addActionListener(selectGameObject(GameObjectType.COWARD));
         resetChoice.addActionListener(reset());
         cleanField.addActionListener(e -> this.killAllObject());
         firstUser.addActionListener(selectPlayer(firstPlayer));
         secondUser.addActionListener(selectPlayer(secondPlayer));
-        goldMiner.addActionListener(selectGameObject(UnitType.GOLD_MINER));
-        gold.addActionListener(selectGameObject(ResourceType.GOLD));
-        base.addActionListener(selectGameObject(BuildingType.BASE));
+        goldMiner.addActionListener(selectGameObject(GameObjectType.GOLD_MINER));
+        gold.addActionListener(selectGameObject(GameObjectType.GOLD_MINE));
+        base.addActionListener(selectGameObject(GameObjectType.BASE));
         Dimension dimension = new Dimension(70, 70);
         for (Button button : Arrays.asList(
                 gold,

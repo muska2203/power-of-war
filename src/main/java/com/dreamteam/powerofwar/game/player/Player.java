@@ -7,6 +7,10 @@ import com.dreamteam.powerofwar.game.object.type.ResourceType;
  */
 public class Player {
 
+    private static int ID_GENERATOR = 0;
+
+    private int id;
+
     private String name;
 
     private PlayerContext playerContext;
@@ -14,10 +18,15 @@ public class Player {
     private GameObjectFactory gameObjectFactory;
 
     public Player(String name) {
+        this.id = ++ID_GENERATOR;
         this.name = name;
         this.playerContext = new PlayerContext();
         this.playerContext.addResource(ResourceType.GOLD, 20);
         this.gameObjectFactory = new GameObjectFactory(this);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {

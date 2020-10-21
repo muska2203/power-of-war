@@ -1,6 +1,7 @@
 package com.dreamteam.powerofwar.game.object;
 
 import com.dreamteam.powerofwar.game.Board;
+import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 
 public abstract class Resource extends BaseGameObject {
@@ -38,4 +39,6 @@ public abstract class Resource extends BaseGameObject {
     public boolean isDead() {
         return this.count <= 0;
     }
+
+    public abstract ResourceType getResourceType();
 }

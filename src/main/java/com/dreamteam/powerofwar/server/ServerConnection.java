@@ -16,10 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.dreamteam.powerofwar.connection.ConnectionInfo;
 import com.dreamteam.powerofwar.connection.Message;
 import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
-import com.dreamteam.powerofwar.connection.servertest.message.PrintTextMessage;
 import com.dreamteam.powerofwar.connection.session.ChannelSession;
 import com.dreamteam.powerofwar.connection.session.Session;
-import com.dreamteam.powerofwar.game.player.Player;
 
 public abstract class ServerConnection implements Runnable, Closeable {
 
@@ -28,7 +26,7 @@ public abstract class ServerConnection implements Runnable, Closeable {
     private Selector selector;
 
     private Map<SocketChannel, Session> sessions = new ConcurrentHashMap<>();
-    private Map<SocketChannel, Player> players = new ConcurrentHashMap<>();
+    private Map<Integer, SocketChannel> channelByPlayerIds = new ConcurrentHashMap<>();
 
     public ServerConnection() throws IOException {
         selector = Selector.open();
@@ -36,9 +34,6 @@ public abstract class ServerConnection implements Runnable, Closeable {
         serverSocketChannel.socket().bind(new InetSocketAddress(ConnectionInfo.IP, ConnectionInfo.PORT));
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-    }
-
-    public void start() {
         serverConnectionThread.start();
     }
 
@@ -78,9 +73,13 @@ public abstract class ServerConnection implements Runnable, Closeable {
             channel.configureBlocking(false);
             channel.register(selector, SelectionKey.OP_READ);
             System.out.println("accepted connection from: " + address);
+            //TODO: Задержка сделана, как костыль, чтобы приложение клиента успело включится перед началом работы
+            Thread.sleep(1000);
             sessions.put(channel, createChannelSession(channel));
         } catch (IOException e) {
             System.out.println("Connection refused.");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -105,7 +104,7 @@ public abstract class ServerConnection implements Runnable, Closeable {
             try {
                 entry.getValue().send(message);
             } catch (ConnectionClosedException e) {
-                closedChannels.add(entry.getKey());
+                closedChannels.remove(entry.getKey());
             }
         }
         closedChannels.forEach(sessions::remove);

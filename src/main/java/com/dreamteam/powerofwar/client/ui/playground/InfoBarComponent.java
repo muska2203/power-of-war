@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.object.type.ResourceType;
-import com.dreamteam.powerofwar.game.object.type.UnitType;
+import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.player.Player;
 
 @Component
@@ -51,7 +51,7 @@ public class InfoBarComponent extends JComponent {
         g.fillRect(0, 0, dim.width, dim.height);
         g.setColor(Color.white);
         g.drawString("Gold: " + this.player.getContext().getResource(ResourceType.GOLD), 0, 10);
-        g.drawString("Warriors: " + this.player.getContext().getObjectCount(UnitType.WARRIOR), 0, 20);
-        g.drawString("Gold Miners: " + this.player.getContext().getObjectCount(UnitType.GOLD_MINER), 100, 20);
+        g.drawString("Warriors: " + this.player.getContext().getObjectCount(GameObjectType.WARRIOR), 0, 20);
+        g.drawString("Gold Miners: " + this.player.getContext().getObjectCount(GameObjectType.GOLD_MINER), 100, 20);
     }
 }

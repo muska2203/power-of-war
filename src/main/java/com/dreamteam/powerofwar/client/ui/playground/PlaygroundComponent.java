@@ -25,7 +25,6 @@ import com.dreamteam.powerofwar.client.state.subject.SelectedPlayer;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.object.GameObject;
 import com.dreamteam.powerofwar.game.object.type.GameObjectType;
-import com.dreamteam.powerofwar.game.object.type.UnitType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.handler.Dispatcher;
 
@@ -131,7 +130,7 @@ public class PlaygroundComponent extends JComponent {
         java.util.List<GameObject> gameObjectsSecondUser =
                 Optional.ofNullable(gameObjectByUser.get(secondPlayer)).orElse(Collections.emptyList());
         java.util.List<GameObject> gameObjectsCoward =
-                Optional.ofNullable(gameObjectTypeListMap.get(UnitType.COWARD)).orElse(Collections.emptyList());
+                Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.COWARD)).orElse(Collections.emptyList());
 
         drawObjects(g, Color.GREEN, Color.GREEN, null, gameObjectsFirstUser);
         drawObjects(g, Color.red, Color.red, null, gameObjectsSecondUser);
@@ -156,7 +155,7 @@ public class PlaygroundComponent extends JComponent {
         if (visionColor != null) {
             g.setColor(visionColor);
             for (GameObject gameObject : gameObjects) {
-                if (gameObject.getType().equals(UnitType.COWARD)) {
+                if (gameObject.getType().equals(GameObjectType.COWARD)) {
                     int size = toUICoordinate(gameObject.getVisibilityRadius() * 2);
                     int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getVisibilityRadius());
                     int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getVisibilityRadius());

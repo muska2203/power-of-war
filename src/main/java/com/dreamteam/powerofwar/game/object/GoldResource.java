@@ -1,5 +1,6 @@
 package com.dreamteam.powerofwar.game.object;
 
+import com.dreamteam.powerofwar.game.object.type.GameObjectType;
 import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 
@@ -10,6 +11,11 @@ public class GoldResource extends Resource {
     GoldResource(double x, double y, Player player) {
         super(x, y, player);
         this.count = 50;
+    }
+
+    @Override
+    public ResourceType getResourceType() {
+        return ResourceType.GOLD;
     }
 
     @Override
@@ -33,7 +39,7 @@ public class GoldResource extends Resource {
     }
 
     @Override
-    public ResourceType getType() {
-        return ResourceType.GOLD;
+    public GameObjectType getType() {
+        return GameObjectType.GOLD_MINE;
     }
 }

@@ -3,7 +3,8 @@ package com.dreamteam.powerofwar.game.object;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.action.MineResourceAction;
 import com.dreamteam.powerofwar.game.action.StoreResourcesAction;
-import com.dreamteam.powerofwar.game.object.type.BuildingType;
+import com.dreamteam.powerofwar.game.object.type.GameObjectType;
+import com.dreamteam.powerofwar.game.object.type.ObjectFunctionType;
 import com.dreamteam.powerofwar.game.object.type.ResourceType;
 import com.dreamteam.powerofwar.game.player.Player;
 import com.dreamteam.powerofwar.phisics.Vector;
@@ -109,12 +110,12 @@ public abstract class Miner extends BaseGameObject {
 
     private GameObject getNearestResource(Board board) {
         return GameObjectUtils.getNearestObject(this, board.getGameObjects(),
-                gameObject -> getResourceType().equals(gameObject.getType()));
+                gameObject -> gameObject.getType().getFunctionType() == ObjectFunctionType.RESOURCE && ((Resource) gameObject).getResourceType() == getResourceType());
     }
 
     private GameObject getNearestBase(Board board) {
         return GameObjectUtils.getNearestObject(this, board.getGameObjects(),
-                gameObject -> BuildingType.BASE.equals(gameObject.getType()),
+                gameObject -> GameObjectType.BASE.equals(gameObject.getType()),
                 gameObject -> !this.getOwner().isEnemyFor(gameObject.getOwner()));
     }
 

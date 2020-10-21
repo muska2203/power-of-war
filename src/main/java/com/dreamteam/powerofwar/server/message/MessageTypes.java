@@ -3,7 +3,8 @@ package com.dreamteam.powerofwar.server.message;
 import com.dreamteam.powerofwar.connection.codec.OPCode;
 
 public enum MessageTypes implements OPCode {
-    GAME_STATE(1)
+    GAME_STATE(1),
+    ADD_OBJECT(2),
     ;
     private int code;
 

@@ -29,10 +29,8 @@ public class ServerApplication {
                 .headless(false)
                 .run(args);
 
-        ServerConnection serverConnection = context.getBean(ServerConnection.class);
         GameProgram gameProgram = context.getBean(GameProgram.class);
         StateUpdater stateUpdater = context.getBean(StateUpdater.class);
-        serverConnection.start();
         gameProgram.startGame();
         stateUpdater.start();
     }
