@@ -9,11 +9,11 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import com.dreamteam.powerofwar.connection.Message;
 import com.dreamteam.powerofwar.connection.codec.Codec;
 import com.dreamteam.powerofwar.connection.codec.CodecDispatcher;
 import com.dreamteam.powerofwar.connection.codec.RegistryCodecDispatcher;
 import com.dreamteam.powerofwar.connection.session.ChannelSession;
+import com.dreamteam.powerofwar.connection.session.IncomingMessage;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.GameProgram;
 import com.dreamteam.powerofwar.handler.Dispatcher;
@@ -46,7 +46,7 @@ public class ServerApplication {
     }
 
     @Bean
-    Dispatcher<Message> registryMessageDispatcher(List<Handler<? extends Message>> handlers) {
+    Dispatcher<IncomingMessage> registryMessageDispatcher(List<Handler<? extends IncomingMessage>> handlers) {
         return new RegistryDispatcher<>(handlers);
     }
 
@@ -60,7 +60,7 @@ public class ServerApplication {
     }
 
     @Bean
-    ServerConnection serverConnection(Dispatcher<Message> registryMessageDispatcher, CodecDispatcher codecDispatcher) throws IOException {
+    ServerConnection serverConnection(Dispatcher<IncomingMessage> registryMessageDispatcher, CodecDispatcher codecDispatcher) throws IOException {
         return new ServerConnection() {
             @Override
             ChannelSession createChannelSession(SocketChannel socketChannel) {

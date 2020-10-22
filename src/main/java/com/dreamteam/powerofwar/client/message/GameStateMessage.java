@@ -2,10 +2,10 @@ package com.dreamteam.powerofwar.client.message;
 
 import java.util.Map;
 
-import com.dreamteam.powerofwar.connection.Message;
+import com.dreamteam.powerofwar.connection.session.IncomingMessage;
 import com.dreamteam.powerofwar.game.object.type.ResourceType;
 
-public class GameStateMessage implements Message {
+public class GameStateMessage extends IncomingMessage {
 
     private Map<ResourceType, Integer> resources;
 

@@ -28,12 +28,17 @@ public interface Session {
     /**
      * Handles the specified message.
      */
-    <T extends Message> void receiveMessage();
+    <T extends IncomingMessage> void receiveMessage();
 
     /**
      * Closes connection if it is opened.
      */
     void disconnect();
+
+    /**
+     * Session id.
+     */
+    int getId();
 
     /**
      * Called when connection has been disconnected, right before the Session invalidated.

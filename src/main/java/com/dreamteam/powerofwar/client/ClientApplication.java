@@ -20,6 +20,7 @@ import com.dreamteam.powerofwar.connection.codec.Codec;
 import com.dreamteam.powerofwar.connection.codec.CodecDispatcher;
 import com.dreamteam.powerofwar.connection.codec.RegistryCodecDispatcher;
 import com.dreamteam.powerofwar.connection.session.ChannelSession;
+import com.dreamteam.powerofwar.connection.session.IncomingMessage;
 import com.dreamteam.powerofwar.connection.session.Session;
 import com.dreamteam.powerofwar.game.Board;
 import com.dreamteam.powerofwar.game.GameProgram;
@@ -66,7 +67,7 @@ public class ClientApplication {
     }
 
     @Bean
-    public Dispatcher<Message> messageDispatcher(List<Handler<? extends Message>> handlers) {
+    public Dispatcher<IncomingMessage> messageDispatcher(List<Handler<? extends IncomingMessage>> handlers) {
         return new RegistryDispatcher<>(handlers);
     }
 
@@ -76,7 +77,7 @@ public class ClientApplication {
     }
 
     @Bean
-    public Session session(Dispatcher<Message> messageDispatcher, CodecDispatcher codecDispatcher) throws IOException {
+    public Session session(Dispatcher<IncomingMessage> messageDispatcher, CodecDispatcher codecDispatcher) throws IOException {
         SocketChannel channel = SocketChannel.open(new InetSocketAddress(ConnectionInfo.IP, ConnectionInfo.PORT));
         return new ChannelSession(channel, messageDispatcher, codecDispatcher);
     }

@@ -3,7 +3,6 @@ package com.dreamteam.powerofwar.server.message.handler;
 import org.springframework.stereotype.Component;
 
 import com.dreamteam.powerofwar.connection.MessageHandler;
-import com.dreamteam.powerofwar.game.event.AddGameObjectEvent;
 import com.dreamteam.powerofwar.game.event.EventListener;
 import com.dreamteam.powerofwar.server.message.AddGameObjectMessage;
 
@@ -18,6 +17,6 @@ public class AddGameObjectMessageHandler implements MessageHandler<AddGameObject
 
     @Override
     public void handle(AddGameObjectMessage message) {
-        System.out.println(message.getType());
+        System.out.println(message.getType() + "from session with id = " + message.getSenderSessionId());
     }
 }

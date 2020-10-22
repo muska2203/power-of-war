@@ -26,7 +26,6 @@ public abstract class ServerConnection implements Runnable, Closeable {
     private Selector selector;
 
     private Map<SocketChannel, Session> sessions = new ConcurrentHashMap<>();
-    private Map<Integer, SocketChannel> channelByPlayerIds = new ConcurrentHashMap<>();
 
     public ServerConnection() throws IOException {
         selector = Selector.open();
@@ -75,7 +74,8 @@ public abstract class ServerConnection implements Runnable, Closeable {
             System.out.println("accepted connection from: " + address);
             //TODO: Задержка сделана, как костыль, чтобы приложение клиента успело включится перед началом работы
             Thread.sleep(1000);
-            sessions.put(channel, createChannelSession(channel));
+            Session session = createChannelSession(channel);
+            sessions.put(channel, session);
         } catch (IOException e) {
             System.out.println("Connection refused.");
         } catch (InterruptedException e) {

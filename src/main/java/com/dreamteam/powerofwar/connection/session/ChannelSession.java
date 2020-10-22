@@ -12,15 +12,19 @@ import com.dreamteam.powerofwar.handler.Dispatcher;
 //todo: JavaDocs
 public class ChannelSession implements Session {
 
+    private static int ID_GENERATOR = 0;
+
     public static final int MAX_MESSAGE_SIZE = 1024;
     ByteBuffer readBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
     ByteBuffer writeBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
 
     private SocketChannel channel;
-    private Dispatcher<Message> messageDispatcher;
+    private Dispatcher<IncomingMessage> messageDispatcher;
     private CodecDispatcher codecDispatcher;
+    private int id;
 
-    public ChannelSession(SocketChannel channel, Dispatcher<Message> messageDispatcher, CodecDispatcher codecDispatcher) {
+    public ChannelSession(SocketChannel channel, Dispatcher<IncomingMessage> messageDispatcher, CodecDispatcher codecDispatcher) {
+        this.id = ++ID_GENERATOR;
         this.channel = channel;
         this.messageDispatcher = messageDispatcher;
         this.codecDispatcher = codecDispatcher;
@@ -29,7 +33,7 @@ public class ChannelSession implements Session {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Message> void receiveMessage() {
+    public <T extends IncomingMessage> void receiveMessage() {
         int numRead;
         readBuffer.clear();
         try {
@@ -43,6 +47,7 @@ public class ChannelSession implements Session {
         }
         readBuffer.rewind();
         T message = (T) this.codecDispatcher.decode(readBuffer);
+        message.setSenderSessionId(getId());
         this.messageDispatcher.dispatch(message);
     }
 
@@ -78,5 +83,10 @@ public class ChannelSession implements Session {
         } catch (IOException ignore) {
             //todo: handle
         }
+    }
+
+    @Override
+    public int getId() {
+        return this.id;
     }
 }
