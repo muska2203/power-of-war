@@ -19,26 +19,20 @@ import org.springframework.stereotype.Component;
 
 import com.dreamteam.powerofwar.client.action.Action;
 import com.dreamteam.powerofwar.client.action.type.AddGameObjectAction;
+import com.dreamteam.powerofwar.client.game.GameContext;
+import com.dreamteam.powerofwar.client.game.object.StaticGameObject;
 import com.dreamteam.powerofwar.client.state.State;
 import com.dreamteam.powerofwar.client.state.subject.SelectedGameObject;
-import com.dreamteam.powerofwar.client.state.subject.SelectedPlayer;
-import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.object.GameObject;
-import com.dreamteam.powerofwar.game.object.type.GameObjectType;
-import com.dreamteam.powerofwar.game.player.Player;
+import com.dreamteam.powerofwar.game.types.GameObjectType;
 import com.dreamteam.powerofwar.handler.Dispatcher;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PlaygroundComponent extends JComponent {
 
-    private Board board;
+    private GameContext gameContext;
 
     private Dispatcher<Action> actionDispatcher;
-    private State<SelectedPlayer> selectedPlayerState;
-    private State<SelectedGameObject> selectedGameObjectState;
-    private Player firstPlayer;
-    private Player secondPlayer;
 
     private Timer repaintTimer;
 
@@ -46,22 +40,13 @@ public class PlaygroundComponent extends JComponent {
     private int xBoardStart = 0;
     private int yBoardStart = 0;
 
-    public PlaygroundComponent(Board board,
-                               Dispatcher<Action> actionDispatcher,
-                               State<SelectedPlayer> selectedPlayerState,
+    public PlaygroundComponent(Dispatcher<Action> actionDispatcher,
                                State<SelectedGameObject> selectedGameObjectState,
-                               Player firstPlayer,
-                               Player secondPlayer) {
+                               GameContext gameContext) {
         super();
 
-        this.board = board;
+        this.gameContext = gameContext;
         this.actionDispatcher = actionDispatcher;
-
-        this.selectedPlayerState = selectedPlayerState;
-        this.selectedGameObjectState = selectedGameObjectState;
-
-        this.firstPlayer = firstPlayer;
-        this.secondPlayer = secondPlayer;
 
         this.repaintTimer = new Timer(20, e -> this.repaint());
         // TODO: Implement a game state. Start and stop the timer according to the state
@@ -70,16 +55,14 @@ public class PlaygroundComponent extends JComponent {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                SelectedPlayer selectedPlayer = selectedPlayerState.get();
                 SelectedGameObject selectedGameObject = selectedGameObjectState.get();
-                if (selectedPlayer == null || selectedGameObject == null) {
+                if (selectedGameObject == null) {
                     return;
                 }
 
-                Player player = selectedPlayer.getPlayer();
                 GameObjectType type = selectedGameObject.getType();
 
-                if (type == null || player == null) {
+                if (type == null) {
                     return;
                 }
                 int x = fromUICoordinateX(e.getX());
@@ -87,7 +70,7 @@ public class PlaygroundComponent extends JComponent {
 
                 switch (e.getButton()) {
                     case 1: // Left Button
-                        PlaygroundComponent.this.actionDispatcher.dispatch(new AddGameObjectAction(x, y, player, type));
+                        PlaygroundComponent.this.actionDispatcher.dispatch(new AddGameObjectAction(x, y, type));
                         break;
                     default:
                         // process ordinary clicks on the map?
@@ -98,7 +81,7 @@ public class PlaygroundComponent extends JComponent {
 
     @Override
     public Dimension getMinimumSize() {
-        return new Dimension((int) board.getWidth(), (int) board.getHeight());
+        return new Dimension((int) gameContext.getWidth(), (int) gameContext.getHeight());
     }
 
     @Override
@@ -114,62 +97,43 @@ public class PlaygroundComponent extends JComponent {
         g.setColor(Color.black);
         g.fillRect(0, 0, dim.width, dim.height);
         g.setColor(Color.white);
-        g.drawRect(toUICoordinateX(0), toUICoordinateY(0), toUICoordinate(board.getWidth()),
-                toUICoordinate(board.getHeight()));
+        g.drawRect(toUICoordinateX(0), toUICoordinateY(0), toUICoordinate(gameContext.getWidth()),
+                toUICoordinate(gameContext.getHeight()));
 
-        Map<GameObjectType, java.util.List<GameObject>> gameObjectTypeListMap = board.getGameObjects()
+        Map<GameObjectType, java.util.List<StaticGameObject>> gameObjectTypeListMap = gameContext.getGameObjects()
+                .values()
                 .stream()
-                .collect(Collectors.groupingBy(GameObject::getType));
+                .collect(Collectors.groupingBy(StaticGameObject::getType));
 
-        Map<Player, java.util.List<GameObject>> gameObjectByUser = board.getGameObjects()
+        Map<Boolean, java.util.List<StaticGameObject>> gameObjectByUser = gameContext.getGameObjects()
+                .values()
                 .stream()
-                .collect(Collectors.groupingBy(GameObject::getOwner));
+                .collect(Collectors.groupingBy(StaticGameObject::isEnemy));
 
-        List<GameObject> gameObjectsFirstUser =
-                Optional.ofNullable(gameObjectByUser.get(firstPlayer)).orElse(Collections.emptyList());
-        java.util.List<GameObject> gameObjectsSecondUser =
-                Optional.ofNullable(gameObjectByUser.get(secondPlayer)).orElse(Collections.emptyList());
-        java.util.List<GameObject> gameObjectsCoward =
+        List<StaticGameObject> ownerObjects =
+                Optional.ofNullable(gameObjectByUser.get(false)).orElse(Collections.emptyList());
+        List<StaticGameObject> enemies =
+                Optional.ofNullable(gameObjectByUser.get(true)).orElse(Collections.emptyList());
+        List<StaticGameObject> gameObjectsCoward =
                 Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.COWARD)).orElse(Collections.emptyList());
 
-        drawObjects(g, Color.GREEN, Color.GREEN, null, gameObjectsFirstUser);
-        drawObjects(g, Color.red, Color.red, null, gameObjectsSecondUser);
-        drawObjects(g, null, null, Color.WHITE, gameObjectsCoward);
+        drawObjects(g, Color.GREEN, ownerObjects);
+        drawObjects(g, Color.red, enemies);
+        drawObjects(g, Color.blue, gameObjectsCoward);
     }
 
-    private void drawObjects(Graphics g, Color bodyColor, Color visionColor,
-                             Color actionColor, List<GameObject> gameObjects) {
+    private void drawObjects(Graphics g, Color bodyColor, List<StaticGameObject> gameObjects) {
         if (gameObjects == null || gameObjects.size() == 0) {
             return;
         }
         if (bodyColor != null) {
             g.setColor(bodyColor);
-            for (GameObject gameObject : gameObjects) {
+            for (StaticGameObject gameObject : gameObjects) {
                 int size = toUICoordinate(gameObject.getSize() * 2);
                 int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getSize());
                 int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getSize());
                 g.drawString(gameObject.toString(), xPosition - 2, yPosition - 2);
                 g.fillOval(xPosition, yPosition, size, size);
-            }
-        }
-        if (visionColor != null) {
-            g.setColor(visionColor);
-            for (GameObject gameObject : gameObjects) {
-                if (gameObject.getType().equals(GameObjectType.COWARD)) {
-                    int size = toUICoordinate(gameObject.getVisibilityRadius() * 2);
-                    int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getVisibilityRadius());
-                    int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getVisibilityRadius());
-                    g.drawOval(xPosition, yPosition, size, size);
-                }
-            }
-        }
-        if (actionColor != null) {
-            g.setColor(actionColor);
-            for (GameObject gameObject : gameObjects) {
-                int size = toUICoordinate(gameObject.getActionRadius() * 2);
-                int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getActionRadius());
-                int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getActionRadius());
-                g.drawOval(xPosition, yPosition, size, size);
             }
         }
     }
@@ -199,16 +163,16 @@ public class PlaygroundComponent extends JComponent {
     }
 
     private void fillScaleData(Dimension dim) {
-        double widthScale = dim.width / board.getWidth();
-        double heightScale = dim.height / board.getHeight();
+        double widthScale = dim.width / gameContext.getWidth();
+        double heightScale = dim.height / gameContext.getHeight();
         if (widthScale > heightScale) {
             scale = heightScale;
-            xBoardStart = (int) ((dim.width - board.getWidth() * scale) / 2);
+            xBoardStart = (int) ((dim.width - gameContext.getWidth() * scale) / 2);
             yBoardStart = 0;
         } else {
             scale = widthScale;
             xBoardStart = 0;
-            yBoardStart = (int) ((dim.height - board.getHeight() * scale) / 2);
+            yBoardStart = (int) ((dim.height - gameContext.getHeight() * scale) / 2);
         }
     }
 }

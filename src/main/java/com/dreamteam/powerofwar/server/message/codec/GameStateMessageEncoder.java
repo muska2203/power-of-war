@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 
 import com.dreamteam.powerofwar.connection.codec.Encoder;
 import com.dreamteam.powerofwar.connection.codec.OPCode;
-import com.dreamteam.powerofwar.game.object.type.ResourceType;
+import com.dreamteam.powerofwar.game.types.GameObjectType;
+import com.dreamteam.powerofwar.game.types.ResourceType;
 import com.dreamteam.powerofwar.server.message.GameStateMessage;
 import com.dreamteam.powerofwar.server.message.MessageTypes;
 
@@ -21,6 +22,16 @@ public class GameStateMessageEncoder implements Encoder<GameStateMessage> {
         Map<ResourceType, Integer> resources = message.getResources();
         for (ResourceType resourceType : ResourceType.values()) {
             byteBuffer.putInt(resources.get(resourceType));
+        }
+        byteBuffer.putInt(message.getGameObjectsInfo().size());
+        for (GameStateMessage.GameObjectInfo gameObjectInfo : message.getGameObjectsInfo()) {
+            byteBuffer.putInt(gameObjectInfo.getId());
+            byteBuffer.putDouble(gameObjectInfo.getX());
+            byteBuffer.putDouble(gameObjectInfo.getY());
+            byteBuffer.putInt(gameObjectInfo.getHealth());
+            byteBuffer.putDouble(gameObjectInfo.getSize());
+            byteBuffer.putInt(gameObjectInfo.getType().getCode());
+            byteBuffer.put((byte) (gameObjectInfo.isEnemy() ? 1 : 0));
         }
         return true;
     }

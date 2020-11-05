@@ -9,18 +9,19 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import com.dreamteam.powerofwar.connection.Message;
 import com.dreamteam.powerofwar.connection.codec.Codec;
 import com.dreamteam.powerofwar.connection.codec.CodecDispatcher;
 import com.dreamteam.powerofwar.connection.codec.RegistryCodecDispatcher;
 import com.dreamteam.powerofwar.connection.session.ChannelSession;
-import com.dreamteam.powerofwar.connection.session.IncomingMessage;
-import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.GameProgram;
+import com.dreamteam.powerofwar.server.game.Board;
+import com.dreamteam.powerofwar.server.game.GameProgram;
 import com.dreamteam.powerofwar.handler.Dispatcher;
 import com.dreamteam.powerofwar.handler.Handler;
 import com.dreamteam.powerofwar.handler.RegistryDispatcher;
+import com.dreamteam.powerofwar.server.game.event.EventListener;
 
-@SpringBootApplication(scanBasePackages = {"com.dreamteam.powerofwar.server", "com.dreamteam.powerofwar.game"})
+@SpringBootApplication(scanBasePackages = {"com.dreamteam.powerofwar.server", "com.dreamteam.powerofwar.server.game"})
 public class ServerApplication {
 
     public static void main(String[] args) {
@@ -46,7 +47,7 @@ public class ServerApplication {
     }
 
     @Bean
-    Dispatcher<IncomingMessage> registryMessageDispatcher(List<Handler<? extends IncomingMessage>> handlers) {
+    Dispatcher<Message> registryMessageDispatcher(List<Handler<? extends Message>> handlers) {
         return new RegistryDispatcher<>(handlers);
     }
 
@@ -60,11 +61,11 @@ public class ServerApplication {
     }
 
     @Bean
-    ServerConnection serverConnection(Dispatcher<IncomingMessage> registryMessageDispatcher, CodecDispatcher codecDispatcher) throws IOException {
-        return new ServerConnection() {
+    ServerConnection serverConnection(Dispatcher<Message> registryMessageDispatcher, EventListener eventListener, CodecDispatcher codecDispatcher) throws IOException {
+        return new ServerConnection(registryMessageDispatcher, eventListener) {
             @Override
             ChannelSession createChannelSession(SocketChannel socketChannel) {
-                return new ChannelSession(socketChannel, registryMessageDispatcher, codecDispatcher);
+                return new ChannelSession(socketChannel, codecDispatcher);
             }
         };
     }

@@ -11,6 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import com.dreamteam.powerofwar.client.action.Action;
+import com.dreamteam.powerofwar.client.game.GameContext;
 import com.dreamteam.powerofwar.client.state.GenericMutableState;
 import com.dreamteam.powerofwar.client.state.subject.SelectedGameObject;
 import com.dreamteam.powerofwar.client.state.subject.SelectedPlayer;
@@ -20,15 +21,12 @@ import com.dreamteam.powerofwar.connection.codec.Codec;
 import com.dreamteam.powerofwar.connection.codec.CodecDispatcher;
 import com.dreamteam.powerofwar.connection.codec.RegistryCodecDispatcher;
 import com.dreamteam.powerofwar.connection.session.ChannelSession;
-import com.dreamteam.powerofwar.connection.session.IncomingMessage;
 import com.dreamteam.powerofwar.connection.session.Session;
-import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.GameProgram;
 import com.dreamteam.powerofwar.handler.Dispatcher;
 import com.dreamteam.powerofwar.handler.Handler;
 import com.dreamteam.powerofwar.handler.RegistryDispatcher;
 
-@SpringBootApplication(scanBasePackages = {"com.dreamteam.powerofwar.client", "com.dreamteam.powerofwar.game"})
+@SpringBootApplication(scanBasePackages = {"com.dreamteam.powerofwar.client", "com.dreamteam.powerofwar.server.game"})
 public class ClientApplication {
 
     public static void main(String[] args) {
@@ -37,8 +35,6 @@ public class ClientApplication {
                 .headless(false)
                 .run(args);
 
-//        GameProgram gameProgram = context.getBean(GameProgram.class);
-//        gameProgram.startGame();
     }
 
     @Bean
@@ -57,17 +53,12 @@ public class ClientApplication {
     }
 
     @Bean
-    public Board board() {
-        return new Board();
+    public GameContext gameContext() {
+        return new GameContext();
     }
 
     @Bean
-    public GameProgram gameProgram(Board board) {
-        return new GameProgram(board);
-    }
-
-    @Bean
-    public Dispatcher<IncomingMessage> messageDispatcher(List<Handler<? extends IncomingMessage>> handlers) {
+    public Dispatcher<Message> messageDispatcher(List<Handler<? extends Message>> handlers) {
         return new RegistryDispatcher<>(handlers);
     }
 
@@ -77,13 +68,13 @@ public class ClientApplication {
     }
 
     @Bean
-    public Session session(Dispatcher<IncomingMessage> messageDispatcher, CodecDispatcher codecDispatcher) throws IOException {
+    public Session session(CodecDispatcher codecDispatcher) throws IOException {
         SocketChannel channel = SocketChannel.open(new InetSocketAddress(ConnectionInfo.IP, ConnectionInfo.PORT));
-        return new ChannelSession(channel, messageDispatcher, codecDispatcher);
+        return new ChannelSession(channel, codecDispatcher);
     }
 
     @Bean
-    public ClientConnection clientConnection(Session session) {
-        return new ClientConnection(session);
+    public ClientConnection clientConnection(Session session, Dispatcher<Message> messageDispatcher) {
+        return new ClientConnection(session, messageDispatcher);
     }
 }

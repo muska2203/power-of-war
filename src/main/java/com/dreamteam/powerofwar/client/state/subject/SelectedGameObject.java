@@ -1,6 +1,6 @@
 package com.dreamteam.powerofwar.client.state.subject;
 
-import com.dreamteam.powerofwar.game.object.type.GameObjectType;
+import com.dreamteam.powerofwar.game.types.GameObjectType;
 
 public class SelectedGameObject {
 

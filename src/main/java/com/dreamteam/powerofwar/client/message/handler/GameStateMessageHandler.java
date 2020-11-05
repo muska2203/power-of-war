@@ -2,23 +2,23 @@ package com.dreamteam.powerofwar.client.message.handler;
 
 import org.springframework.stereotype.Component;
 
+import com.dreamteam.powerofwar.client.game.GameContext;
 import com.dreamteam.powerofwar.client.message.GameStateMessage;
-import com.dreamteam.powerofwar.client.state.State;
-import com.dreamteam.powerofwar.client.state.subject.SelectedPlayer;
 import com.dreamteam.powerofwar.connection.MessageHandler;
 
 @Component
 public class GameStateMessageHandler implements MessageHandler<GameStateMessage> {
 
-    private State<SelectedPlayer> selectedPlayerState;
+    private GameContext gameContext;
 
-    public GameStateMessageHandler(State<SelectedPlayer> selectedPlayerState) {
-        this.selectedPlayerState = selectedPlayerState;
+    public GameStateMessageHandler(GameContext gameContext) {
+        this.gameContext = gameContext;
     }
 
     @Override
     public void handle(GameStateMessage message) {
-        SelectedPlayer selectedPlayer = selectedPlayerState.get();
-        selectedPlayer.getPlayer().getContext().setResources(message.getResources());
+        gameContext.setResources(message.getResources());
+        gameContext.getGameObjects().clear();
+        gameContext.getGameObjects().putAll(message.getGameObjects());
     }
 }

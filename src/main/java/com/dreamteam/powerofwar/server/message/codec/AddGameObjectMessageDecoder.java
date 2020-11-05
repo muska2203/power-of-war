@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.dreamteam.powerofwar.connection.codec.Decoder;
 import com.dreamteam.powerofwar.connection.codec.OPCode;
-import com.dreamteam.powerofwar.game.object.type.GameObjectType;
+import com.dreamteam.powerofwar.game.types.GameObjectType;
 import com.dreamteam.powerofwar.server.message.AddGameObjectMessage;
 import com.dreamteam.powerofwar.server.message.MessageTypes;
 

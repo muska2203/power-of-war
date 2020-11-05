@@ -1,7 +1,7 @@
 package com.dreamteam.powerofwar.client.message;
 
 import com.dreamteam.powerofwar.connection.Message;
-import com.dreamteam.powerofwar.game.object.type.GameObjectType;
+import com.dreamteam.powerofwar.game.types.GameObjectType;
 
 public class AddGameObjectMessage implements Message {
 

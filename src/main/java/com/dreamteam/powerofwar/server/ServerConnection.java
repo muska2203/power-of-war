@@ -18,6 +18,11 @@ import com.dreamteam.powerofwar.connection.Message;
 import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 import com.dreamteam.powerofwar.connection.session.ChannelSession;
 import com.dreamteam.powerofwar.connection.session.Session;
+import com.dreamteam.powerofwar.server.game.event.AddPlayerEvent;
+import com.dreamteam.powerofwar.server.game.event.EventListener;
+import com.dreamteam.powerofwar.server.game.player.Player;
+import com.dreamteam.powerofwar.handler.Dispatcher;
+import com.dreamteam.powerofwar.server.message.PlayerMessage;
 
 public abstract class ServerConnection implements Runnable, Closeable {
 
@@ -25,9 +30,15 @@ public abstract class ServerConnection implements Runnable, Closeable {
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
 
-    private Map<SocketChannel, Session> sessions = new ConcurrentHashMap<>();
+    private Map<Player, Session> sessions = new ConcurrentHashMap<>();
+    private Map<SocketChannel, Player> players = new ConcurrentHashMap<>();
 
-    public ServerConnection() throws IOException {
+    private final Dispatcher<Message> messageDispatcher;
+    private final EventListener eventListener;
+
+    public ServerConnection(Dispatcher<Message> messageDispatcher, EventListener eventListener) throws IOException {
+        this.messageDispatcher = messageDispatcher;
+        this.eventListener = eventListener;
         selector = Selector.open();
         serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.socket().bind(new InetSocketAddress(ConnectionInfo.IP, ConnectionInfo.PORT));
@@ -75,7 +86,10 @@ public abstract class ServerConnection implements Runnable, Closeable {
             //TODO: Задержка сделана, как костыль, чтобы приложение клиента успело включится перед началом работы
             Thread.sleep(1000);
             Session session = createChannelSession(channel);
-            sessions.put(channel, session);
+            Player player = new Player("Player " + players.size());
+            eventListener.registerEvent(new AddPlayerEvent(player));
+            players.put(channel, player);
+            sessions.put(player, session);
         } catch (IOException e) {
             System.out.println("Connection refused.");
         } catch (InterruptedException e) {
@@ -85,8 +99,13 @@ public abstract class ServerConnection implements Runnable, Closeable {
 
     private void handleRead(SelectionKey key) {
         SocketChannel channel = (SocketChannel) key.channel();
-        Session session = sessions.get(channel);
-        session.receiveMessage();
+        Player player = players.get(channel);
+        Session session = sessions.get(player);
+        Message message = session.receiveMessage();
+        if (message instanceof PlayerMessage) {
+            ((PlayerMessage) message).setInitiator(player);
+        }
+        messageDispatcher.dispatch(message);
     }
 
     @Override
@@ -99,8 +118,8 @@ public abstract class ServerConnection implements Runnable, Closeable {
     abstract ChannelSession createChannelSession(SocketChannel socketChannel);
 
     public void sendMessage(Message message) {
-        List<SocketChannel> closedChannels = new ArrayList<>();
-        for (Map.Entry<SocketChannel, Session> entry : sessions.entrySet()) {
+        List<Player> closedChannels = new ArrayList<>();
+        for (Map.Entry<Player, Session> entry : sessions.entrySet()) {
             try {
                 entry.getValue().send(message);
             } catch (ConnectionClosedException e) {
@@ -108,5 +127,12 @@ public abstract class ServerConnection implements Runnable, Closeable {
             }
         }
         closedChannels.forEach(sessions::remove);
+    }
+
+    public void sendMessage(Message message, Player player) {
+        Session session = sessions.get(player);
+        if (session != null) {
+            session.send(message);
+        }
     }
 }

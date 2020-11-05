@@ -1,7 +1,7 @@
 package com.dreamteam.powerofwar.client.action.type;
 
 import com.dreamteam.powerofwar.client.action.Action;
-import com.dreamteam.powerofwar.game.object.type.GameObjectType;
+import com.dreamteam.powerofwar.game.types.GameObjectType;
 
 public class SelectGameObjectAction implements Action {
 

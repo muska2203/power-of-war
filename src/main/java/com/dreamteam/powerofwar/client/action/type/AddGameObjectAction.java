@@ -1,8 +1,8 @@
 package com.dreamteam.powerofwar.client.action.type;
 
 import com.dreamteam.powerofwar.client.action.Action;
-import com.dreamteam.powerofwar.game.object.type.GameObjectType;
-import com.dreamteam.powerofwar.game.player.Player;
+import com.dreamteam.powerofwar.game.types.GameObjectType;
+import com.dreamteam.powerofwar.server.game.player.Player;
 
 public class AddGameObjectAction implements Action {
 
@@ -11,10 +11,9 @@ public class AddGameObjectAction implements Action {
     private Player player;
     private GameObjectType type;
 
-    public AddGameObjectAction(double x, double y, Player player, GameObjectType type) {
+    public AddGameObjectAction(double x, double y, GameObjectType type) {
         this.x = x;
         this.y = y;
-        this.player = player;
         this.type = type;
     }
 

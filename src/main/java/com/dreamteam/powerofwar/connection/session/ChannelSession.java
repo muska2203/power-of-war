@@ -7,7 +7,6 @@ import java.nio.channels.SocketChannel;
 import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 import com.dreamteam.powerofwar.connection.Message;
 import com.dreamteam.powerofwar.connection.codec.CodecDispatcher;
-import com.dreamteam.powerofwar.handler.Dispatcher;
 
 //todo: JavaDocs
 public class ChannelSession implements Session {
@@ -19,36 +18,32 @@ public class ChannelSession implements Session {
     ByteBuffer writeBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
 
     private SocketChannel channel;
-    private Dispatcher<IncomingMessage> messageDispatcher;
     private CodecDispatcher codecDispatcher;
     private int id;
 
-    public ChannelSession(SocketChannel channel, Dispatcher<IncomingMessage> messageDispatcher, CodecDispatcher codecDispatcher) {
+    public ChannelSession(SocketChannel channel, CodecDispatcher codecDispatcher) {
         this.id = ++ID_GENERATOR;
         this.channel = channel;
-        this.messageDispatcher = messageDispatcher;
         this.codecDispatcher = codecDispatcher;
         onReady();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends IncomingMessage> void receiveMessage() {
+    public <T extends Message> T receiveMessage() {
         int numRead;
         readBuffer.clear();
         try {
             numRead = this.channel.read(readBuffer);
         } catch (IOException ignore) {
-            numRead = 0; //todo: Delete it and throw exception
+            numRead = -1; //todo: Delete it and throw exception
         }
         if (numRead == -1) {
             disconnect();
-            return;
+            return null;
         }
         readBuffer.rewind();
-        T message = (T) this.codecDispatcher.decode(readBuffer);
-        message.setSenderSessionId(getId());
-        this.messageDispatcher.dispatch(message);
+        return (T) this.codecDispatcher.decode(readBuffer);
     }
 
     @Override
@@ -81,6 +76,7 @@ public class ChannelSession implements Session {
         try {
             this.channel.close();
         } catch (IOException ignore) {
+            ignore.printStackTrace();
             //todo: handle
         }
     }

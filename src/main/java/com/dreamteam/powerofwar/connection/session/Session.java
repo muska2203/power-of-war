@@ -26,9 +26,9 @@ public interface Session {
     void sendAll(Message... messages) throws ConnectionClosedException;
 
     /**
-     * Handles the specified message.
+     * Receive a message.
      */
-    <T extends IncomingMessage> void receiveMessage();
+    <T extends Message> T receiveMessage();
 
     /**
      * Closes connection if it is opened.

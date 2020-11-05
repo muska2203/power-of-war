@@ -13,11 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.dreamteam.powerofwar.client.action.Action;
 import com.dreamteam.powerofwar.client.action.type.SelectGameObjectAction;
-import com.dreamteam.powerofwar.client.action.type.SelectPlayerAction;
-import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.object.GameObject;
-import com.dreamteam.powerofwar.game.object.type.GameObjectType;
-import com.dreamteam.powerofwar.game.player.Player;
+import com.dreamteam.powerofwar.game.types.GameObjectType;
 import com.dreamteam.powerofwar.handler.Dispatcher;
 
 @Component
@@ -25,28 +21,20 @@ import com.dreamteam.powerofwar.handler.Dispatcher;
 public class ControlComponent extends JPanel {
 
     private Dispatcher<Action> actionDispatcher;
-    private Board board;
 
-    public ControlComponent(Dispatcher<Action> actionDispatcher, Board board, Player firstPlayer, Player secondPlayer) {
+    public ControlComponent(Dispatcher<Action> actionDispatcher) {
         this.actionDispatcher = actionDispatcher;
-        this.board = board;
 
         Box box = Box.createHorizontalBox();
         Button warrior = new Button("Warrior");
         Button cowardMinion = new Button("Coward Minion");
         Button resetChoice = new Button("Reset choice");
-        Button cleanField = new Button("Clean field");
-        Button firstUser = new Button("First Player");
-        Button secondUser = new Button("Second Player");
         Button goldMiner = new Button("Gold Miner");
         Button gold = new Button("Gold");
         Button base = new Button("Base");
         warrior.addActionListener(selectGameObject(GameObjectType.WARRIOR));
         cowardMinion.addActionListener(selectGameObject(GameObjectType.COWARD));
         resetChoice.addActionListener(reset());
-        cleanField.addActionListener(e -> this.killAllObject());
-        firstUser.addActionListener(selectPlayer(firstPlayer));
-        secondUser.addActionListener(selectPlayer(secondPlayer));
         goldMiner.addActionListener(selectGameObject(GameObjectType.GOLD_MINER));
         gold.addActionListener(selectGameObject(GameObjectType.GOLD_MINE));
         base.addActionListener(selectGameObject(GameObjectType.BASE));
@@ -56,10 +44,7 @@ public class ControlComponent extends JPanel {
                 goldMiner,
                 base,
                 warrior,
-                resetChoice,
-                cleanField,
-                firstUser,
-                secondUser)) {
+                resetChoice)) {
             button.setSize(dimension);
             box.add(button);
         }
@@ -72,20 +57,9 @@ public class ControlComponent extends JPanel {
         return e -> this.actionDispatcher.dispatch(new SelectGameObjectAction(gameObjectType));
     }
 
-    private ActionListener selectPlayer(Player player) {
-        return e -> this.actionDispatcher.dispatch(new SelectPlayerAction(player));
-    }
-
     private ActionListener reset() {
         return e -> {
             this.actionDispatcher.dispatch(new SelectGameObjectAction(null));
-            this.actionDispatcher.dispatch(new SelectPlayerAction(null));
         };
-    }
-
-    // TODO: This is a test method. Remove it
-    private void killAllObject() {
-        java.util.List<GameObject> objects = this.board.getGameObjects();
-        objects.forEach(object -> object.doDamage(100500));
     }
 }
