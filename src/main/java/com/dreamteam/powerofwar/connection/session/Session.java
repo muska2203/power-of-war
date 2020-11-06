@@ -4,8 +4,7 @@ import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 import com.dreamteam.powerofwar.connection.Message;
 
 /**
- * Represents connection to another program.
- * TODO: JavaDocs
+ * Represents a connection to another program.
  */
 public interface Session {
 
@@ -36,7 +35,7 @@ public interface Session {
     void disconnect();
 
     /**
-     * Session id.
+     * Returns session id.
      */
     int getId();
 

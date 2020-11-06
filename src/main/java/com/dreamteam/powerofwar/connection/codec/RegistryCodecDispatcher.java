@@ -10,6 +10,9 @@ import com.dreamteam.powerofwar.connection.exception.IllegalCodecException;
 import com.dreamteam.powerofwar.connection.exception.TooSmallBufferSizeException;
 import com.dreamteam.powerofwar.connection.Message;
 
+/**
+ * Main implementation of {@link CodecDispatcher} which uses registration of Codecs.
+ */
 public class RegistryCodecDispatcher implements CodecDispatcher {
 
     private Map<Integer, Decoder<?>> decoderByCode = new HashMap<>();

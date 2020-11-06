@@ -4,14 +4,18 @@ import java.nio.ByteBuffer;
 
 import com.dreamteam.powerofwar.connection.Message;
 
+/**
+ * Implementations can decode the specified type of messages.
+ * @param <T> message type
+ */
 public interface Decoder<T extends Message> extends Codec<T> {
 
     /**
-     * Decodes the message from the specified byte buffer.
+     * Decodes a message from the specified byte buffer.
      * The process starts from the current position of the specified byte buffer.
      *
-     * @param byteBuffer the buffer to read from.
-     * @return the decoded message.
+     * @param byteBuffer a buffer to read from.
+     * @return a decoded message.
      */
     T decode(ByteBuffer byteBuffer);
 }

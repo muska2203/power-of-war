@@ -8,7 +8,9 @@ import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 import com.dreamteam.powerofwar.connection.Message;
 import com.dreamteam.powerofwar.connection.codec.CodecDispatcher;
 
-//todo: JavaDocs
+/**
+ * Standard implementation of the {@link Session} which uses a socket channel to connect to another program.
+ */
 public class ChannelSession implements Session {
 
     private static int ID_GENERATOR = 0;
@@ -58,8 +60,9 @@ public class ChannelSession implements Session {
             while (writeBuffer.hasRemaining()) {
                 this.channel.write(writeBuffer);
             }
-        } catch (IOException ignore) {
-            //todo: throw exception
+        } catch (IOException e) {
+            e.printStackTrace();
+            // TODO: handle
         }
     }
 
