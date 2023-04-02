@@ -9,6 +9,9 @@ import com.dreamteam.powerofwar.connection.Message;
  */
 public interface Codec<T extends Message> {
 
+    byte[] START_MESSAGE = new byte[]{(byte) 77, (byte) 77, (byte) 77};
+    byte[] END_MESSAGE = new byte[]{(byte) 42, (byte) 42, (byte) 42};
+
     /**
      * Returns the count of bytes which needs to encode or decode a message with current type.
      * TODO: Must be researched to find out if it really needs. Now coding size can be different for one message. For example List of smth.

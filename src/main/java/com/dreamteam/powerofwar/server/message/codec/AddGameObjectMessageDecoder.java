@@ -17,9 +17,15 @@ public class AddGameObjectMessageDecoder implements Decoder<AddGameObjectMessage
 
     @Override
     public AddGameObjectMessage decode(ByteBuffer byteBuffer) {
+        for (int i = 0; i < START_MESSAGE.length; i++) {
+            byteBuffer.get();
+        }
         double x = byteBuffer.getDouble();
         double y = byteBuffer.getDouble();
         GameObjectType gameObjectType = GameObjectType.valueOf(byteBuffer.getInt());
+        for (int i = 0; i < END_MESSAGE.length; i++) {
+            byteBuffer.get();
+        }
         return new AddGameObjectMessage(x, y, gameObjectType);
     }
 

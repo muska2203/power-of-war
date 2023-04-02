@@ -10,16 +10,15 @@ import com.dreamteam.powerofwar.connection.codec.Encoder;
 import com.dreamteam.powerofwar.connection.codec.OPCode;
 
 @Component
-public class AddGameObjectMessageEncoder implements Encoder<AddGameObjectMessage> {
+public class AddGameObjectMessageEncoder extends Encoder<AddGameObjectMessage> {
 
     private static final int MESSAGE_SIZE = Double.BYTES * 2 + Integer.BYTES;
 
     @Override
-    public boolean encode(ByteBuffer byteBuffer, AddGameObjectMessage message) {
+    public void write(AddGameObjectMessage message, ByteBuffer byteBuffer) {
         byteBuffer.putDouble(message.getX());
         byteBuffer.putDouble(message.getY());
         byteBuffer.putInt(message.getType().getCode());
-        return true;
     }
 
     @Override

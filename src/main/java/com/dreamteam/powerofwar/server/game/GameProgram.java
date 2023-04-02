@@ -45,18 +45,22 @@ public class GameProgram implements EventListener, Runnable {
     @Override
     public void run() {
         while (running) {
-            doEvents();
-            long loopTime = calculateLoopTime();
-            board.doActions(loopTime);
-
-            board.getGameObjects().forEach(gameObject -> gameObject.update(board));
-            board.getGameObjects().forEach(gameObject -> gameObject.move(loopTime));
-            board.cleanOverboardObjects();
-            board.cleanDeadObjects();
             try {
-                Thread.sleep(15);
-            } catch (InterruptedException e) {
-                this.stopGame();
+                doEvents();
+                long loopTime = calculateLoopTime();
+                board.doActions(loopTime);
+
+                board.getGameObjects().forEach(gameObject -> gameObject.update(board));
+                board.getGameObjects().forEach(gameObject -> gameObject.move(loopTime));
+                board.cleanOverboardObjects();
+                board.cleanDeadObjects();
+                try {
+                    Thread.sleep(15);
+                } catch (InterruptedException e) {
+                    this.stopGame();
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         }
     }

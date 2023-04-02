@@ -1,14 +1,14 @@
 package com.dreamteam.powerofwar.connection.codec;
 
-import java.nio.ByteBuffer;
-
 import com.dreamteam.powerofwar.connection.Message;
+
+import java.nio.ByteBuffer;
 
 /**
  * Implementations can encode the specified type of messages.
  * @param <T> message type
  */
-public interface Encoder<T extends Message> extends Codec<T> {
+public abstract class Encoder<T extends Message> implements Codec<T> {
 
     /**
      * Encodes the message to the specified byte buffer.
@@ -18,7 +18,20 @@ public interface Encoder<T extends Message> extends Codec<T> {
      * @param message a message to encode.
      * @return the buffer after writing.
      */
-    boolean encode(ByteBuffer byteBuffer, T message);
+    public boolean encode(ByteBuffer byteBuffer, T message) {
+        byteBuffer.put(START_MESSAGE);
+        byteBuffer.put(encode(message));
+        byteBuffer.put(END_MESSAGE);
+        return true;
+    }
 
-    int getMessageSize(T message);
+    private byte[] encode(T message) {
+        ByteBuffer buffer = ByteBuffer.allocate(getMessageSize(message));
+        write(message, buffer);
+        return buffer.array();
+    }
+
+    protected abstract void write(T message, ByteBuffer buffer);
+
+    public abstract int getMessageSize(T message);
 }

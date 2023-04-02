@@ -27,7 +27,7 @@ public class RegistryCodecDispatcher implements CodecDispatcher {
     @SuppressWarnings("unchecked")
     public <T extends Message> void register(Codec<T> codec) {
         if (codec instanceof Encoder<?>) {
-            ParameterizedType genericInterface = (ParameterizedType) codec.getClass().getGenericInterfaces()[0];
+            ParameterizedType genericInterface = (ParameterizedType) codec.getClass().getGenericSuperclass();
             Class<T> actualTypeArgument = (Class<T>) genericInterface.getActualTypeArguments()[0];
             encoderByMessageType.put(actualTypeArgument, (Encoder<?>) codec);
         }
