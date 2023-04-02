@@ -57,8 +57,10 @@ public class RegistryCodecDispatcher implements CodecDispatcher {
         byteBuffer.mark();
         Encoder<T> codec = (Encoder<T>) encoderByMessageType.get(message.getClass());
         if (codec != null) {
-            if (codec.getCodingSize() > byteBuffer.capacity() - byteBuffer.position()) {
-                throw new TooSmallBufferSizeException("Byte Buffer must contain at least - " + codec.getCodingSize());
+            int messageSize = codec.getMessageSize(message);
+            int limit = byteBuffer.capacity() - byteBuffer.position() - Byte.BYTES;
+            if (messageSize >= limit) {
+                throw new TooSmallBufferSizeException("Byte Buffer must contain at least - " + messageSize + ". You have only " + limit);
             }
             byteBuffer.put((byte) codec.getOPCode().getCode());
             codec.encode(byteBuffer, message);

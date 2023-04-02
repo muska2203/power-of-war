@@ -19,4 +19,6 @@ public interface Encoder<T extends Message> extends Codec<T> {
      * @return the buffer after writing.
      */
     boolean encode(ByteBuffer byteBuffer, T message);
+
+    int getMessageSize(T message);
 }

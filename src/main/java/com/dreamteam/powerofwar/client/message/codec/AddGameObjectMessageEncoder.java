@@ -28,6 +28,11 @@ public class AddGameObjectMessageEncoder implements Encoder<AddGameObjectMessage
     }
 
     @Override
+    public int getMessageSize(AddGameObjectMessage message) {
+        return MESSAGE_SIZE;
+    }
+
+    @Override
     public OPCode getOPCode() {
         return MessageTypes.ADD_OBJECT;
     }

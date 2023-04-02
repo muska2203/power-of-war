@@ -42,6 +42,14 @@ public class GameStateMessageEncoder implements Encoder<GameStateMessage> {
     }
 
     @Override
+    public int getMessageSize(GameStateMessage message) {
+        return ResourceType.values().length * Integer.BYTES
+                + Integer.BYTES
+                + message.getGameObjectsInfo().size()
+                    * (3 * Integer.BYTES + 3 * Double.BYTES + Byte.BYTES);
+    }
+
+    @Override
     public OPCode getOPCode() {
         return MessageTypes.GAME_STATE;
     }
