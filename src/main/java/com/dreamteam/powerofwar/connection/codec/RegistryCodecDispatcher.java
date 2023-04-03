@@ -10,6 +10,9 @@ import com.dreamteam.powerofwar.connection.exception.IllegalCodecException;
 import com.dreamteam.powerofwar.connection.exception.TooSmallBufferSizeException;
 import com.dreamteam.powerofwar.connection.Message;
 
+import static com.dreamteam.powerofwar.connection.codec.Codec.START_MESSAGE;
+import static com.dreamteam.powerofwar.connection.utils.ByteUtils.getInt;
+
 /**
  * Main implementation of {@link CodecDispatcher} which uses registration of Codecs.
  */
@@ -38,35 +41,26 @@ public class RegistryCodecDispatcher implements CodecDispatcher {
 
     @Override
     public Message decode(ByteBuffer byteBuffer) {
-        byteBuffer.mark();
+        for (int i = 0; i < START_MESSAGE.length; i++) {
+            byteBuffer.get();
+        }
+        int bytesCount = getInt(new byte[]{byteBuffer.get(), byteBuffer.get(), byteBuffer.get(), byteBuffer.get()});
         int code = byteBuffer.get();
         Decoder<?> codec = decoderByCode.get(code);
-        if (codec != null) {
-            if (codec.getCodingSize() > byteBuffer.limit() - byteBuffer.position()) {
-                throw new TooSmallBufferSizeException("Byte Buffer must contain at least - " + codec.getCodingSize());
-            }
-            return codec.decode(byteBuffer);
+        if (codec == null) {
+            throw new IllegalCodecException("Decoder with code [" + code + "] has not been found.");
         }
-        byteBuffer.reset();
-        throw new IllegalCodecException("Decoder with code [" + code + "] has not been found.");
+
+        return codec.decode(byteBuffer);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Message> boolean encode(ByteBuffer byteBuffer, T message) {
-        byteBuffer.mark();
+    public <T extends Message> byte[] encode(T message) {
         Encoder<T> codec = (Encoder<T>) encoderByMessageType.get(message.getClass());
         if (codec != null) {
-            int messageSize = codec.getMessageSize(message);
-            int limit = byteBuffer.capacity() - byteBuffer.position() - Byte.BYTES;
-            if (messageSize >= limit) {
-                throw new TooSmallBufferSizeException("Byte Buffer must contain at least - " + messageSize + ". You have only " + limit);
-            }
-            byteBuffer.put((byte) codec.getOPCode().getCode());
-            codec.encode(byteBuffer, message);
-            return true;
+            return codec.encode(message);
         }
-        byteBuffer.reset();
         throw new IllegalCodecException("Encoder of message type [" + message.getClass() + "] has not been found.");
     }
 }

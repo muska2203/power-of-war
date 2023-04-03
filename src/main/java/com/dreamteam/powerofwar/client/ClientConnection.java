@@ -18,7 +18,7 @@ public class ClientConnection implements Closeable {
             while (true) {
                 Message message = this.session.receiveMessage();
                 if (message != null) {
-                messageDispatcher.dispatch(message);
+                    messageDispatcher.dispatch(message);
                 }
             }
         });

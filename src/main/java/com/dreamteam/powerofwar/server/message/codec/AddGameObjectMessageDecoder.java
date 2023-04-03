@@ -11,21 +11,15 @@ import com.dreamteam.powerofwar.server.message.AddGameObjectMessage;
 import com.dreamteam.powerofwar.server.message.MessageTypes;
 
 @Component
-public class AddGameObjectMessageDecoder implements Decoder<AddGameObjectMessage> {
+public class AddGameObjectMessageDecoder extends Decoder<AddGameObjectMessage> {
 
     private static final int MESSAGE_SIZE = Double.BYTES * 2 + Integer.BYTES;
 
     @Override
-    public AddGameObjectMessage decode(ByteBuffer byteBuffer) {
-        for (int i = 0; i < START_MESSAGE.length; i++) {
-            byteBuffer.get();
-        }
+    public AddGameObjectMessage decodeInternal(ByteBuffer byteBuffer) {
         double x = byteBuffer.getDouble();
         double y = byteBuffer.getDouble();
         GameObjectType gameObjectType = GameObjectType.valueOf(byteBuffer.getInt());
-        for (int i = 0; i < END_MESSAGE.length; i++) {
-            byteBuffer.get();
-        }
         return new AddGameObjectMessage(x, y, gameObjectType);
     }
 

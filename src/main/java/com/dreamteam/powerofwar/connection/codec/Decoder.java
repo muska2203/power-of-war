@@ -8,14 +8,17 @@ import com.dreamteam.powerofwar.connection.Message;
  * Implementations can decode the specified type of messages.
  * @param <T> message type
  */
-public interface Decoder<T extends Message> extends Codec<T> {
+public abstract class Decoder<T extends Message> implements Codec<T> {
 
     /**
      * Decodes a message from the specified byte buffer.
      * The process starts from the current position of the specified byte buffer.
      *
-     * @param byteBuffer a buffer to read from.
      * @return a decoded message.
      */
-    T decode(ByteBuffer byteBuffer);
+    public T decode(ByteBuffer byteBuffer) {
+        return decodeInternal(byteBuffer);
+    }
+
+    protected abstract T decodeInternal(ByteBuffer byteBuffer);
 }

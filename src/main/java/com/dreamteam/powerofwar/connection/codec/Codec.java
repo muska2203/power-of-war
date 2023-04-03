@@ -9,8 +9,8 @@ import com.dreamteam.powerofwar.connection.Message;
  */
 public interface Codec<T extends Message> {
 
-    byte[] START_MESSAGE = new byte[]{(byte) 77, (byte) 77, (byte) 77};
-    byte[] END_MESSAGE = new byte[]{(byte) 42, (byte) 42, (byte) 42};
+    byte[] START_MESSAGE = new byte[]{(byte) -1, (byte) -1, (byte) -1, (byte) -1, (byte) -1, (byte) -1, (byte) -1};
+    byte[] END_MESSAGE = new byte[]{(byte) -2, (byte) -2, (byte) -2, (byte) -2, (byte) -2, (byte) -2, (byte) -2};
 
     /**
      * Returns the count of bytes which needs to encode or decode a message with current type.

@@ -17,15 +17,12 @@ import com.dreamteam.powerofwar.game.types.GameObjectType;
 import com.dreamteam.powerofwar.game.types.ResourceType;
 
 @Component
-public class GameStateMessageDecoder implements Decoder<GameStateMessage> {
+public class GameStateMessageDecoder extends Decoder<GameStateMessage> {
 
     private static final int MESSAGE_SIZE = ResourceType.values().length * Integer.BYTES;
 
     @Override
-    public GameStateMessage decode(ByteBuffer byteBuffer) {
-        for (int i = 0; i < START_MESSAGE.length; i++) {
-            byteBuffer.get();
-        }
+    public GameStateMessage decodeInternal(ByteBuffer byteBuffer) {
         Map<ResourceType, Integer> resources = new HashMap<>();
         for (ResourceType resourceType : ResourceType.values()) {
             resources.put(resourceType, byteBuffer.getInt());
@@ -42,9 +39,6 @@ public class GameStateMessageDecoder implements Decoder<GameStateMessage> {
             gameObject.setType(GameObjectType.valueOf(byteBuffer.getInt()));
             gameObject.setEnemy(byteBuffer.get() == 1);
             gameObjects.add(gameObject);
-        }
-        for (int i = 0; i < END_MESSAGE.length; i++) {
-            byteBuffer.get();
         }
         return new GameStateMessage(resources, gameObjects);
     }
