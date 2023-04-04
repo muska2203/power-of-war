@@ -13,19 +13,12 @@ import com.dreamteam.powerofwar.server.message.MessageTypes;
 @Component
 public class AddGameObjectMessageDecoder extends Decoder<AddGameObjectMessage> {
 
-    private static final int MESSAGE_SIZE = Double.BYTES * 2 + Integer.BYTES;
-
     @Override
     public AddGameObjectMessage decodeInternal(ByteBuffer byteBuffer) {
         double x = byteBuffer.getDouble();
         double y = byteBuffer.getDouble();
         GameObjectType gameObjectType = GameObjectType.valueOf(byteBuffer.getInt());
         return new AddGameObjectMessage(x, y, gameObjectType);
-    }
-
-    @Override
-    public int getCodingSize() {
-        return MESSAGE_SIZE;
     }
 
     @Override

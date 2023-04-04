@@ -22,11 +22,6 @@ public class AddGameObjectMessageEncoder extends Encoder<AddGameObjectMessage> {
     }
 
     @Override
-    public int getCodingSize() {
-        return MESSAGE_SIZE;
-    }
-
-    @Override
     public int getMessageSize(AddGameObjectMessage message) {
         return MESSAGE_SIZE;
     }

@@ -34,11 +34,6 @@ public class GameStateMessageEncoder extends Encoder<GameStateMessage> {
     }
 
     @Override
-    public int getCodingSize() {
-        return MESSAGE_SIZE;
-    }
-
-    @Override
     public int getMessageSize(GameStateMessage message) {
         return ResourceType.values().length * Integer.BYTES
                 + Integer.BYTES

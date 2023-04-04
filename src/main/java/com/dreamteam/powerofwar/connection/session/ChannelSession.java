@@ -18,7 +18,7 @@ public class ChannelSession implements Session {
 
     private static int ID_GENERATOR = 0;
 
-    public static final int MAX_MESSAGE_SIZE = 5;
+    public static final int MAX_MESSAGE_SIZE = 1 << 10;
     private final ChunkReader chunkReader;
     ByteBuffer readBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
     ByteBuffer writeBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
@@ -47,8 +47,8 @@ public class ChannelSession implements Session {
                     break;
                 }
                 readBuffer.rewind();
-                byte[] array = readBuffer.array();
-                System.out.println("readCount: " + readCount + ", position: " + readBuffer.capacity() + " ,array: " + Arrays.toString(array));
+                byte[] array = Arrays.copyOf(readBuffer.array(), readCount);
+                System.out.println("readCount: " + readCount + ", position: " + readBuffer.capacity());
                 chunkReader.addChunk(array);
                 byte[] readyToParseChunk = chunkReader.getReadyToParseChunk();
                 if (readyToParseChunk != null) {
@@ -71,9 +71,7 @@ public class ChannelSession implements Session {
         List<byte[]> chunks = ArrayUtils.split(encoded, MAX_MESSAGE_SIZE);
 
         for (byte[] chunk : chunks) {
-            writeBuffer.clear();
-            System.out.println("write -> " + Arrays.toString(chunk));
-            writeBuffer.put(chunk);
+            writeBuffer = ByteBuffer.wrap(chunk);
             writeBuffer.rewind();
             try {
                 if (writeBuffer.hasRemaining()) {

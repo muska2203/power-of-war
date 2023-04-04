@@ -44,11 +44,6 @@ public class GameStateMessageDecoder extends Decoder<GameStateMessage> {
     }
 
     @Override
-    public int getCodingSize() {
-        return MESSAGE_SIZE;
-    }
-
-    @Override
     public OPCode getOPCode() {
         return MessageTypes.GAME_STATE;
     }

@@ -61,7 +61,6 @@ public final class ArrayUtils {
     }
 
     public static byte[] exclude(byte[] array, int left, int right) {
-        System.out.println("Exclude: " + Arrays.toString(array) + " " + left + " " + right);
         byte[] result = new byte[array.length - (right - left + 1)];
         for (int i = 0, startPosition = 0; i < array.length; i++) {
             if (!(left <= i && i <= right)) {
@@ -69,9 +68,5 @@ public final class ArrayUtils {
             }
         }
         return result;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(Arrays.toString(exclude(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 0, 9)));
     }
 }
