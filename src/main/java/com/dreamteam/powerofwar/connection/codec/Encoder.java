@@ -4,6 +4,7 @@ import com.dreamteam.powerofwar.connection.Message;
 
 import java.nio.ByteBuffer;
 
+import static com.dreamteam.powerofwar.connection.codec.OPCode.OP_CODE_SIZE;
 import static com.dreamteam.powerofwar.connection.utils.ArrayUtils.mergeArrays;
 import static com.dreamteam.powerofwar.connection.utils.ByteUtils.encodeInt;
 
@@ -21,24 +22,16 @@ public abstract class Encoder<T extends Message> implements Codec<T> {
      * @return the buffer after writing.
      */
     public byte[] encode(T message) {
-
-        byte[] mainMassage = mergeArrays(
-                new byte[]{ (byte) getOPCode().getCode() },
-                encodeInternal(message)
-        );
-        return mergeArrays(
-                START_MESSAGE,
-                encodeInt(mainMassage.length),
-                mainMassage
-        );
-    }
-
-    private byte[] encodeInternal(T message) {
         ByteBuffer buffer = ByteBuffer.allocate(getMessageSize(message));
         write(message, buffer);
-        return buffer.array();
-    }
+        byte[] mainMessage = buffer.array();
 
+        return mergeArrays(
+                encodeInt(mainMessage.length + OP_CODE_SIZE),
+                new byte[]{ (byte) getOPCode().getCode() },
+                mainMessage
+        );
+    }
     protected abstract void write(T message, ByteBuffer buffer);
 
     public abstract int getMessageSize(T message);

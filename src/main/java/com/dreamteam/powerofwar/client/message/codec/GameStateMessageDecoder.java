@@ -19,10 +19,8 @@ import com.dreamteam.powerofwar.game.types.ResourceType;
 @Component
 public class GameStateMessageDecoder extends Decoder<GameStateMessage> {
 
-    private static final int MESSAGE_SIZE = ResourceType.values().length * Integer.BYTES;
-
     @Override
-    public GameStateMessage decodeInternal(ByteBuffer byteBuffer) {
+    public GameStateMessage decode(ByteBuffer byteBuffer) {
         Map<ResourceType, Integer> resources = new HashMap<>();
         for (ResourceType resourceType : ResourceType.values()) {
             resources.put(resourceType, byteBuffer.getInt());

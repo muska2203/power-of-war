@@ -23,13 +23,12 @@ public class ChannelSession implements Session {
     ByteBuffer readBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
     ByteBuffer writeBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
 
-    private SocketChannel channel;
-    private CodecDispatcher codecDispatcher;
-    private int id;
+    private final SocketChannel channel;
+    private final CodecDispatcher codecDispatcher;
+    private final int id;
 
     public ChannelSession(SocketChannel channel, CodecDispatcher codecDispatcher) {
         this.id = ++ID_GENERATOR;
-        System.out.println("ID = " + id);
         this.channel = channel;
         this.chunkReader = new ChunkReader();
         this.codecDispatcher = codecDispatcher;
@@ -40,21 +39,18 @@ public class ChannelSession implements Session {
     @SuppressWarnings("unchecked")
     public <T extends Message> T receiveMessage() {
         try {
-            readBuffer.clear();
             while (true) {
+                readBuffer.rewind();
                 int readCount = this.channel.read(readBuffer);
                 if (readCount == -1) {
                     break;
                 }
-                readBuffer.rewind();
                 byte[] array = Arrays.copyOf(readBuffer.array(), readCount);
-                System.out.println("readCount: " + readCount + ", position: " + readBuffer.capacity());
                 chunkReader.addChunk(array);
                 byte[] readyToParseChunk = chunkReader.getReadyToParseChunk();
                 if (readyToParseChunk != null) {
                     return (T) this.codecDispatcher.decode(ByteBuffer.wrap(readyToParseChunk));
                 }
-                readBuffer.clear();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -72,9 +68,8 @@ public class ChannelSession implements Session {
 
         for (byte[] chunk : chunks) {
             writeBuffer = ByteBuffer.wrap(chunk);
-            writeBuffer.rewind();
             try {
-                if (writeBuffer.hasRemaining()) {
+                while (writeBuffer.hasRemaining()) {
                     this.channel.write(writeBuffer);
                 }
             } catch (IOException e) {
@@ -96,8 +91,8 @@ public class ChannelSession implements Session {
         onDisconnect();
         try {
             this.channel.close();
-        } catch (IOException ignore) {
-            ignore.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
             //todo: handle
         }
     }

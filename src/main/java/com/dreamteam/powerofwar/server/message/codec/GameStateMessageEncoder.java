@@ -13,8 +13,6 @@ import java.util.Map;
 @Component
 public class GameStateMessageEncoder extends Encoder<GameStateMessage> {
 
-    private static final int MESSAGE_SIZE = ResourceType.values().length * 4;
-
     @Override
     protected void write(GameStateMessage message, ByteBuffer byteBuffer) {
         Map<ResourceType, Integer> resources = message.getResources();

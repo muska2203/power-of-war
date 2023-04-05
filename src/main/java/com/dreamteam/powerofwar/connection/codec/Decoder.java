@@ -16,9 +16,5 @@ public abstract class Decoder<T extends Message> implements Codec<T> {
      *
      * @return a decoded message.
      */
-    public T decode(ByteBuffer byteBuffer) {
-        return decodeInternal(byteBuffer);
-    }
-
-    protected abstract T decodeInternal(ByteBuffer byteBuffer);
+    public abstract T decode(ByteBuffer byteBuffer);
 }

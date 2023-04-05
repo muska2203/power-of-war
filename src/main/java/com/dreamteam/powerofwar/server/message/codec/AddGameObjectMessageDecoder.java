@@ -14,7 +14,7 @@ import com.dreamteam.powerofwar.server.message.MessageTypes;
 public class AddGameObjectMessageDecoder extends Decoder<AddGameObjectMessage> {
 
     @Override
-    public AddGameObjectMessage decodeInternal(ByteBuffer byteBuffer) {
+    public AddGameObjectMessage decode(ByteBuffer byteBuffer) {
         double x = byteBuffer.getDouble();
         double y = byteBuffer.getDouble();
         GameObjectType gameObjectType = GameObjectType.valueOf(byteBuffer.getInt());
