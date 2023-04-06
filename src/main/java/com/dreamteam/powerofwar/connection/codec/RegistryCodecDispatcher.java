@@ -9,9 +9,6 @@ import java.util.Map;
 import com.dreamteam.powerofwar.connection.exception.IllegalCodecException;
 import com.dreamteam.powerofwar.connection.Message;
 
-import static com.dreamteam.powerofwar.connection.codec.Codec.START_MESSAGE;
-import static com.dreamteam.powerofwar.connection.utils.ArrayUtils.mergeArrays;
-
 /**
  * Main implementation of {@link CodecDispatcher} which uses registration of Codecs.
  */
@@ -40,7 +37,7 @@ public class RegistryCodecDispatcher implements CodecDispatcher {
 
     @Override
     public Message decode(ByteBuffer byteBuffer) {
-        for (int i = 0; i < START_MESSAGE.length + Integer.BYTES; i++) {
+        for (int i = 0; i < Integer.BYTES; i++) {
             byteBuffer.get();
         }
         int code = byteBuffer.get();
@@ -57,10 +54,7 @@ public class RegistryCodecDispatcher implements CodecDispatcher {
     public <T extends Message> byte[] encode(T message) {
         Encoder<T> codec = (Encoder<T>) encoderByMessageType.get(message.getClass());
         if (codec != null) {
-            return mergeArrays(
-                    START_MESSAGE,
-                    codec.encode(message)
-            );
+            return codec.encode(message);
         }
         throw new IllegalCodecException("Encoder of message type [" + message.getClass() + "] has not been found.");
     }

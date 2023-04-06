@@ -2,7 +2,6 @@ package com.dreamteam.powerofwar.connection.session;
 
 import java.util.Arrays;
 
-import static com.dreamteam.powerofwar.connection.codec.Codec.START_MESSAGE;
 import static com.dreamteam.powerofwar.connection.utils.ArrayUtils.*;
 import static com.dreamteam.powerofwar.connection.utils.ByteUtils.decodeInt;
 
@@ -18,8 +17,7 @@ public class ChunkReader {
      * @return null is message is not ready, otherwise encoded message as byte array
      */
     public byte[] getReadyToParseChunk() {
-        int left = getFirstPosition(this.bytes, START_MESSAGE);
-        if (bytes.length - START_MESSAGE.length - left < Integer.BYTES) {
+        if (bytes.length < Integer.BYTES) {
             // If the count of the message bytes is zero,
             //      the received message will contain only START_MESSAGE.length + Integer.BYTES bytes.
             //      As result the message will be valid. We need receive at least this count of message to start to process it
@@ -27,16 +25,19 @@ public class ChunkReader {
         }
 
         // trying to get count of the message bytes
-        byte[] countEncoded = Arrays.copyOfRange(bytes, left + START_MESSAGE.length, left + START_MESSAGE.length + Integer.BYTES);
-        int countBytes = decodeInt(countEncoded);
-        int right = left + START_MESSAGE.length + Integer.BYTES + countBytes;
+        int countBytes = decodeInt(bytes);
+        int right = Integer.BYTES + countBytes;
 
         if (right > this.bytes.length) {
             // if we need more bytes than we have now.
             return null;
         }
-        byte[] message = Arrays.copyOfRange(this.bytes, left, right);
-        this.bytes = exclude(this.bytes, left, right - 1);
+        byte[] message = Arrays.copyOf(this.bytes, right);
+        if (this.bytes.length == right) {
+            this.bytes = new byte[0];
+        } else {
+            this.bytes = Arrays.copyOfRange(this.bytes, right, this.bytes.length);
+        }
         return message;
     }
 }
