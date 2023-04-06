@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Arrays;
-import java.util.List;
 
 import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 import com.dreamteam.powerofwar.connection.Message;
 import com.dreamteam.powerofwar.connection.codec.CodecDispatcher;
-import com.dreamteam.powerofwar.connection.utils.ArrayUtils;
 
 /**
  * Standard implementation of the {@link Session} which uses a socket channel to connect to another program.
@@ -64,18 +62,14 @@ public class ChannelSession implements Session {
             throw new ConnectionClosedException();
         }
         byte[] encoded = this.codecDispatcher.encode(message);
-        List<byte[]> chunks = ArrayUtils.split(encoded, MAX_MESSAGE_SIZE);
-
-        for (byte[] chunk : chunks) {
-            writeBuffer = ByteBuffer.wrap(chunk);
-            try {
-                while (writeBuffer.hasRemaining()) {
-                    this.channel.write(writeBuffer);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                // TODO: handle
+        writeBuffer = ByteBuffer.wrap(encoded);
+        try {
+            while (writeBuffer.hasRemaining()) {
+                this.channel.write(writeBuffer);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // TODO: handle
         }
     }
 

@@ -1,28 +1,8 @@
 package com.dreamteam.powerofwar.connection.utils;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 public final class ArrayUtils {
 
     private ArrayUtils() {}
-
-    public static List<byte[]> split(byte[] bytes, int maxLength) {
-        int count = bytes.length / maxLength;
-        if (bytes.length % maxLength > 0) {
-            count++;
-        }
-
-        return IntStream.range(0, count)
-                .mapToObj(chunkNum -> {
-                    int left = chunkNum * maxLength;
-                    int right = Math.min((chunkNum + 1) * maxLength, bytes.length);
-                    return Arrays.copyOfRange(bytes, left, right);
-                })
-                .collect(Collectors.toList());
-    }
 
     public static byte[] mergeArrays(byte[] ...arrays) {
         int length = 0;
