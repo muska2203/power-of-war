@@ -3,6 +3,7 @@ package com.dreamteam.powerofwar.connection.session;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 
 import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 import com.dreamteam.powerofwar.connection.Message;
@@ -15,17 +16,19 @@ public class ChannelSession implements Session {
 
     private static int ID_GENERATOR = 0;
 
-    public static final int MAX_MESSAGE_SIZE = 1024;
+    public static final int MAX_MESSAGE_SIZE = 1 << 10;
+    private final ChunkReader chunkReader;
     ByteBuffer readBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
     ByteBuffer writeBuffer = ByteBuffer.allocate(MAX_MESSAGE_SIZE);
 
-    private SocketChannel channel;
-    private CodecDispatcher codecDispatcher;
-    private int id;
+    private final SocketChannel channel;
+    private final CodecDispatcher codecDispatcher;
+    private final int id;
 
     public ChannelSession(SocketChannel channel, CodecDispatcher codecDispatcher) {
         this.id = ++ID_GENERATOR;
         this.channel = channel;
+        this.chunkReader = new ChunkReader();
         this.codecDispatcher = codecDispatcher;
         onReady();
     }
@@ -33,19 +36,24 @@ public class ChannelSession implements Session {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Message> T receiveMessage() {
-        int numRead;
-        readBuffer.clear();
         try {
-            numRead = this.channel.read(readBuffer);
-        } catch (IOException ignore) {
-            numRead = -1; //todo: Delete it and throw exception
+            while (true) {
+                readBuffer.rewind();
+                int readCount = this.channel.read(readBuffer);
+                if (readCount == -1) {
+                    break;
+                }
+                byte[] array = Arrays.copyOf(readBuffer.array(), readCount);
+                chunkReader.addChunk(array);
+                byte[] readyToParseChunk = chunkReader.getReadyToParseChunk();
+                if (readyToParseChunk != null) {
+                    return (T) this.codecDispatcher.decode(ByteBuffer.wrap(readyToParseChunk));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        if (numRead == -1) {
-            disconnect();
-            return null;
-        }
-        readBuffer.rewind();
-        return (T) this.codecDispatcher.decode(readBuffer);
+        return null;
     }
 
     @Override
@@ -53,9 +61,8 @@ public class ChannelSession implements Session {
         if (!this.channel.isOpen()) {
             throw new ConnectionClosedException();
         }
-        writeBuffer.clear();
-        this.codecDispatcher.encode(writeBuffer, message);
-        writeBuffer.rewind();
+        byte[] encoded = this.codecDispatcher.encode(message);
+        writeBuffer = ByteBuffer.wrap(encoded);
         try {
             while (writeBuffer.hasRemaining()) {
                 this.channel.write(writeBuffer);
@@ -78,8 +85,8 @@ public class ChannelSession implements Session {
         onDisconnect();
         try {
             this.channel.close();
-        } catch (IOException ignore) {
-            ignore.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
             //todo: handle
         }
     }

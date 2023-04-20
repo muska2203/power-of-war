@@ -17,9 +17,7 @@ import com.dreamteam.powerofwar.game.types.GameObjectType;
 import com.dreamteam.powerofwar.game.types.ResourceType;
 
 @Component
-public class GameStateMessageDecoder implements Decoder<GameStateMessage> {
-
-    private static final int MESSAGE_SIZE = ResourceType.values().length * Integer.BYTES;
+public class GameStateMessageDecoder extends Decoder<GameStateMessage> {
 
     @Override
     public GameStateMessage decode(ByteBuffer byteBuffer) {
@@ -41,11 +39,6 @@ public class GameStateMessageDecoder implements Decoder<GameStateMessage> {
             gameObjects.add(gameObject);
         }
         return new GameStateMessage(resources, gameObjects);
-    }
-
-    @Override
-    public int getCodingSize() {
-        return MESSAGE_SIZE;
     }
 
     @Override
