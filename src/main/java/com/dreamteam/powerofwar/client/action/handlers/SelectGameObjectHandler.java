@@ -2,13 +2,13 @@ package com.dreamteam.powerofwar.client.action.handlers;
 
 import org.springframework.stereotype.Component;
 
-import com.dreamteam.powerofwar.client.action.ActionHandler;
+import com.dreamteam.powerofwar.handler.Handler;
 import com.dreamteam.powerofwar.client.action.type.SelectGameObjectAction;
 import com.dreamteam.powerofwar.client.state.StateDispatcher;
 import com.dreamteam.powerofwar.client.state.subject.SelectedGameObject;
 
 @Component
-public class SelectGameObjectHandler implements ActionHandler<SelectGameObjectAction> {
+public class SelectGameObjectHandler implements Handler<SelectGameObjectAction> {
 
     private StateDispatcher<SelectedGameObject> gameObjectStateDispatcher;
 
@@ -17,7 +17,7 @@ public class SelectGameObjectHandler implements ActionHandler<SelectGameObjectAc
     }
 
     @Override
-    public void onAction(SelectGameObjectAction action) {
+    public void handle(SelectGameObjectAction action) {
         this.gameObjectStateDispatcher.dispatch(new SelectedGameObject(action.getType()));
     }
 }
