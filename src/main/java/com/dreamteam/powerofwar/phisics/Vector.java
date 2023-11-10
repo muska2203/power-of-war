@@ -1,6 +1,6 @@
 package com.dreamteam.powerofwar.phisics;
 
-import com.dreamteam.powerofwar.game.object.GameObject;
+import com.dreamteam.powerofwar.server.game.object.GameObject;
 
 public class Vector {
 

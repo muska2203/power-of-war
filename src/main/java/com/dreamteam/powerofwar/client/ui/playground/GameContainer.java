@@ -6,34 +6,26 @@ import java.awt.Dimension;
 
 import org.springframework.stereotype.Component;
 
-import com.dreamteam.powerofwar.client.action.ActionDispatcher;
+import com.dreamteam.powerofwar.client.action.Action;
+import com.dreamteam.powerofwar.client.game.GameContext;
 import com.dreamteam.powerofwar.client.state.State;
 import com.dreamteam.powerofwar.client.state.subject.SelectedGameObject;
-import com.dreamteam.powerofwar.client.state.subject.SelectedPlayer;
-import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.player.Player;
+import com.dreamteam.powerofwar.handler.Dispatcher;
 
 @Component
 public class GameContainer extends Container {
 
-    private Board board;
-    private Player firstPlayer = new Player("First Player");
-    private Player secondPlayer = new Player("Second Player");
-    private Player selectedPlayer = firstPlayer;
 
-    public GameContainer(Board board,
-                         ActionDispatcher actionDispatcher,
-                         State<SelectedPlayer> selectedPlayerState,
-                         State<SelectedGameObject> selectedGameObjectState) {
-        this.board = board;
+    public GameContainer(Dispatcher<Action> actionDispatcher,
+                         State<SelectedGameObject> selectedGameObjectState,
+                         GameContext gameContext) {
 
         this.setLayout(new BorderLayout());
         // TODO: Resolve the "current player" issue (move data to State) and inject as a dependency
-        add(BorderLayout.NORTH, new InfoBarComponent(selectedPlayer, board));
+        add(BorderLayout.NORTH, new InfoBarComponent(gameContext));
         // TODO: Resolve the "first player and second player" issue (move data to State) and inject as a dependency
-        add(BorderLayout.CENTER, new PlaygroundComponent(board, actionDispatcher, selectedPlayerState,
-                selectedGameObjectState, firstPlayer, secondPlayer));
-        add(BorderLayout.SOUTH, new ControlComponent(actionDispatcher, board, firstPlayer, secondPlayer));
+        add(BorderLayout.CENTER, new PlaygroundComponent(actionDispatcher, selectedGameObjectState, gameContext));
+        add(BorderLayout.SOUTH, new ControlComponent(actionDispatcher));
         setSize(new Dimension(700, 700));
     }
 }

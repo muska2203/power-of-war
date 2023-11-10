@@ -4,33 +4,31 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JComponent;
+import javax.swing.Timer;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-import com.dreamteam.powerofwar.game.Board;
-import com.dreamteam.powerofwar.game.object.type.ResourceType;
-import com.dreamteam.powerofwar.game.object.type.UnitType;
-import com.dreamteam.powerofwar.game.player.Player;
+import com.dreamteam.powerofwar.client.game.GameContext;
+import com.dreamteam.powerofwar.game.types.ResourceType;
 
-@Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class InfoBarComponent extends JComponent {
 
-    private Player player;
-    // TODO: удалить board после исправления размеров компонента
-    private Board board;
+    private final Timer repaintTimer;
+    private GameContext gameContext;
 
-    public InfoBarComponent(Player player, Board board) {
+    public InfoBarComponent(GameContext gameContext) {
         super();
-        this.player = player;
-        this.board = board;
+        this.gameContext = gameContext;
+        this.repaintTimer = new Timer(20, e -> this.repaint());
+        // TODO: Implement a game state. Start and stop the timer according to the state
+        this.repaintTimer.start();
     }
 
     @Override
     public Dimension getMinimumSize() {
-        return new Dimension((int) this.board.getWidth(), 25);
+        return new Dimension((int) this.gameContext.getWidth(), 25);
     }
 
     @Override
@@ -45,8 +43,7 @@ public class InfoBarComponent extends JComponent {
         g.setColor(Color.black);
         g.fillRect(0, 0, dim.width, dim.height);
         g.setColor(Color.white);
-        g.drawString("Gold: " + this.player.getContext().getResource(ResourceType.GOLD), 0, 10);
-        g.drawString("Warriors: " + this.player.getContext().getObjectCount(UnitType.WARRIOR), 0, 20);
-        g.drawString("Gold Miners: " + this.player.getContext().getObjectCount(UnitType.GOLD_MINER), 100, 20);
+        g.drawString("Gold: " + this.gameContext.getResource(ResourceType.GOLD), 0, 10);
+        g.drawString("Objects: " + this.gameContext.getGameObjects().size(), 0, 20);
     }
 }
