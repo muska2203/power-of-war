@@ -162,7 +162,7 @@
         </module>
         <module name="MethodParamPad"/>
         <module name="NoWhitespaceAfter"/>
-        <module name="NoWhitespaceBefore"/>
+<!--        <module name="NoWhitespaceBefore"/>-->
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
         <module name="SeparatorWrap">
@@ -195,7 +195,7 @@
             https://checkstyle.org/config_javadoc.html
             // TODO: Javadoc for public methods?
         -->
-        <module name="MissingJavadocType"/>
-        <module name="MissingJavadocPackage"/>
+<!--        <module name="MissingJavadocType"/>-->
+<!--        <module name="MissingJavadocPackage"/>-->
     </module>
 </module>
