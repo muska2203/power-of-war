@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.dreamteam.powerofwar.common.handler.Dispatcher;
 import com.dreamteam.powerofwar.common.player.Player;
 import com.dreamteam.powerofwar.connection.ConnectionInfo;
-import com.dreamteam.powerofwar.connection.Message;
+import com.dreamteam.powerofwar.connection.message.Message;
 import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 import com.dreamteam.powerofwar.connection.session.ChannelSession;
 import com.dreamteam.powerofwar.connection.session.Session;

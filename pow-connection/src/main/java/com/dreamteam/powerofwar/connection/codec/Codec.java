@@ -1,6 +1,6 @@
 package com.dreamteam.powerofwar.connection.codec;
 
-import com.dreamteam.powerofwar.connection.Message;
+import com.dreamteam.powerofwar.connection.message.Message;
 
 /**
  * Main interface which unites all encoders and decoders under it.

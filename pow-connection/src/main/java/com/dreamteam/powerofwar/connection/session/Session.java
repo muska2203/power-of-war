@@ -1,6 +1,6 @@
 package com.dreamteam.powerofwar.connection.session;
 
-import com.dreamteam.powerofwar.connection.Message;
+import com.dreamteam.powerofwar.connection.message.Message;
 import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 
 /**

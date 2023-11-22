@@ -2,7 +2,7 @@ package com.dreamteam.powerofwar.connection.codec;
 
 import java.nio.ByteBuffer;
 
-import com.dreamteam.powerofwar.connection.Message;
+import com.dreamteam.powerofwar.connection.message.Message;
 import com.dreamteam.powerofwar.connection.utils.ArrayUtils;
 import com.dreamteam.powerofwar.connection.utils.ByteUtils;
 

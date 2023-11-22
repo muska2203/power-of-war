@@ -3,7 +3,7 @@ package com.dreamteam.powerofwar.client;
 import java.io.Closeable;
 
 import com.dreamteam.powerofwar.common.handler.Dispatcher;
-import com.dreamteam.powerofwar.connection.Message;
+import com.dreamteam.powerofwar.connection.message.Message;
 import com.dreamteam.powerofwar.connection.exception.ConnectionClosedException;
 import com.dreamteam.powerofwar.connection.session.Session;
 

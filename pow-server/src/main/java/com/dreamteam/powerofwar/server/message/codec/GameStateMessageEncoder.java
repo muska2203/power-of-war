@@ -8,20 +8,21 @@ import org.springframework.stereotype.Component;
 import com.dreamteam.powerofwar.common.types.ResourceType;
 import com.dreamteam.powerofwar.connection.codec.Encoder;
 import com.dreamteam.powerofwar.connection.codec.OPCode;
-import com.dreamteam.powerofwar.server.message.GameStateMessage;
+import com.dreamteam.powerofwar.connection.message.types.FullGameStateMessage;
+import com.dreamteam.powerofwar.connection.message.types.GameObjectInfo;
 import com.dreamteam.powerofwar.server.message.MessageTypes;
 
 @Component
-public class GameStateMessageEncoder extends Encoder<GameStateMessage> {
+public class GameStateMessageEncoder extends Encoder<FullGameStateMessage> {
 
     @Override
-    protected void write(GameStateMessage message, ByteBuffer byteBuffer) {
+    protected void write(FullGameStateMessage message, ByteBuffer byteBuffer) {
         Map<ResourceType, Integer> resources = message.getResources();
         for (ResourceType resourceType : ResourceType.values()) {
             byteBuffer.putInt(resources.get(resourceType));
         }
         byteBuffer.putInt(message.getGameObjectsInfo().size());
-        for (GameStateMessage.GameObjectInfo gameObjectInfo : message.getGameObjectsInfo()) {
+        for (GameObjectInfo gameObjectInfo : message.getGameObjectsInfo()) {
             byteBuffer.putInt(gameObjectInfo.getId());
             byteBuffer.putDouble(gameObjectInfo.getX());
             byteBuffer.putDouble(gameObjectInfo.getY());
@@ -33,7 +34,7 @@ public class GameStateMessageEncoder extends Encoder<GameStateMessage> {
     }
 
     @Override
-    public int getMessageSize(GameStateMessage message) {
+    public int getMessageSize(FullGameStateMessage message) {
         return ResourceType.values().length * Integer.BYTES
                 + Integer.BYTES
                 + message.getGameObjectsInfo().size()

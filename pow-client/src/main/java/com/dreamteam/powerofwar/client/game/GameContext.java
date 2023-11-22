@@ -3,15 +3,15 @@ package com.dreamteam.powerofwar.client.game;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.dreamteam.powerofwar.client.game.object.StaticGameObject;
 import com.dreamteam.powerofwar.common.types.ResourceType;
+import com.dreamteam.powerofwar.connection.message.types.GameObjectInfo;
 
 public class GameContext {
 
     private static final int BOARD_WIDTH = 800;
     private static final int BOARD_HEIGHT = 480;
 
-    private Map<Integer, StaticGameObject> gameObjects = new ConcurrentHashMap<>();
+    private Map<Integer, GameObjectInfo> gameObjects = new ConcurrentHashMap<>();
 
     private Map<ResourceType, Integer> resources = new ConcurrentHashMap<>();
 
@@ -23,11 +23,11 @@ public class GameContext {
         return BOARD_HEIGHT;
     }
 
-    public Map<Integer, StaticGameObject> getGameObjects() {
+    public Map<Integer, GameObjectInfo> getGameObjects() {
         return gameObjects;
     }
 
-    public void setGameObjects(Map<Integer, StaticGameObject> gameObjects) {
+    public void setGameObjects(Map<Integer, GameObjectInfo> gameObjects) {
         this.gameObjects = gameObjects;
     }
 

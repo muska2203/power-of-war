@@ -20,11 +20,11 @@ import org.springframework.stereotype.Component;
 import com.dreamteam.powerofwar.client.action.Action;
 import com.dreamteam.powerofwar.client.action.type.AddGameObjectAction;
 import com.dreamteam.powerofwar.client.game.GameContext;
-import com.dreamteam.powerofwar.client.game.object.StaticGameObject;
 import com.dreamteam.powerofwar.common.handler.Dispatcher;
 import com.dreamteam.powerofwar.common.state.State;
 import com.dreamteam.powerofwar.common.state.subject.SelectedGameObject;
 import com.dreamteam.powerofwar.common.types.GameObjectType;
+import com.dreamteam.powerofwar.connection.message.types.GameObjectInfo;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -100,21 +100,21 @@ public class PlaygroundComponent extends JComponent {
         g.drawRect(toUICoordinateX(0), toUICoordinateY(0), toUICoordinate(gameContext.getWidth()),
                 toUICoordinate(gameContext.getHeight()));
 
-        Map<GameObjectType, java.util.List<StaticGameObject>> gameObjectTypeListMap = gameContext.getGameObjects()
+        Map<GameObjectType, java.util.List<GameObjectInfo>> gameObjectTypeListMap = gameContext.getGameObjects()
                 .values()
                 .stream()
-                .collect(Collectors.groupingBy(StaticGameObject::getType));
+                .collect(Collectors.groupingBy(GameObjectInfo::getType));
 
-        Map<Boolean, java.util.List<StaticGameObject>> gameObjectByUser = gameContext.getGameObjects()
+        Map<Boolean, java.util.List<GameObjectInfo>> gameObjectByUser = gameContext.getGameObjects()
                 .values()
                 .stream()
-                .collect(Collectors.groupingBy(StaticGameObject::isEnemy));
+                .collect(Collectors.groupingBy(GameObjectInfo::isEnemy));
 
-        List<StaticGameObject> ownerObjects =
+        List<GameObjectInfo> ownerObjects =
                 Optional.ofNullable(gameObjectByUser.get(false)).orElse(Collections.emptyList());
-        List<StaticGameObject> enemies =
+        List<GameObjectInfo> enemies =
                 Optional.ofNullable(gameObjectByUser.get(true)).orElse(Collections.emptyList());
-        List<StaticGameObject> gameObjectsCoward =
+        List<GameObjectInfo> gameObjectsCoward =
                 Optional.ofNullable(gameObjectTypeListMap.get(GameObjectType.COWARD)).orElse(Collections.emptyList());
 
         drawObjects(g, Color.GREEN, ownerObjects);
@@ -122,13 +122,13 @@ public class PlaygroundComponent extends JComponent {
         drawObjects(g, Color.blue, gameObjectsCoward);
     }
 
-    private void drawObjects(Graphics g, Color bodyColor, List<StaticGameObject> gameObjects) {
-        if (gameObjects == null || gameObjects.size() == 0) {
+    private void drawObjects(Graphics g, Color bodyColor, List<GameObjectInfo> gameObjects) {
+        if (gameObjects == null || gameObjects.isEmpty()) {
             return;
         }
         if (bodyColor != null) {
             g.setColor(bodyColor);
-            for (StaticGameObject gameObject : gameObjects) {
+            for (GameObjectInfo gameObject : gameObjects) {
                 int size = toUICoordinate(gameObject.getSize() * 2);
                 int xPosition = toUICoordinateX(gameObject.getX() - gameObject.getSize());
                 int yPosition = toUICoordinateY(gameObject.getY() - gameObject.getSize());

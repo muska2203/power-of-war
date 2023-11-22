@@ -1,4 +1,4 @@
-package com.dreamteam.powerofwar.connection;
+package com.dreamteam.powerofwar.connection.message;
 
 import com.dreamteam.powerofwar.common.handler.HandleableType;
 

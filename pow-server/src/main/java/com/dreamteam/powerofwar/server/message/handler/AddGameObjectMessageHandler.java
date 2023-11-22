@@ -2,7 +2,7 @@ package com.dreamteam.powerofwar.server.message.handler;
 
 import org.springframework.stereotype.Component;
 
-import com.dreamteam.powerofwar.connection.MessageHandler;
+import com.dreamteam.powerofwar.connection.message.MessageHandler;
 import com.dreamteam.powerofwar.server.game.event.AddGameObjectEvent;
 import com.dreamteam.powerofwar.server.game.event.EventListener;
 import com.dreamteam.powerofwar.server.message.AddGameObjectMessage;

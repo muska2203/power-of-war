@@ -8,27 +8,27 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.dreamteam.powerofwar.client.game.object.StaticGameObject;
-import com.dreamteam.powerofwar.client.message.GameStateMessage;
 import com.dreamteam.powerofwar.client.message.MessageTypes;
 import com.dreamteam.powerofwar.common.types.GameObjectType;
 import com.dreamteam.powerofwar.common.types.ResourceType;
 import com.dreamteam.powerofwar.connection.codec.Decoder;
 import com.dreamteam.powerofwar.connection.codec.OPCode;
+import com.dreamteam.powerofwar.connection.message.types.FullGameStateMessage;
+import com.dreamteam.powerofwar.connection.message.types.GameObjectInfo;
 
 @Component
-public class GameStateMessageDecoder extends Decoder<GameStateMessage> {
+public class GameStateMessageDecoder extends Decoder<FullGameStateMessage> {
 
     @Override
-    public GameStateMessage decode(ByteBuffer byteBuffer) {
+    public FullGameStateMessage decode(ByteBuffer byteBuffer) {
         Map<ResourceType, Integer> resources = new HashMap<>();
         for (ResourceType resourceType : ResourceType.values()) {
             resources.put(resourceType, byteBuffer.getInt());
         }
         int objectsListSize = byteBuffer.getInt();
-        List<StaticGameObject> gameObjects = new ArrayList<>(objectsListSize);
+        List<GameObjectInfo> gameObjects = new ArrayList<>(objectsListSize);
         for (int i = 0; i < objectsListSize; i++) {
-            StaticGameObject gameObject = new StaticGameObject();
+            GameObjectInfo gameObject = new GameObjectInfo();
             gameObject.setId(byteBuffer.getInt());
             gameObject.setX(byteBuffer.getDouble());
             gameObject.setY(byteBuffer.getDouble());
@@ -38,7 +38,7 @@ public class GameStateMessageDecoder extends Decoder<GameStateMessage> {
             gameObject.setEnemy(byteBuffer.get() == 1);
             gameObjects.add(gameObject);
         }
-        return new GameStateMessage(resources, gameObjects);
+        return new FullGameStateMessage(resources, gameObjects);
     }
 
     @Override

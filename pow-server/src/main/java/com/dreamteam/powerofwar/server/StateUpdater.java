@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component;
 
 import com.dreamteam.powerofwar.common.player.Player;
 import com.dreamteam.powerofwar.common.types.ResourceType;
+import com.dreamteam.powerofwar.connection.message.types.FullGameStateMessage;
+import com.dreamteam.powerofwar.connection.message.types.GameObjectInfo;
 import com.dreamteam.powerofwar.server.game.object.Board;
-import com.dreamteam.powerofwar.server.message.GameStateMessage;
 
 @Component
 public class StateUpdater {
@@ -29,12 +30,19 @@ public class StateUpdater {
             while (true) {
                 for (Player player : board.getPlayers()) {
                     resources.put(ResourceType.GOLD, player.getContext().getResource(ResourceType.GOLD));
-                    List<GameStateMessage.GameObjectInfo> gameObjectsInfo = board.getGameObjects()
+                    List<GameObjectInfo> gameObjectsInfo = board.getGameObjects()
                             .stream()
-                            .map(gameObject -> new GameStateMessage.GameObjectInfo(gameObject,
-                                    gameObject.getOwner() != player))
+                            .map(gameObject -> new GameObjectInfo(
+                                    gameObject.getId(),
+                                    gameObject.getX(),
+                                    gameObject.getY(),
+                                    gameObject.getHealth(),
+                                    gameObject.getType(),
+                                    gameObject.getOwner() != player,
+                                    gameObject.getSize()
+                            ))
                             .collect(Collectors.toList());
-                    serverConnection.sendMessage(new GameStateMessage(resources, gameObjectsInfo), player);
+                    serverConnection.sendMessage(new FullGameStateMessage(resources, gameObjectsInfo), player);
                 }
                 try {
                     Thread.sleep(100);

@@ -2,7 +2,7 @@ package com.dreamteam.powerofwar.connection.codec;
 
 import java.nio.ByteBuffer;
 
-import com.dreamteam.powerofwar.connection.Message;
+import com.dreamteam.powerofwar.connection.message.Message;
 
 /**
  * Uses to delegate choosing of the necessary codec.

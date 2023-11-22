@@ -20,7 +20,7 @@ import com.dreamteam.powerofwar.common.handler.RegistryDispatcher;
 import com.dreamteam.powerofwar.common.state.GenericMutableState;
 import com.dreamteam.powerofwar.common.state.subject.SelectedGameObject;
 import com.dreamteam.powerofwar.connection.ConnectionInfo;
-import com.dreamteam.powerofwar.connection.Message;
+import com.dreamteam.powerofwar.connection.message.Message;
 import com.dreamteam.powerofwar.connection.codec.Codec;
 import com.dreamteam.powerofwar.connection.codec.CodecDispatcher;
 import com.dreamteam.powerofwar.connection.codec.RegistryCodecDispatcher;

@@ -1,7 +1,7 @@
 package com.dreamteam.powerofwar.server.message;
 
 import com.dreamteam.powerofwar.common.player.Player;
-import com.dreamteam.powerofwar.connection.Message;
+import com.dreamteam.powerofwar.connection.message.Message;
 
 public abstract class PlayerMessage implements Message {
 

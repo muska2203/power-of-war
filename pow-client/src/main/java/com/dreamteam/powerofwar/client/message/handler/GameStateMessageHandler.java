@@ -1,13 +1,18 @@
 package com.dreamteam.powerofwar.client.message.handler;
 
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.dreamteam.powerofwar.client.game.GameContext;
-import com.dreamteam.powerofwar.client.message.GameStateMessage;
-import com.dreamteam.powerofwar.connection.MessageHandler;
+import com.dreamteam.powerofwar.connection.message.MessageHandler;
+import com.dreamteam.powerofwar.connection.message.types.FullGameStateMessage;
+import com.dreamteam.powerofwar.connection.message.types.GameObjectInfo;
 
 @Component
-public class GameStateMessageHandler implements MessageHandler<GameStateMessage> {
+public class GameStateMessageHandler implements MessageHandler<FullGameStateMessage> {
 
     private final GameContext gameContext;
 
@@ -16,9 +21,12 @@ public class GameStateMessageHandler implements MessageHandler<GameStateMessage>
     }
 
     @Override
-    public void handle(GameStateMessage message) {
+    public void handle(FullGameStateMessage message) {
         gameContext.setResources(message.getResources());
         gameContext.getGameObjects().clear();
-        gameContext.getGameObjects().putAll(message.getGameObjects());
+        Map<Integer, GameObjectInfo> mappedObjects = message.getGameObjectsInfo()
+                .stream()
+                .collect(Collectors.toMap(GameObjectInfo::getId, Function.identity()));
+        gameContext.getGameObjects().putAll(mappedObjects);
     }
 }
